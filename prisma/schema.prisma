@@ -9,6 +9,25 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mongodb"
   url      = env("DATABASE_URL")
+}
+
+model Question {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String
+  question    String
+  questionId  String   @unique
+  upvoteCount Int      @default(0)
+  answers     Answer[]
+}
+
+model Answer {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String
+  questionId  String
+  answerId    String   @unique
+  answer      String
+  upvoteCount Int      @default(0)
+  question    Question @relation(fields: [questionId], references: [questionId])
 }
