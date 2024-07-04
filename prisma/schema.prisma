@@ -16,7 +16,8 @@ datasource db {
 model Question {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
   userId      String
-  question    String
+  questionTitle    String
+  questionDescription    String
   upvoteCount Int      @default(0)
   answers     Answer[]
 }
