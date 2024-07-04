@@ -3,6 +3,8 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Textarea } from "@/components/ui/textarea";
 import prisma from "@/lib/prisma"
 import { isValidObjectId } from "@/lib/validate";
+import { revalidatePath } from "next/cache";
+import Upvote from "./upvote";
 
 interface Params {
     params: {
@@ -11,6 +13,24 @@ interface Params {
 }
 
 export default async function Question({ params }: Params) {
+    const postAnswer = async (formData: FormData) => {
+        "use server"
+        const answerText = await formData.get("answerText");
+        if (answerText) {
+            const answer = await prisma.answer.create({
+                data: {
+                    userId: "123",
+                    questionId: params.id,
+                    upvoteCount: 0,
+                    answer: answerText as string,
+                },
+            });
+
+            revalidatePath('')
+
+            console.log(answer)
+        }
+    }
     let question = null;
     let answers = null;
     if (isValidObjectId(params.id)) {
@@ -43,8 +63,10 @@ export default async function Question({ params }: Params) {
                 </CardHeader>
 
                 <CardContent>
-                    <Textarea rows={6} placeholder="Enter your asnwer..."></Textarea>
-                    <Button className="mt-3">Submit</Button>
+                    <form action={postAnswer}>
+                        <Textarea name="answerText" rows={6} placeholder="Enter your asnwer..."></Textarea>
+                        <Button className="mt-3">Submit</Button>
+                    </form>
                 </CardContent>
 
                 <CardFooter className="flex flex-col items-start">
@@ -62,7 +84,6 @@ interface AnswersParams {
     id: string;
     userId: string;
     questionId: string;
-    answerId: string;
     answer: string;
     upvoteCount: number;
 }
@@ -71,24 +92,25 @@ interface AnswersProps {
     answers: AnswersParams[];
 }
 const Answers = (answers: AnswersProps) => {
+    
     if (answers.answers.length === 0) {
         return <h2 className="font-bold text-xl text-center text-muted-foreground">
             Answers is empty!
         </h2>
     }
 
-    return <div className="flex">
+    return <div className="flex flex-col gap-2 w-full">
         {answers.answers.map(answer => (
             <Card key={answer.id}>
                 <CardHeader>
                     <CardTitle>John doe</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    This is others answer
+                    {answer.answer}
                 </CardContent>
 
                 <CardFooter>
-                    <Button variant="outline">Upvote</Button>
+                   <Upvote id={answer.id} upvoteCount={answer.upvoteCount} />
                 </CardFooter>
             </Card>
         ))}
