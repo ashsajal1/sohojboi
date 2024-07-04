@@ -1,15 +1,10 @@
-'use client'
+"use client"
 
-import { Button } from "@/components/ui/button";
-import { handleUpvote } from "./action";
-import { useOptimistic, useTransition } from "react";
+import { Button } from '@/components/ui/button'
+import React, { useOptimistic, useTransition } from 'react'
+import { handleQuestionUpvote } from './action'
 
-interface AnswersParams {
-    id: string;
-    upvoteCount: number;
-}
-
-export default function Upvote({ id, upvoteCount }: AnswersParams) {
+export default function UpvoteBtn({ id, upvoteCount }: { id: string, upvoteCount: number }) {
     const [optimisticUpvotes, addOptimisticUpvote] = useOptimistic(
         { upvoteCount, upvoting: false },
         (state, newUpvoteCount: number) => ({
@@ -20,12 +15,13 @@ export default function Upvote({ id, upvoteCount }: AnswersParams) {
 
     )
     let [_, startTransition] = useTransition();
+
     return (
         <Button onClick={async () => {
             startTransition(async () => {
                 addOptimisticUpvote(optimisticUpvotes.upvoteCount + 1);
-                await handleUpvote(id, upvoteCount)
+                await handleQuestionUpvote(id, upvoteCount)
             })
-        }} variant="outline">{upvoteCount} {optimisticUpvotes.upvoting ? 'Upvoting' : 'Upvote'}</Button>
+        }} variant={'outline'}>{upvoteCount} {optimisticUpvotes.upvoting ? 'Upvoting' : 'Upvote'}</Button>
     )
 }
