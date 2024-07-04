@@ -19,12 +19,13 @@ export default function Upvote({ id, upvoteCount }: AnswersParams) {
         })
 
     )
-    // let [isPending, startTransition] = useTransition();
+    let [_, startTransition] = useTransition();
     return (
-        // <Button onClick={() => startTransition(() => handleUpvote(id, upvoteCount))} variant="outline">{upvoteCount} {isPending ? 'Upvoting' : 'Upvote'}</Button>
         <Button onClick={async () => {
-            addOptimisticUpvote(optimisticUpvotes.upvoteCount + 1);
-            await handleUpvote(id, upvoteCount)
+            startTransition(async () => {
+                addOptimisticUpvote(optimisticUpvotes.upvoteCount + 1);
+                await handleUpvote(id, upvoteCount)
+            })
 
         }} variant="outline">{upvoteCount} {optimisticUpvotes.upvoting ? 'Upvoting' : 'Upvote'}</Button>
     )
