@@ -14,7 +14,7 @@ export default async function Question() {
           </CardHeader>
 
           <CardFooter className="flex items-center gap-3">
-            <Button>Asnwer</Button>
+            <Button>Answer</Button>
             <Button variant={'outline'}>Upvote</Button>
           </CardFooter>
         </Card>
