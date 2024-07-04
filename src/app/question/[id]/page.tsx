@@ -28,7 +28,7 @@ export default async function Question({ params }: Params) {
 
             revalidatePath('')
 
-            console.log(answer)
+            // console.log(answer)
         }
     }
     let question = null;
@@ -52,7 +52,7 @@ export default async function Question({ params }: Params) {
         throw new Error('Invalid ObjectId');
     }
 
-    console.log(question)
+    // console.log(question)
     return (
         <div>
             <Card>
