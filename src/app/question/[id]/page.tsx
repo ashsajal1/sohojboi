@@ -58,11 +58,12 @@ export default async function Question({ params }: Params) {
             <Card>
                 <CardHeader>
                     <CardTitle>
-                        {question?.question}
+                        {question?.questionTitle}
                     </CardTitle>
                 </CardHeader>
 
                 <CardContent>
+                    <div>{question?.questionDescription}</div>
                     <form action={postAnswer}>
                         <Textarea name="answerText" rows={6} placeholder="Enter your asnwer..."></Textarea>
                         <Button className="mt-3">Submit</Button>

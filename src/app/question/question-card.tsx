@@ -7,7 +7,8 @@ interface QuestionProps {
     question: {
         id: string;
         userId: string;
-        question: string;
+        questionTitle: string;
+        questionDescription: string;
         upvoteCount: number;
     }
 }
@@ -15,7 +16,7 @@ export default function QuestionCard({ question }: QuestionProps) {
     return (
         <Card>
             <CardHeader>
-                <CardTitle>{question.question}</CardTitle>
+                <CardTitle>{question.questionTitle}</CardTitle>
             </CardHeader>
 
             <CardFooter className="flex items-center gap-3">
