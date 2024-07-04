@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import prisma from "@/lib/prisma"
+import Link from "next/link";
 
 export default async function Question() {
   const questions = await prisma.question.findMany();
@@ -14,7 +15,7 @@ export default async function Question() {
           </CardHeader>
 
           <CardFooter className="flex items-center gap-3">
-            <Button>Answer</Button>
+          <Link href={`/question/${question.id}`}><Button>Answer</Button></Link>
             <Button variant={'outline'}>Upvote</Button>
           </CardFooter>
         </Card>
