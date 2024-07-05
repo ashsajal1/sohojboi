@@ -9,6 +9,7 @@ import { SignedIn, SignedOut } from "@clerk/nextjs";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { currentUser } from '@clerk/nextjs/server';
+import { Answers } from "./answers";
 
 interface Params {
     params: {
@@ -97,40 +98,3 @@ export default async function Question({ params }: Params) {
 }
 
 
-interface AnswersParams {
-    id: string;
-    userId: string;
-    questionId: string;
-    answer: string;
-    upvoteCount: number;
-}
-
-interface AnswersProps {
-    answers: AnswersParams[];
-}
-const Answers = (answers: AnswersProps) => {
-
-    if (answers.answers.length === 0) {
-        return <h2 className="font-bold text-xl text-center text-muted-foreground">
-            Answers is empty!
-        </h2>
-    }
-
-    return <div className="flex flex-col gap-2 w-full">
-        <Badge variant={'secondary'} className="mb-4">Community answers :</Badge>
-        {answers.answers.map(answer => (
-            <Card key={answer.id}>
-                <CardHeader>
-                    <CardTitle>John doe</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    {answer.answer}
-                </CardContent>
-
-                <CardFooter>
-                    <Upvote id={answer.id} upvoteCount={answer.upvoteCount} />
-                </CardFooter>
-            </Card>
-        ))}
-    </div>
-}
