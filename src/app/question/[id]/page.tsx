@@ -36,7 +36,7 @@ export default async function Question({ params }: Params) {
                 },
             });
 
-            revalidatePath('')
+            revalidatePath(`/question/${params.id}`)
 
             // console.log(answer)
         }
