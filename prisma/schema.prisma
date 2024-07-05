@@ -22,15 +22,21 @@ model Question {
   answers             Answer[]
   createdAt           DateTime @default(now())
   updatedAt           DateTime @updatedAt
+  userFirstName       String
+  userLastName        String
+  userFullName        String
 }
 
 model Answer {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId      String
-  questionId  String   @db.ObjectId
-  answer      String
-  upvoteCount Int      @default(0)
-  question    Question @relation(fields: [questionId], references: [id])
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId        String
+  questionId    String   @db.ObjectId
+  answer        String
+  upvoteCount   Int      @default(0)
+  question      Question @relation(fields: [questionId], references: [id])
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  userFirstName String
+  userLastName  String
+  userFullName  String
 }

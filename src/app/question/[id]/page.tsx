@@ -8,6 +8,7 @@ import Upvote from "./upvote";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
+import { currentUser } from '@clerk/nextjs/server';
 
 interface Params {
     params: {
@@ -16,6 +17,8 @@ interface Params {
 }
 
 export default async function Question({ params }: Params) {
+    const user = await currentUser();
+
     const postAnswer = async (formData: FormData) => {
         "use server"
         const answerText = await formData.get("answerText");
@@ -26,6 +29,9 @@ export default async function Question({ params }: Params) {
                     questionId: params.id,
                     upvoteCount: 0,
                     answer: answerText as string,
+                    userFirstName: user?.firstName as string,
+                    userLastName: user?.lastName as string,
+                    userFullName: user?.fullName as string,
                 },
             });
 

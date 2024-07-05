@@ -3,8 +3,10 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import prisma from "@/lib/prisma";
+import { currentUser } from '@clerk/nextjs/server';
 
-export default function Create() {
+export default async function Create() {
+  const user = await currentUser();
   const createQuestion = async (formData: FormData) => {
     "use server"
     const title = formData.get("title")
@@ -15,9 +17,12 @@ export default function Create() {
         userId: '123',
         questionTitle: title as string,
         questionDescription: description as string,
+        userFirstName: user?.firstName as string,
+        userLastName: user?.lastName as string,
+        userFullName: user?.fullName as string,
       }
     })
-    
+
     // console.log(newQuestion)
   }
   return (
