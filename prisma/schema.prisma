@@ -51,6 +51,7 @@ model Quiz {
   userQuizResults UserQuizResult[]
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
+  Competition     Competition[]
 }
 
 model QuizQuestion {
@@ -85,21 +86,16 @@ model UserQuizResult {
 }
 
 model Competition {
-  id          String       @id @default(auto()) @map("_id") @db.ObjectId
-  title       String
-  description String?
-  competitors Competitor[]
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-}
-
-model Competitor {
-  id            String      @id @default(auto()) @map("_id") @db.ObjectId
-  competitionId String      @db.ObjectId
-  userId        String
-  score         Int
-  isWinner      Boolean
-  competition   Competition @relation(fields: [competitionId], references: [id])
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  title           String
+  description     String?
+  quizId          String   @db.ObjectId
+  challengerId    String   @db.ObjectId
+  challengeeId    String   @db.ObjectId
+  challengerScore Int
+  challengeeScore Int?
+  status          String   @default("pending")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  quiz            Quiz     @relation(fields: [quizId], references: [id])
 }
