@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import prisma from '@/lib/prisma'
 import React from 'react'
+import QuizComponent from './quizzes';
 
 export default async function page() {
     const quizzes = await prisma.quiz.findMany({
@@ -34,7 +35,7 @@ export default async function page() {
     console.log(quizQuestions)
     return (
         <div className='flex flex-col gap-2'>
-            {quizQuestions.map(question => (
+            {/* {quizQuestions.map(question => (
                 <Card key={question.id}>
                     <CardHeader>
                         <CardTitle>{question.text}</CardTitle>
@@ -45,7 +46,8 @@ export default async function page() {
                         ))}
                     </CardContent>
                 </Card>
-            ))}
+            ))} */}
+            <QuizComponent quizQuestions={quizQuestions} />
         </div>
     )
 }
