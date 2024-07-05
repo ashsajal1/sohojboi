@@ -45,6 +45,8 @@ model Quiz {
   id            String             @id @default(auto()) @map("_id") @db.ObjectId
   title         String
   description   String?
+  topic         String?
+  chapter       String?
   questions     QuizQuestion[]
   userQuizResults UserQuizResult[]
   createdAt     DateTime           @default(now())
