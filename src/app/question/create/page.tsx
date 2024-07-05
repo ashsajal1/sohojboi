@@ -14,7 +14,7 @@ export default async function Create() {
     // console.log(title, description)
     const newQuestion = await prisma.question.create({
       data: {
-        userId: '123',
+        userId: user?.id as string,
         questionTitle: title as string,
         questionDescription: description as string,
         userFirstName: user?.firstName as string,
