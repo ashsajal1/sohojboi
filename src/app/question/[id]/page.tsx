@@ -7,6 +7,7 @@ import { revalidatePath } from "next/cache";
 import Upvote from "./upvote";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
 import Link from "next/link";
+import { Label } from "@/components/ui/label";
 
 interface Params {
     params: {
@@ -56,7 +57,7 @@ export default async function Question({ params }: Params) {
 
     // console.log(question)
     return (
-        <div>
+        <div className="mt-2">
             <Card>
                 <CardHeader>
                     <CardTitle>
@@ -65,7 +66,10 @@ export default async function Question({ params }: Params) {
                 </CardHeader>
 
                 <CardContent>
-                    <div>{question?.questionDescription}</div>
+                    <div className="mb-4 border-b flex flex-col pb-4">
+                        <Label>Desciption : </Label>
+                        <p className="mt-2">{question?.questionDescription}</p>
+                    </div>
                     <SignedIn>
                         <form action={postAnswer}>
                             <Textarea name="answerText" rows={6} placeholder="Enter your asnwer..."></Textarea>
