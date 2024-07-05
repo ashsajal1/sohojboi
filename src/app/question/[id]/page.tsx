@@ -7,7 +7,6 @@ import { revalidatePath } from "next/cache";
 import Upvote from "./upvote";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
 import Link from "next/link";
-import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 
 interface Params {
@@ -68,7 +67,7 @@ export default async function Question({ params }: Params) {
 
                 <CardContent>
                     <div className="mb-4 border-b flex flex-col pb-4">
-                        <Label>Desciption : </Label>
+                        <Badge variant={'secondary'}>Desciption : </Badge>
                         <p className="mt-2">{question?.questionDescription}</p>
                     </div>
                     <SignedIn>
