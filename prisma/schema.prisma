@@ -40,3 +40,64 @@ model Answer {
   userLastName  String
   userFullName  String
 }
+
+model Quiz {
+  id            String             @id @default(auto()) @map("_id") @db.ObjectId
+  title         String
+  description   String?
+  questions     QuizQuestion[]
+  userQuizResults UserQuizResult[]
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+}
+
+model QuizQuestion {
+  id            String         @id @default(auto()) @map("_id") @db.ObjectId
+  quizId        String         @db.ObjectId
+  content       String
+  options       AnswerOption[]
+  correctOptionId String       @db.ObjectId
+  quiz          Quiz           @relation(fields: [quizId], references: [id])
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+}
+
+model AnswerOption {
+  id            String       @id @default(auto()) @map("_id") @db.ObjectId
+  questionId    String       @db.ObjectId
+  content       String
+  question      QuizQuestion @relation(fields: [questionId], references: [id])
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+}
+
+model UserQuizResult {
+  id          String       @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String
+  quizId      String       @db.ObjectId
+  score       Int
+  completedAt DateTime     @default(now())
+  quiz        Quiz         @relation(fields: [quizId], references: [id])
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model Competition {
+  id          String         @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  description String?
+  competitors Competitor[]
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+}
+
+model Competitor {
+  id            String       @id @default(auto()) @map("_id") @db.ObjectId
+  competitionId String       @db.ObjectId
+  userId        String
+  score         Int
+  isWinner      Boolean
+  competition   Competition  @relation(fields: [competitionId], references: [id])
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+}
