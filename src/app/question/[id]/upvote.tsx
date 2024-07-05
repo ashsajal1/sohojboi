@@ -1,7 +1,7 @@
 'use client'
 
 import { Button } from "@/components/ui/button";
-import { handleUpvote } from "./action";
+import { handleUpvote } from "./actions";
 import { useOptimistic, useTransition } from "react";
 
 interface AnswersParams {

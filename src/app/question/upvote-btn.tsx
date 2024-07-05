@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/ui/button'
 import React, { useOptimistic, useTransition } from 'react'
-import { handleQuestionUpvote } from './action'
+import { handleQuestionUpvote } from './actions'
 
 export default function UpvoteBtn({ id, upvoteCount }: { id: string, upvoteCount: number }) {
     const [optimisticUpvotes, addOptimisticUpvote] = useOptimistic(
