@@ -10,6 +10,7 @@ interface AnswersParams {
     questionId: string;
     answer: string;
     upvoteCount: number;
+    userFullName: string;
 }
 
 interface AnswersProps {
@@ -28,7 +29,7 @@ export const Answers = (answers: AnswersProps) => {
         {answers.answers.map(answer => (
             <Card key={answer.id}>
                 <CardHeader>
-                    <CardTitle>John doe</CardTitle>
+                    <CardTitle>{answer.userFullName}</CardTitle>
                 </CardHeader>
                 <CardContent>
                     {answer.answer}
