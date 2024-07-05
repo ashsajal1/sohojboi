@@ -26,7 +26,7 @@ export default async function Question({ params }: Params) {
         if (answerText) {
             const answer = await prisma.answer.create({
                 data: {
-                    userId: "123",
+                    userId: user?.id as string,
                     questionId: params.id,
                     upvoteCount: 0,
                     answer: answerText as string,
