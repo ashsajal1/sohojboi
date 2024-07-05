@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Button } from "./ui/button";
 import { ModeToggle } from "./mode-toggle";
-import { UserButton, SignedIn } from '@clerk/nextjs'
+import { UserButton, SignedIn, SignedOut } from '@clerk/nextjs'
 
 export default function Navbar() {
     return (
@@ -15,6 +15,11 @@ export default function Navbar() {
                 <SignedIn>
                     <UserButton />
                 </SignedIn>
+                <SignedOut>
+                    <Link href={'/login'}>
+                        <Button>Login</Button>
+                    </Link>
+                </SignedOut>
             </div>
         </nav>
     )
