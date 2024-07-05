@@ -5,6 +5,8 @@ import prisma from "@/lib/prisma"
 import { isValidObjectId } from "@/lib/validate";
 import { revalidatePath } from "next/cache";
 import Upvote from "./upvote";
+import { SignedIn, SignedOut } from "@clerk/nextjs";
+import Link from "next/link";
 
 interface Params {
     params: {
@@ -64,10 +66,16 @@ export default async function Question({ params }: Params) {
 
                 <CardContent>
                     <div>{question?.questionDescription}</div>
-                    <form action={postAnswer}>
-                        <Textarea name="answerText" rows={6} placeholder="Enter your asnwer..."></Textarea>
-                        <Button className="mt-3">Submit</Button>
-                    </form>
+                    <SignedIn>
+                        <form action={postAnswer}>
+                            <Textarea name="answerText" rows={6} placeholder="Enter your asnwer..."></Textarea>
+                            <Button className="mt-3">Submit</Button>
+                        </form>
+                    </SignedIn>
+                    <SignedOut>
+                        <h3 className="font-bold text-muted-foreground text-xl"><Link className="text-primary border-b" href={'/login'}>Login</Link> to post your answer</h3>
+                    </SignedOut>
+
                 </CardContent>
 
                 <CardFooter className="flex flex-col items-start">
@@ -93,7 +101,7 @@ interface AnswersProps {
     answers: AnswersParams[];
 }
 const Answers = (answers: AnswersProps) => {
-    
+
     if (answers.answers.length === 0) {
         return <h2 className="font-bold text-xl text-center text-muted-foreground">
             Answers is empty!
@@ -111,7 +119,7 @@ const Answers = (answers: AnswersProps) => {
                 </CardContent>
 
                 <CardFooter>
-                   <Upvote id={answer.id} upvoteCount={answer.upvoteCount} />
+                    <Upvote id={answer.id} upvoteCount={answer.upvoteCount} />
                 </CardFooter>
             </Card>
         ))}
