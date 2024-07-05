@@ -5,6 +5,7 @@ import { clerkClient } from "@clerk/nextjs/server";
 import { type Answer } from "@prisma/client";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import { formatDate } from "@/lib/date-format";
 
 interface AnswersProps {
     answers: Answer[];
@@ -40,8 +41,9 @@ const Answer = async ({ answer }: { answer: Answer }) => {
             {profileImageSrc && <Image className="rounded-full" width={30} height={30} src={profileImageSrc} alt={"Profile image"} />}
             <CardTitle>{answer.userFullName}</CardTitle>
         </CardHeader>
-        <CardContent>
-            {answer.answer}
+        <CardContent className="flex flex-col gap-2">
+            <span>{answer.answer}</span>
+            <span className="text-sm text-muted-foreground">Answered {formatDate(answer.createdAt)}</span>
         </CardContent>
 
         <CardFooter>
