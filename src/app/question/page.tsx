@@ -3,7 +3,11 @@ import QuestionCard from "./question-card";
 import { Card, CardTitle } from "@/components/ui/card";
 
 export default async function Question() {
-    const questions = await prisma.question.findMany();
+    const questions = await prisma.question.findMany({
+        orderBy: {
+            createdAt: 'desc'
+        }
+    });
     // console.log(questions)
 
     if(questions.length === 0) {

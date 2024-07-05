@@ -54,6 +54,9 @@ export default async function Question({ params }: Params) {
                 where: {
                     questionId: params.id,
                 },
+                orderBy: {
+                    createdAt: 'desc'
+                }
             });
         } catch (error) {
             throw new Error('Error fetching question:', error || '');
