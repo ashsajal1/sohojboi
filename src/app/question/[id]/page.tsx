@@ -8,6 +8,7 @@ import Upvote from "./upvote";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
 import Link from "next/link";
 import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
 
 interface Params {
     params: {
@@ -83,8 +84,6 @@ export default async function Question({ params }: Params) {
                 </CardContent>
 
                 <CardFooter className="flex flex-col items-start">
-                    <h2 className="mb-4">Others answers :</h2>
-
                     <Answers answers={answers} />
                 </CardFooter>
             </Card>
@@ -113,6 +112,7 @@ const Answers = (answers: AnswersProps) => {
     }
 
     return <div className="flex flex-col gap-2 w-full">
+        <Badge variant={'secondary'} className="mb-4">Community answers :</Badge>
         {answers.answers.map(answer => (
             <Card key={answer.id}>
                 <CardHeader>
