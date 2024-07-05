@@ -4,7 +4,6 @@ import { Textarea } from "@/components/ui/textarea";
 import prisma from "@/lib/prisma"
 import { isValidObjectId } from "@/lib/validate";
 import { revalidatePath } from "next/cache";
-import Upvote from "./upvote";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
@@ -37,8 +36,6 @@ export default async function Question({ params }: Params) {
             });
 
             revalidatePath(`/question/${params.id}`)
-
-            // console.log(answer)
         }
     }
     let question = null;
@@ -65,7 +62,6 @@ export default async function Question({ params }: Params) {
         throw new Error('Invalid ObjectId');
     }
 
-    // console.log(question)
     return (
         <div className="mt-2">
             <Card>
