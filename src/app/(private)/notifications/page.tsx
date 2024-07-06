@@ -4,7 +4,6 @@ import React from 'react'
 import { Notification } from "@prisma/client"
 import { Card, CardHeader, CardTitle } from '@/components/ui/card';
 import { formatDate } from '@/lib/date-format';
-import { Badge } from '@/components/ui/badge';
 import MarkReadBtn from './mark-read-btn';
 
 export default async function page() {
@@ -15,6 +14,9 @@ export default async function page() {
             notifications = await prisma.notification.findMany({
                 where: {
                     userId: userId as string
+                },
+                orderBy: {
+                    createdAt: 'desc'
                 }
             })
         } catch (error) {
