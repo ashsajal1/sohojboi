@@ -31,7 +31,7 @@ export default async function Navbar() {
                 <SignedIn>
                     <Link href={'/notifications'}>
                         <Button className="relative mx-2" size={'icon'} variant={'outline'}>
-                            {notifications?.length || 0 > 0 && <Badge className="absolute -right-3 -top-3" variant={'destructive'}>{notifications?.length}</Badge>}
+                            {(notifications?.length || 0 > 0) && <Badge className="absolute -right-3 -top-3" variant={'destructive'}>{notifications?.length}</Badge>}
                             <BellIcon />
                         </Button></Link>
                 </SignedIn>
