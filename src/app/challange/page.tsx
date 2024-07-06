@@ -41,7 +41,9 @@ export default async function page({ searchParams }: { searchParams: any }) {
   })).map(quesitons => quesitons.questions)[0];
   const competitions = await prisma.competition.findMany({
     where: {
-      challengerId: user.userId as string,
+      challengerId: {
+        not: user.userId as string
+      },
       status: { equals: "pending" }
     }
   })
