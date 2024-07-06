@@ -2,6 +2,9 @@ import React from 'react'
 import Challange from './challange'
 import prisma from '@/lib/prisma';
 import { auth } from '@clerk/nextjs/server'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 export default async function page({ searchParams }: { searchParams: any }) {
   const user = auth();
@@ -35,8 +38,31 @@ export default async function page({ searchParams }: { searchParams: any }) {
       }))
     }))
   })).map(quesitons => quesitons.questions)[0];
+  const competitions = await prisma.competition.findMany({
+    where: {
+      challengerId: user.userId as string,
+      status: { equals: "pending" }
+    }
+  })
+
+  console.log("Competitions : ", competitions)
   return (
     <div>
+
+      {competitions.map(c => (
+        <Card key={c.id}>
+          <CardHeader>
+            <CardTitle>
+              {c.title}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Link href={`/challange/accept?competitionId=${c.id}`}>
+              <Button>Accept Challange</Button>
+            </Link>
+          </CardContent>
+        </Card>
+      ))}
       {showQuiz && <Challange quizId={quizzes[0].id} challangerId={user.userId as string} challangeeId={challangeeId} quizQuestions={quizQuestions} />}
     </div>
   )
