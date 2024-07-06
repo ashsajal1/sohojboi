@@ -9,8 +9,6 @@ import Select from './select';
 
 export default async function page({ searchParams }: { searchParams: any }) {
   const user = auth();
-  // console.log("Search : ", searchParams)
-  // const topic = searchParams.topic;
   const challengeeId = searchParams.challengeeId;
   const showQuiz = challengeeId;
   const quizzes = await prisma.quiz.findMany({
@@ -46,17 +44,15 @@ export default async function page({ searchParams }: { searchParams: any }) {
       },
       status: { equals: "pending" }
     }
-  })
+  });
 
-  // console.log("Competitions : ", competitions)
   let users: any = await (await clerkClient().users.getUserList()).data;
   users = JSON.parse(JSON.stringify(users))
-  console.log(users)
   return (
     <div>
 
       {(!showQuiz) && <div>
-        <h1>Select opponent</h1>
+        <h1 className='p-4 text-center font-bold'>Select opponent</h1>
         <Select users={users} />
       </div>}
       {competitions.map(c => (
