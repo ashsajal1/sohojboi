@@ -55,7 +55,7 @@ export default async function page({ searchParams }: { searchParams: any }) {
         <h1 className='p-4 text-center font-bold'>Select opponent</h1>
         <Select users={users} userId={user.userId as string} />
       </div>}
-      {competitions.map(c => (
+      {(!showQuiz) && competitions.map(c => (
         <Card key={c.id}>
           <CardHeader>
             <CardTitle>
