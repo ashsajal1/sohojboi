@@ -1,12 +1,14 @@
 "use server";
 
 import prisma from "@/lib/prisma";
+import { clerkClient } from "@clerk/nextjs/server";
 
 export const createCompetition = async (
   challangeeId: string,
   challangerId: string,
   quizId: string,
   challengerScore: number
+  // challengerName: string,
 ) => {
   const competition = await prisma.competition.create({
     data: {
@@ -20,12 +22,14 @@ export const createCompetition = async (
     },
   });
   // console.log(competition)
+
+  const challengerName = (await clerkClient().users.getUser(challangerId)).fullName;
   const notif = await prisma.notification.create({
     data: {
       userId: challangeeId,
-      message: `${challangerId} challenged you in a quiz!`
-    }
-  })
+      message: `${challengerName} challenged you in a quiz!`,
+    },
+  });
 
-  console.log(notif)
+  // console.log(notif)
 };
