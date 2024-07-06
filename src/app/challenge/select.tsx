@@ -12,7 +12,6 @@ export default function Select({ users, userId }: { users: User[], userId: strin
     const handleSearchParms = (userId: string) => {
         const params = new URLSearchParams(searchParams);
         params.set('challengeeId', userId);
-        console.log(params);
         replace(`${pathName}?${params.toString()}`);
     }
 
@@ -25,9 +24,6 @@ export default function Select({ users, userId }: { users: User[], userId: strin
                         <CardTitle>{user.firstName} {user.lastName}</CardTitle>
                         <Button onClick={() => handleSearchParms(user.id)}>Select user</Button>
                     </CardHeader>
-
-
-
                 </Card>
             ))}
         </div>
