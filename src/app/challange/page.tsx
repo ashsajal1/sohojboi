@@ -10,9 +10,9 @@ import Select from './select';
 export default async function page({ searchParams }: { searchParams: any }) {
   const user = auth();
   // console.log("Search : ", searchParams)
-  const topic = searchParams.topic;
-  const challangeeId = searchParams.challangeeId;
-  const showQuiz = challangeeId && topic;
+  // const topic = searchParams.topic;
+  const challengeeId = searchParams.challengeeId;
+  const showQuiz = challengeeId;
   const quizzes = await prisma.quiz.findMany({
     orderBy: {
       createdAt: 'desc'
@@ -54,7 +54,7 @@ export default async function page({ searchParams }: { searchParams: any }) {
     <div>
 
       {(!showQuiz) && <div>
-        <h1>Select opponent and weapon</h1>
+        <h1>Select opponent</h1>
         <Select users={users} />
       </div>}
       {competitions.map(c => (
@@ -71,7 +71,7 @@ export default async function page({ searchParams }: { searchParams: any }) {
           </CardContent>
         </Card>
       ))}
-      {showQuiz && <Challange quizId={quizzes[0].id} challangerId={user.userId as string} challangeeId={challangeeId} quizQuestions={quizQuestions} />}
+      {showQuiz && <Challange quizId={quizzes[0].id} challangerId={user.userId as string} challangeeId={challengeeId} quizQuestions={quizQuestions} />}
     </div>
   )
 }
