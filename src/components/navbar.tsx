@@ -28,11 +28,13 @@ export default async function Navbar() {
             <div className="flex items-center gap-2">
                 <ModeToggle />
                 <SignedIn>
-                    <Button className="relative mx-2" size={'icon'} variant={'outline'}>
-                        <Badge className="absolute -right-3 -top-3" variant={'destructive'}>{notifications?.length}</Badge>
-                        <BellIcon />
-                    </Button>
+                    <Link href={'/notifications'}>
+                        <Button className="relative mx-2" size={'icon'} variant={'outline'}>
+                            <Badge className="absolute -right-3 -top-3" variant={'destructive'}>{notifications?.length}</Badge>
+                            <BellIcon />
+                        </Button></Link>
                 </SignedIn>
+
                 <Link href={'/question'}>
                     <Button>Question</Button>
                 </Link>
