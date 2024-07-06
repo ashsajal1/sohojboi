@@ -5,7 +5,7 @@ import { User } from "@clerk/nextjs/server"
 import { Button } from "@/components/ui/button"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 
-export default function Select({ users }: { users: User[] }) {
+export default function Select({ users, userId }: { users: User[], userId: string }) {
     const searchParams = useSearchParams();
     const pathName = usePathname();
     const { replace } = useRouter()
@@ -15,9 +15,11 @@ export default function Select({ users }: { users: User[] }) {
         console.log(params);
         replace(`${pathName}?${params.toString()}`);
     }
+
+    const filteredUsers = users.filter(user => user.id != userId)
     return (
         <div>
-            {users.map(user => (
+            {filteredUsers.map(user => (
                 <Card key={user.id}>
                     <CardHeader className="flex items-center justify-between">
                         <CardTitle>{user.firstName} {user.lastName}</CardTitle>
