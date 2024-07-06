@@ -7,6 +7,7 @@ import { completeCompetition } from './actions';
 interface QuizQuestionsProps {
     competitionId: string,
     challengerId: string,
+    winnerId: string | null,
     quizQuestions: {
         id: string;
         text: string;
@@ -18,7 +19,7 @@ interface QuizQuestionsProps {
     }[];
 }
 
-const Challange: React.FC<QuizQuestionsProps> = ({ quizQuestions, competitionId, challengerId }) => {
+const Challange: React.FC<QuizQuestionsProps> = ({ quizQuestions, competitionId, challengerId, winnerId }) => {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [selectedOption, setSelectedOption] = useState<string | null>(null);
     const [score, setScore] = useState(0);
@@ -44,7 +45,7 @@ const Challange: React.FC<QuizQuestionsProps> = ({ quizQuestions, competitionId,
             setSelectedOption(null);
         } else {
             setShowResults(true);
-            await completeCompetition(competitionId, score, challengerId)
+            await completeCompetition(competitionId, score, challengerId, winnerId)
         }
     };
 
