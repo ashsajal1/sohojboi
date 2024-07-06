@@ -1,13 +1,10 @@
 import React from 'react';
 import prisma from '@/lib/prisma';
-import { auth } from '@clerk/nextjs/server';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import AcceptBtn from './accept-btn';
 import Challange from './challange-quiz';
 
 export default async function AcceptChallengePage({ searchParams }: { searchParams: any }) {
-    const { userId } = auth();
     const { competitionId } = searchParams;
 
     if (!competitionId) {
@@ -78,6 +75,7 @@ export default async function AcceptChallengePage({ searchParams }: { searchPara
     if (!competition) {
         return <div>Competition not found.</div>;
     }
+    
 
     return (
         <div>
@@ -88,7 +86,7 @@ export default async function AcceptChallengePage({ searchParams }: { searchPara
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <Challange competitionId={competition.id} quizQuestions={quizQuestions} />
+                    <Challange challengerId={competition.challengerId} competitionId={competition.id} quizQuestions={quizQuestions} />
                     <AcceptBtn competitionId={competitionId} />
                 </CardContent>
             </Card>

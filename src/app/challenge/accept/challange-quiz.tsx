@@ -6,6 +6,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/componen
 import { completeCompetition } from './actions';
 interface QuizQuestionsProps {
     competitionId: string,
+    challengerId: string,
     quizQuestions: {
         id: string;
         text: string;
@@ -17,7 +18,7 @@ interface QuizQuestionsProps {
     }[];
 }
 
-const Challange: React.FC<QuizQuestionsProps> = ({ quizQuestions, competitionId }) => {
+const Challange: React.FC<QuizQuestionsProps> = ({ quizQuestions, competitionId, challengerId }) => {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [selectedOption, setSelectedOption] = useState<string | null>(null);
     const [score, setScore] = useState(0);
@@ -43,7 +44,7 @@ const Challange: React.FC<QuizQuestionsProps> = ({ quizQuestions, competitionId 
             setSelectedOption(null);
         } else {
             setShowResults(true);
-            await completeCompetition(competitionId, score)
+            await completeCompetition(competitionId, score, challengerId)
         }
     };
 
