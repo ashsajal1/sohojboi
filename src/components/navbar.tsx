@@ -15,7 +15,8 @@ export default async function Navbar() {
         try {
             notifications = await prisma.notification.findMany({
                 where: {
-                    userId: userId as string
+                    userId: userId as string,
+                    read: false
                 }
             })
         } catch (error) {
