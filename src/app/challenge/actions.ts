@@ -10,10 +10,12 @@ export const createCompetition = async (
   challengerScore: number
   // challengerName: string,
 ) => {
+  const challengerName = (await clerkClient().users.getUser(challangerId)).fullName;
+  const challengeeName = (await clerkClient().users.getUser(challangeeId)).fullName;
   const competition = await prisma.competition.create({
     data: {
-      title: `${challangerId} vs ${challangeeId}`,
-      description: `A competition`,
+      title: `${challengerName} vs ${challengeeName}`,
+      description: `A competition between ${challengerName} and ${challengeeName}`,
       quizId: quizId,
       challengerId: challangerId,
       challengeeId: challangeeId,
@@ -23,7 +25,7 @@ export const createCompetition = async (
   });
   // console.log(competition)
 
-  const challengerName = (await clerkClient().users.getUser(challangerId)).fullName;
+  
   const notif = await prisma.notification.create({
     data: {
       userId: challangeeId,
