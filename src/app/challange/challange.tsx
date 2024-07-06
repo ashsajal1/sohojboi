@@ -3,7 +3,11 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { createCompetition } from './actions';
 interface QuizQuestionsProps {
+    challangeeId: string,
+    challangerId: string,
+    quizId: string,
     quizQuestions: {
         id: string;
         text: string;
@@ -15,7 +19,7 @@ interface QuizQuestionsProps {
     }[];
 }
 
-const Challange: React.FC<QuizQuestionsProps> = ({ quizQuestions }) => {
+const Challange: React.FC<QuizQuestionsProps> = ({challangeeId, challangerId, quizQuestions, quizId }) => {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [selectedOption, setSelectedOption] = useState<string | null>(null);
     const [score, setScore] = useState(0);
@@ -26,7 +30,7 @@ const Challange: React.FC<QuizQuestionsProps> = ({ quizQuestions }) => {
         setSelectedOption(optionId);
     };
 
-    const nextQuestion = () => {
+    const nextQuestion = async () => {
         const currentQuestion = quizQuestions[currentQuestionIndex]; // Access the current question directly
         const isCorrect = currentQuestion.options.find(
             (option) => option.id === selectedOption
@@ -41,6 +45,7 @@ const Challange: React.FC<QuizQuestionsProps> = ({ quizQuestions }) => {
             setSelectedOption(null);
         } else {
             setShowResults(true);
+            await createCompetition(challangeeId, challangerId,quizId, score)
         }
     };
 

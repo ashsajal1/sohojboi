@@ -90,8 +90,8 @@ model Competition {
   title           String
   description     String?
   quizId          String   @db.ObjectId
-  challengerId    String   @db.ObjectId
-  challengeeId    String   @db.ObjectId
+  challengerId    String   
+  challengeeId    String  
   challengerScore Int
   challengeeScore Int?
   status          String   @default("pending")
