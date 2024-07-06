@@ -24,7 +24,7 @@ export default async function page() {
         }
     }
     return (
-        <div>
+        <div className='flex flex-col gap-2'>
             {notifications?.map(notification => (
                 <Card key={notification.id}>
                     <CardHeader>
