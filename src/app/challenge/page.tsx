@@ -63,7 +63,7 @@ export default async function page({ searchParams }: { searchParams: any }) {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <Link href={`/challange/accept?competitionId=${c.id}`}>
+            <Link href={`/challenge/accept?competitionId=${c.id}`}>
               <Button>Accept Challange</Button>
             </Link>
           </CardContent>
