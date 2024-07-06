@@ -29,7 +29,7 @@ export default async function page() {
                         <CardTitle>{notification.message}</CardTitle>
                         <div className='flex items-center gap-2'>
                             <p className='text-sm text-muted-foreground'>{formatDate(notification.createdAt)}</p>
-                            <MarkReadBtn notificationId={notification.id} />
+                            <MarkReadBtn status={notification.read} notificationId={notification.id} />
                         </div>
                     </CardHeader>
                 </Card>

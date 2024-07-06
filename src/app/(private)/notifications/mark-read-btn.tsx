@@ -5,11 +5,18 @@ import React from 'react'
 import { handleMarkRead } from './actions';
 
 export default function MarkReadBtn({
-    notificationId,
+    notificationId, status
 }: {
-  notificationId: string;
+    notificationId: string;
+    status: boolean
 }) {
     return (
-        <Badge onClick={() => handleMarkRead(notificationId)} className='cursor-pointer select-none' variant={'outline'}>Mark as read</Badge>
+        <>
+            {(!status) &&
+                < Badge onClick={() => handleMarkRead(notificationId)
+                } className='cursor-pointer select-none' variant={'outline'} >
+                    Mark as read
+                </Badge >}
+        </>
     )
 }
