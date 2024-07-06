@@ -1,9 +1,10 @@
 "use client"
 
-import { Card, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { User } from "@clerk/nextjs/server"
 import { Button } from "@/components/ui/button"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
+import Image from "next/image"
 
 export default function Select({ users, userId }: { users: User[], userId: string }) {
     const searchParams = useSearchParams();
@@ -16,14 +17,15 @@ export default function Select({ users, userId }: { users: User[], userId: strin
     }
 
     const filteredUsers = users.filter(user => user.id != userId)
+
     return (
-        <div>
+        <div className="flex flex-wrap gap-2">
             {filteredUsers.map(user => (
-                <Card key={user.id}>
-                    <CardHeader className="flex items-center justify-between">
-                        <CardTitle>{user.firstName} {user.lastName}</CardTitle>
-                        <Button onClick={() => handleSearchParms(user.id)}>Select user</Button>
-                    </CardHeader>
+                <Card className="flex items-center justify-between p-4 gap-2" key={user.id}>
+                    <Image className="rounded-full" width={30} height={30} src={user.imageUrl} alt={"Profile image"} />
+                    <CardTitle>{user.firstName} {user.lastName}</CardTitle>
+                    <Button onClick={() => handleSearchParms(user.id)}>Select user</Button>
+
                 </Card>
             ))}
         </div>

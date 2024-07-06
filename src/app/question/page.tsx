@@ -8,8 +8,7 @@ export default async function Question() {
             createdAt: 'desc'
         }
     });
-    // console.log(questions)
-
+ 
     if(questions.length === 0) {
         return <Card className="p-4 m-12">
             <CardTitle>Question is empty!</CardTitle>

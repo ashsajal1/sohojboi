@@ -49,9 +49,9 @@ export default async function page({ searchParams }: { searchParams: any }) {
   let users: any = await (await clerkClient().users.getUserList()).data;
   users = JSON.parse(JSON.stringify(users))
   return (
-    <div>
+    <div className='flex flex-col items-center gap-2'>
 
-      {(!showQuiz) && <div>
+      {(!showQuiz) && <div className='mb-2'>
         <h1 className='p-4 text-center font-bold'>Select opponent</h1>
         <Select users={users} userId={user.userId as string} />
       </div>}
