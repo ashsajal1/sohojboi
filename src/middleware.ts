@@ -6,6 +6,7 @@ import {
 const isProtectedRoute = createRouteMatcher([
   '/question/create(.*)',
   '/challenge',
+  '/notifications',
 ]);
 
 export default clerkMiddleware((auth, req) => {
