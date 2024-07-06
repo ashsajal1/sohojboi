@@ -1,14 +1,15 @@
 import React from 'react'
 import Challange from './challange'
 import prisma from '@/lib/prisma';
-import { auth } from '@clerk/nextjs/server'
+import { auth, clerkClient, User } from '@clerk/nextjs/server'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import Select from './select';
 
 export default async function page({ searchParams }: { searchParams: any }) {
   const user = auth();
-  console.log("Search : ", searchParams)
+  // console.log("Search : ", searchParams)
   const topic = searchParams.topic;
   const challangeeId = searchParams.challangeeId;
   const showQuiz = challangeeId && topic;
@@ -45,10 +46,17 @@ export default async function page({ searchParams }: { searchParams: any }) {
     }
   })
 
-  console.log("Competitions : ", competitions)
+  // console.log("Competitions : ", competitions)
+  let users: any = await (await clerkClient().users.getUserList()).data;
+  users = JSON.parse(JSON.stringify(users))
+  console.log(users)
   return (
     <div>
 
+      {(!showQuiz) && <div>
+        <h1>Select opponent and weapon</h1>
+        <Select users={users} />
+      </div>}
       {competitions.map(c => (
         <Card key={c.id}>
           <CardHeader>
