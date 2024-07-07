@@ -105,8 +105,8 @@ const Winner = async ({ challengerId, challengeeId, userId, challengerScore, cha
     let resultText = '';
     let badgeVariant: 'secondary' | 'destructive' = 'secondary';
 
-    const challenger = await clerkClient.users.getUser(challengerId);
-    const challengee = await clerkClient.users.getUser(challengeeId);
+    const challenger = await clerkClient().users.getUser(challengerId);
+    const challengee = await clerkClient().users.getUser(challengeeId);
 
     if (challengerScore === challengeeScore) {
         resultText = 'It\'s a draw';
