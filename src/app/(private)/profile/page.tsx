@@ -157,5 +157,5 @@ const Names = async ({ challenge }: { challenge: Competition }) => {
 function calculateWinPercentage(wins: number, losses: number): number {
     const totalGames = wins + losses;
     if (totalGames === 0) return 0; // Avoid division by zero
-    return (wins / totalGames) * 100;
+    return parseFloat(((wins / totalGames) * 100).toFixed(2));
 }
