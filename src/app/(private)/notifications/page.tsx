@@ -42,7 +42,7 @@ export default async function page() {
             ))}
             <h3 className='mt-3'>Old notifications</h3>
             {oldNotificatons?.map(notification => (
-                <Card key={notification.id}>
+                <Card className='text-muted-foreground' key={notification.id}>
                     <CardHeader>
                         <CardTitle>{notification.message}</CardTitle>
                         <div className='flex items-center gap-2'>
