@@ -115,6 +115,7 @@ model Notification {
   type          NotificationType
   competitionId String?          @db.ObjectId
   postId        String?          @db.ObjectId
+  answerId      String?          @db.ObjectId
   createdAt     DateTime         @default(now())
   updatedAt     DateTime         @updatedAt
 }
