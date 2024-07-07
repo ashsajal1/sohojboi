@@ -12,12 +12,13 @@ import {
 import QuestionCard from "@/app/question/question-card";
 import { Answers } from "@/app/question/[id]/answers";
 import { clerkClient, currentUser } from '@clerk/nextjs/server';
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { Competition } from "@prisma/client";
+import { getUserWinLoseStats } from "@/lib/db-query";
 
 export default async function Page() {
     const user = await currentUser();
+    const challangeStats = await getUserWinLoseStats(user?.id || '')
+
     // console.log(user)
     const questions = await prisma.question.findMany({
         where: {
@@ -58,6 +59,7 @@ export default async function Page() {
                         <Label>User stats : </Label>
                         <Badge>Total questions : {questions.length}</Badge>
                         <Badge>Total answers : {answers.length}</Badge>
+                        <Badge>Challenge win percentage : {calculateWinPercentage(challangeStats.wins, challangeStats.losses)}%</Badge>
                     </div>
                 </CardContent>
             </Card>
@@ -143,4 +145,10 @@ const Names = async ({ challenge }: { challenge: Competition }) => {
         <p><strong>{challenger}&apos;s Score:</strong> {challenge.challengerScore}</p>
         <p><strong>{challengee}&apos;s Score:</strong> {challenge.challengeeScore}</p>
     </>
+}
+
+function calculateWinPercentage(wins: number, losses: number): number {
+    const totalGames = wins + losses;
+    if (totalGames === 0) return 0; // Avoid division by zero
+    return (wins / totalGames) * 100;
 }
