@@ -100,11 +100,21 @@ model Competition {
   quiz            Quiz     @relation(fields: [quizId], references: [id])
 }
 
+enum NotificationType {
+  CHALLENGE
+  UPVOTE
+  ANSWER
+  FOLLOW
+}
+
 model Notification {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId    String
-  message   String
-  read      Boolean  @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id            String           @id @default(auto()) @map("_id") @db.ObjectId
+  userId        String           @db.ObjectId
+  message       String
+  read          Boolean          @default(false)
+  type          NotificationType
+  competitionId String?          @db.ObjectId
+  postId        String?          @db.ObjectId
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
 }
