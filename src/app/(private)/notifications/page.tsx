@@ -8,6 +8,7 @@ import MarkReadBtn from './mark-read-btn';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
 import ViewBtn from './view-btn';
+import { cn } from '@/lib/utils';
 
 export default async function page() {
     const userId = auth().userId;
@@ -58,7 +59,7 @@ export default async function page() {
                             <MarkReadBtn status={notification.read} notificationId={notification.id} />
 
                             <Link href={`${getPathnameByNotificationType(notification)}`}>
-                                <Badge variant={'outline'}>
+                                <Badge className={cn('text-muted-foreground')} variant={'outline'}>
                                     View {getPathnameByNotificationType(notification)?.split('/')[1]}
                                 </Badge>
                             </Link>
