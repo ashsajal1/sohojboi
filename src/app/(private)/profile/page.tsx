@@ -11,12 +11,19 @@ import {
 } from "@/components/ui/tabs"
 import QuestionCard from "@/app/question/question-card";
 import { Answers } from "@/app/question/[id]/answers";
-import { clerkClient, currentUser } from '@clerk/nextjs/server';
+import { clerkClient, currentUser, User } from '@clerk/nextjs/server';
 import { Competition } from "@prisma/client";
 import { getUserWinLoseStats } from "@/lib/db-query";
 
-export default async function Page() {
-    const user = await currentUser();
+export default async function Page({ params }: { params: { id: string } }) {
+    let user: User | null;
+
+    if(!params.id) {
+        user = await currentUser();
+    } else {
+        user = await clerkClient().users.getUser(params.id)
+    }
+
     const challangeStats = await getUserWinLoseStats(user?.id || '')
 
     // console.log(user)
