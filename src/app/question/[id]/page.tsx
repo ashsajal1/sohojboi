@@ -38,15 +38,17 @@ export default async function Question({ params }: Params) {
                 },
             });
 
-            const notif = await prisma.notification.create({
-                data: {
-                    userId: questionUserId as string,
-                    message: `${user?.fullName} has answered your questions.`,
-                    type: NotificationType.ANSWER,
-                    answerId: answer.id,
-                    questionId: answer.questionId
-                }
-            })
+            if (user?.id !== questionUserId) {
+                const notif = await prisma.notification.create({
+                    data: {
+                        userId: questionUserId as string,
+                        message: `${user?.fullName} has answered your questions.`,
+                        type: NotificationType.ANSWER,
+                        answerId: answer.id,
+                        questionId: answer.questionId
+                    }
+                })
+            }
 
             revalidatePath(`/question/${params.id}`)
         }
