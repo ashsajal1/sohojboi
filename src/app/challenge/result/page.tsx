@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 
 export default async function ResultPage({ searchParams }: { searchParams: any }) {
-  const { userId } = auth();
+  const { userId } = await auth();
   const { competitionId } = searchParams;
 
   if (!competitionId) {
@@ -46,10 +46,16 @@ export default async function ResultPage({ searchParams }: { searchParams: any }
           <p><strong>Your Score:</strong> {userScore}</p>
           <p><strong>Opponent&apos;s Score:</strong> {opponentScore}</p>
           <p><strong>Status:</strong> {competition.status}</p>
+          {userId === competition.challengeeId && <div className='mt-2'>
+            <Link href={`/challenge/accept?competitionId=${competition.id}`}>
+              <Button variant={'destructive'}>
+                Accept Challange
+              </Button></Link>
+          </div>}
         </CardContent>
       </Card>
       <div>
-        <Link href="/challange">
+        <Link href="/challenge">
           <Button>Back to Competitions</Button>
         </Link>
       </div>
