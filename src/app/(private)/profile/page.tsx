@@ -15,13 +15,13 @@ import { clerkClient, currentUser, User } from '@clerk/nextjs/server';
 import { Competition } from "@prisma/client";
 import { getUserWinLoseStats } from "@/lib/db-query";
 
-export default async function Page({ params }: { params: { id: string } }) {
+export default async function Page({ searchParams }: { searchParams: { id: string } }) {
     let user: User | null;
 
-    if(!params.id) {
+    if(!searchParams.id) {
         user = await currentUser();
     } else {
-        user = await clerkClient().users.getUser(params.id)
+        user = await clerkClient().users.getUser(searchParams.id)
     }
 
     const challangeStats = await getUserWinLoseStats(user?.id || '')

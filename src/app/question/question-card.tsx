@@ -25,7 +25,7 @@ export default function QuestionCard({ question }: QuestionProps) {
                 <CardTitle>{question.questionTitle}</CardTitle>
                 <div className="text-sm text-muted-foreground flex items-center gap-2">
                     <span>Asked {formatDate(question.createdAt)} by</span>
-                    <Link href={`/user/${question.userId}`} className="text-primary border-b">{question.userFullName}</Link>
+                    <Link href={`/profile?id=${question.userId}`} className="text-primary border-b">{question.userFullName}</Link>
                 </div>
             </CardHeader>
 
