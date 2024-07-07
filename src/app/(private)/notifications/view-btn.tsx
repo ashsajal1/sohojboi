@@ -11,6 +11,10 @@ const getPathnameByNotificationType = (notification: Notification | null): strin
             return `/question/${notification.questionId}`
         case NotificationType.CHALLENGE:
             return `/challenge/result?competitionId=${notification.competitionId}`
+        case NotificationType.UPVOTE_ANSWER:
+            return `/question/${notification.questionId}`
+        case NotificationType.UPVOTE_QUESTION:
+            return `/question/${notification.questionId}`
         default:
             return undefined
     }
