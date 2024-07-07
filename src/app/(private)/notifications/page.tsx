@@ -23,9 +23,25 @@ export default async function page() {
             notifications = null
         }
     }
+
+    const oldNotificatons = notifications?.filter(n => n.read === true)
+    const newNotificatons = notifications?.filter(n => n.read === false)
     return (
         <div className='flex flex-col gap-2'>
-            {notifications?.map(notification => (
+            <h3>Unread notifications</h3>
+            {newNotificatons?.map(notification => (
+                <Card key={notification.id}>
+                    <CardHeader>
+                        <CardTitle>{notification.message}</CardTitle>
+                        <div className='flex items-center gap-2'>
+                            <p className='text-sm text-muted-foreground'>{formatDate(notification.createdAt)}</p>
+                            <MarkReadBtn status={notification.read} notificationId={notification.id} />
+                        </div>
+                    </CardHeader>
+                </Card>
+            ))}
+            <h3 className='mt-3'>Old notifications</h3>
+            {oldNotificatons?.map(notification => (
                 <Card key={notification.id}>
                     <CardHeader>
                         <CardTitle>{notification.message}</CardTitle>
