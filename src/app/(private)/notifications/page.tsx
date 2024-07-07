@@ -1,10 +1,12 @@
 import prisma from '@/lib/prisma';
 import { auth } from '@clerk/nextjs/server';
 import React from 'react'
-import { Notification } from "@prisma/client"
+import { Notification, NotificationType } from "@prisma/client"
 import { Card, CardHeader, CardTitle } from '@/components/ui/card';
 import { formatDate } from '@/lib/date-format';
 import MarkReadBtn from './mark-read-btn';
+import Link from 'next/link';
+import { Badge } from '@/components/ui/badge';
 
 export default async function page() {
     const userId = auth().userId;
@@ -38,6 +40,12 @@ export default async function page() {
                         <div className='flex items-center gap-2'>
                             <p className='text-sm text-muted-foreground'>{formatDate(notification.createdAt)}</p>
                             <MarkReadBtn status={notification.read} notificationId={notification.id} />
+
+                            <Link href={`${getPathnameByNotificationType(notification.type)}`}>
+                                <Badge variant={'outline'}>
+                                    View {getPathnameByNotificationType(notification.type)?.split('/')[1]}
+                                </Badge>
+                            </Link>
                         </div>
                     </CardHeader>
                 </Card>
@@ -51,6 +59,12 @@ export default async function page() {
                         <div className='flex items-center gap-2'>
                             <p className='text-sm text-muted-foreground'>{formatDate(notification.createdAt)}</p>
                             <MarkReadBtn status={notification.read} notificationId={notification.id} />
+
+                            <Link href={`/`}>
+                                <Badge variant={'outline'}>
+                                    View {notification.type}
+                                </Badge>
+                            </Link>
                         </div>
                     </CardHeader>
                 </Card>
@@ -59,4 +73,13 @@ export default async function page() {
             {notifications?.length === 0 && <h1 className='font-bold text-2xl text-muted-foreground text-center p-4'>Notification is empty!</h1>}
         </div>
     )
+}
+
+const getPathnameByNotificationType = (type: string) => {
+    switch (type) {
+        case NotificationType.ANSWER:
+            return '/question'
+        case NotificationType.CHALLENGE:
+            return '/challenge'
+    }
 }
