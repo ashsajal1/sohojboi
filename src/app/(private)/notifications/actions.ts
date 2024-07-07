@@ -13,7 +13,5 @@ export const handleMarkRead = async (notificationId: string) => {
     },
   });
 
-//   console.log(notfi)
-
   revalidatePath("/notifications");
 };

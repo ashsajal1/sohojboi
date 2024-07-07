@@ -7,6 +7,7 @@ import { formatDate } from '@/lib/date-format';
 import MarkReadBtn from './mark-read-btn';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
+import ViewBtn from './view-btn';
 
 export default async function page() {
     const userId = auth().userId;
@@ -41,11 +42,7 @@ export default async function page() {
                             <p className='text-sm text-muted-foreground'>{formatDate(notification.createdAt)}</p>
                             <MarkReadBtn status={notification.read} notificationId={notification.id} />
 
-                            <Link href={`${getPathnameByNotificationType(notification)}`}>
-                                <Badge variant={'outline'}>
-                                    View {getPathnameByNotificationType(notification)?.split('/')[1]}
-                                </Badge>
-                            </Link>
+                            <ViewBtn notification={notification} />
                         </div>
                     </CardHeader>
                 </Card>
@@ -75,7 +72,7 @@ export default async function page() {
     )
 }
 
-const getPathnameByNotificationType = (notification: Notification) => {
+export const getPathnameByNotificationType = (notification: Notification) => {
     switch (notification.type) {
         case NotificationType.ANSWER:
             return `/question/${notification.questionId}`
