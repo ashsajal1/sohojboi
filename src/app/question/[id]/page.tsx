@@ -9,6 +9,8 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { currentUser } from '@clerk/nextjs/server';
 import { Answers } from "./answers";
+import { Input } from "@/components/ui/input";
+import { NotificationType } from "@prisma/client";
 
 interface Params {
     params: {
@@ -22,6 +24,7 @@ export default async function Question({ params }: Params) {
     const postAnswer = async (formData: FormData) => {
         "use server"
         const answerText = await formData.get("answerText");
+        const questionUserId = await formData.get("userId");
         if (answerText) {
             const answer = await prisma.answer.create({
                 data: {
@@ -34,6 +37,15 @@ export default async function Question({ params }: Params) {
                     userFullName: user?.fullName as string,
                 },
             });
+
+            const notif = await prisma.notification.create({
+                data: {
+                    userId: questionUserId as string,
+                    message: `${user?.fullName} has answered your questions.`,
+                    type: NotificationType.ANSWER,
+                    answerId: answer.id
+                }
+            })
 
             revalidatePath(`/question/${params.id}`)
         }
@@ -79,6 +91,7 @@ export default async function Question({ params }: Params) {
                     <SignedIn>
                         <form action={postAnswer}>
                             <Textarea name="answerText" rows={6} placeholder="Enter your asnwer..."></Textarea>
+                            <Input className="hidden" value={question?.userId} name="userId" />
                             <Button className="mt-3">Submit</Button>
                         </form>
                     </SignedIn>
