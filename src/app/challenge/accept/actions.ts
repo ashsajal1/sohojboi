@@ -2,6 +2,7 @@
 
 import prisma from "@/lib/prisma";
 import { clerkClient } from "@clerk/nextjs/server";
+import { NotificationType } from "@prisma/client";
 
 export const completeCompetition = async (
   competitionId: string,
@@ -29,10 +30,13 @@ export const completeCompetition = async (
   } else {
     notificationMessage = `You lost a challenge against ${challengerName}.`;
   }
+  
   await prisma.notification.create({
     data: {
       userId: challangerId,
       message: notificationMessage,
+      type: NotificationType.CHALLENGE,
+      competitionId: competition.id
     },
   });
 };
