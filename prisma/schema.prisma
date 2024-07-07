@@ -109,13 +109,14 @@ enum NotificationType {
 
 model Notification {
   id            String           @id @default(auto()) @map("_id") @db.ObjectId
-  userId        String           
+  userId        String
   message       String
   read          Boolean          @default(false)
   type          NotificationType
   competitionId String?          @db.ObjectId
   postId        String?          @db.ObjectId
   answerId      String?          @db.ObjectId
+  QuestionId    String?          @db.ObjectId
   createdAt     DateTime         @default(now())
   updatedAt     DateTime         @updatedAt
 }
