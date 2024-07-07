@@ -58,7 +58,7 @@ export default async function Page() {
                 </CardContent>
             </Card>
 
-            <Tabs defaultValue="questions">
+            <Tabs className="mt-2" defaultValue="questions">
                 <TabsList className="grid w-full grid-cols-3">
                     <TabsTrigger value="questions">Asked Questions</TabsTrigger>
                     <TabsTrigger value="answers">Answers</TabsTrigger>
