@@ -80,6 +80,6 @@ const getPathnameByNotificationType = (notification: Notification) => {
         case NotificationType.ANSWER:
             return `/question/${notification.questionId}`
         case NotificationType.CHALLENGE:
-            return `/challenge/${notification.competitionId}`
+            return `/challenge/result?competitionId=${notification.competitionId}`
     }
 }
