@@ -72,11 +72,13 @@ export default async function page() {
     )
 }
 
-export const getPathnameByNotificationType = (notification: Notification) => {
-    switch (notification.type) {
+const getPathnameByNotificationType = (notification: Notification | null): string | undefined => {
+    switch (notification?.type) {
         case NotificationType.ANSWER:
             return `/question/${notification.questionId}`
         case NotificationType.CHALLENGE:
             return `/challenge/result?competitionId=${notification.competitionId}`
+        default:
+            return undefined
     }
 }
