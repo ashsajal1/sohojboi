@@ -14,6 +14,7 @@ import { Answers } from "@/app/question/[id]/answers";
 import { clerkClient, currentUser } from '@clerk/nextjs/server';
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { Competition } from "@prisma/client";
 
 export default async function Page() {
     const user = await currentUser();
@@ -38,6 +39,9 @@ export default async function Page() {
             status: "completed"
         },
     })
+
+
+
     return (
         <>
             <Card className="mt-2">
@@ -89,8 +93,7 @@ export default async function Page() {
                                 </CardTitle>
                             </CardHeader>
                             <CardContent>
-                                <p><strong>Challenger Score:</strong> {challenge.challengerScore}</p>
-                                <p><strong>Opponent&apos;s Score:</strong> {challenge.challengeeScore}</p>
+                                <Names challenge={challenge} />
                             </CardContent>
                         </Card>
                     ))}
@@ -130,4 +133,14 @@ const Winner = async ({ challengerId, challengeeId, userId, challengerScore, cha
             {resultText}
         </Badge>
     );
+}
+
+
+const Names = async ({ challenge }: { challenge: Competition }) => {
+    const challenger = (await clerkClient.users.getUser(challenge.challengerId)).lastName;
+    const challengee = (await clerkClient.users.getUser(challenge.challengeeId)).lastName;
+    return <>
+        <p><strong>{challenger}&apos;s Score:</strong> {challenge.challengerScore}</p>
+        <p><strong>{challengee}&apos;s Score:</strong> {challenge.challengeeScore}</p>
+    </>
 }
