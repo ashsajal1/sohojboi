@@ -1,18 +1,19 @@
 import { Badge } from "@/components/ui/badge";
 import { Card, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import Upvote from "./upvote";
-import { clerkClient } from "@clerk/nextjs/server";
-import { type Answer } from "@prisma/client";
+import { auth, clerkClient } from "@clerk/nextjs/server";
+import { Question, type Answer } from "@prisma/client";
 import Image from "next/image";
 import { formatDate } from "@/lib/date-format";
 import Link from "next/link";
 
 interface AnswersProps {
     answers: Answer[];
+    question: Question | null
 }
-export const Answers = async (answers: AnswersProps) => {
+export const Answers = async ({ answers, question }: AnswersProps) => {
 
-    if (answers.answers.length === 0) {
+    if (answers.length === 0) {
         return <h2 className="font-bold text-xl text-center text-muted-foreground">
             Answers is empty!
         </h2>
@@ -20,18 +21,20 @@ export const Answers = async (answers: AnswersProps) => {
 
     return <div className="flex flex-col gap-2 w-full">
         <Badge variant={'secondary'} className="mb-4">Community answers :</Badge>
-        {answers.answers.map(answer => (
-            <Answer key={answer.id} answer={answer} />
+        {answers.map(answer => (
+            <Answer question={question} key={answer.id} answer={answer} />
         ))}
     </div>
 }
 
-const Answer = async ({ answer }: { answer: Answer }) => {
-    let user;
+const Answer = async ({ answer, question }: { answer: Answer, question: Question | null }) => {
+    let answeredUser;
+    let currentUser;
     let profileImageSrc;
     try {
-        user = await clerkClient().users.getUser(answer.userId);
-        profileImageSrc = user.imageUrl;
+        answeredUser = await clerkClient().users.getUser(answer.userId);
+        profileImageSrc = answeredUser.imageUrl;
+        currentUser = await auth();
     } catch (error: any) {
         // throw new Error(error.message)
     }
@@ -45,7 +48,7 @@ const Answer = async ({ answer }: { answer: Answer }) => {
 
         <CardFooter>
             <div className="flex items-center justify-between w-full">
-                <Upvote id={answer.id} upvoteCount={answer.upvoteCount} />
+                <Upvote question={question} userId={currentUser?.userId || ''} answerId={answer.id} upvoteCount={answer.upvoteCount} />
 
                 <Link className="flex items-center gap-2" href={`/profile?id=${answer.userId}`}>
                     {profileImageSrc && <Image className="rounded-full" width={30} height={30} src={profileImageSrc} alt={"Profile image"} />}

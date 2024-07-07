@@ -105,7 +105,7 @@ export default async function Question({ params }: Params) {
                 </CardContent>
 
                 <CardFooter className="flex flex-col items-start">
-                    <Answers answers={answers} />
+                    <Answers question={question} answers={answers} />
                 </CardFooter>
             </Card>
         </div>
