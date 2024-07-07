@@ -1,11 +1,11 @@
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import Upvote from "./upvote";
 import { clerkClient } from "@clerk/nextjs/server";
 import { type Answer } from "@prisma/client";
 import Image from "next/image";
-import { cn } from "@/lib/utils";
 import { formatDate } from "@/lib/date-format";
+import Link from "next/link";
 
 interface AnswersProps {
     answers: Answer[];
@@ -37,17 +37,25 @@ const Answer = async ({ answer }: { answer: Answer }) => {
     }
 
     return <Card>
-        <CardHeader className={cn("flex items-center gap-2")}>
-            {profileImageSrc && <Image className="rounded-full" width={30} height={30} src={profileImageSrc} alt={"Profile image"} />}
-            <CardTitle>{answer.userFullName}</CardTitle>
+        <CardHeader>
+            <CardTitle>
+                {answer.answer}
+            </CardTitle>
         </CardHeader>
-        <CardContent className="flex flex-col gap-2">
-            <span>{answer.answer}</span>
-            <span className="text-sm text-muted-foreground">Answered {formatDate(answer.createdAt)}</span>
-        </CardContent>
 
         <CardFooter>
-            <Upvote id={answer.id} upvoteCount={answer.upvoteCount} />
+            <div className="flex items-center justify-between w-full">
+                <Upvote id={answer.id} upvoteCount={answer.upvoteCount} />
+
+                <Link className="flex items-center gap-2" href={`/profile?id=${answer.userId}`}>
+                    {profileImageSrc && <Image className="rounded-full" width={30} height={30} src={profileImageSrc} alt={"Profile image"} />}
+                    <p className="flex flex-col">
+                        {answer.userFullName}
+                        <span className="text-sm text-muted-foreground">Answered {formatDate(answer.createdAt)}</span>
+                    </p>
+                </Link>
+            </div>
+
         </CardFooter>
     </Card>
 }
