@@ -102,9 +102,10 @@ model Competition {
 
 enum NotificationType {
   CHALLENGE
-  UPVOTE
   ANSWER
-  FOLLOW
+  QUESTION
+  UPVOTE_QUESTION
+  UPVOTE_ANSWER
 }
 
 model Notification {
