@@ -8,7 +8,7 @@ export default function AcceptBtn({competitionId}:{competitionId: string}) {
        
 
         // Redirect to the competition play page or reload
-        window.location.href = `/challange/result?competitionId=${competitionId}`;
+        window.location.href = `/challenge/result?competitionId=${competitionId}`;
     };
   return (
     <Button onClick={handleAccept}>Accept Challenge</Button>
