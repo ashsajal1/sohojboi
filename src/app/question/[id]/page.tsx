@@ -43,7 +43,8 @@ export default async function Question({ params }: Params) {
                     userId: questionUserId as string,
                     message: `${user?.fullName} has answered your questions.`,
                     type: NotificationType.ANSWER,
-                    answerId: answer.id
+                    answerId: answer.id,
+                    questionId: answer.questionId
                 }
             })
 
