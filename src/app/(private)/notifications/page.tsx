@@ -41,9 +41,9 @@ export default async function page() {
                             <p className='text-sm text-muted-foreground'>{formatDate(notification.createdAt)}</p>
                             <MarkReadBtn status={notification.read} notificationId={notification.id} />
 
-                            <Link href={`${getPathnameByNotificationType(notification.type)}`}>
+                            <Link href={`${getPathnameByNotificationType(notification)}`}>
                                 <Badge variant={'outline'}>
-                                    View {getPathnameByNotificationType(notification.type)?.split('/')[1]}
+                                    View {getPathnameByNotificationType(notification)?.split('/')[1]}
                                 </Badge>
                             </Link>
                         </div>
@@ -75,11 +75,11 @@ export default async function page() {
     )
 }
 
-const getPathnameByNotificationType = (type: string) => {
-    switch (type) {
+const getPathnameByNotificationType = (notification: Notification) => {
+    switch (notification.type) {
         case NotificationType.ANSWER:
-            return '/question'
+            return `/question/${notification.questionId}`
         case NotificationType.CHALLENGE:
-            return '/challenge'
+            return `/challenge/${notification.competitionId}`
     }
 }
