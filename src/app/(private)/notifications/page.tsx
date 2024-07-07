@@ -60,9 +60,9 @@ export default async function page() {
                             <p className='text-sm text-muted-foreground'>{formatDate(notification.createdAt)}</p>
                             <MarkReadBtn status={notification.read} notificationId={notification.id} />
 
-                            <Link href={`/`}>
+                            <Link href={`${getPathnameByNotificationType(notification)}`}>
                                 <Badge variant={'outline'}>
-                                    View {notification.type}
+                                    View {getPathnameByNotificationType(notification)?.split('/')[1]}
                                 </Badge>
                             </Link>
                         </div>
