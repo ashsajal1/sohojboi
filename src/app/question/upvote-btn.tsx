@@ -4,10 +4,12 @@ import { Button } from '@/components/ui/button'
 import React, { useOptimistic, useTransition } from 'react'
 import { handleQuestionUpvote } from './actions'
 import { Question } from '@prisma/client'
+import { getStatusText } from '@/lib/utils'
 
-export default function UpvoteBtn({ question, actorId }: {
+export default function UpvoteBtn({ question, actorId, isUpvotedQuestion }: {
     question: Question,
-    actorId: string
+    actorId: string,
+    isUpvotedQuestion: boolean
 }) {
     const currentUpvoteCount = question.upvoteCount;
     const [optimisticUpvotes, addOptimisticUpvote] = useOptimistic(
@@ -20,12 +22,14 @@ export default function UpvoteBtn({ question, actorId }: {
     );
     let [_, startTransition] = useTransition();
 
+    const statusText = getStatusText(isUpvotedQuestion)
+
     return (
         <Button onClick={async () => {
             startTransition(async () => {
                 addOptimisticUpvote(optimisticUpvotes.currentUpvoteCount + 1);
                 await handleQuestionUpvote(question, actorId)
             })
-        }} variant={'outline'}>{currentUpvoteCount} {optimisticUpvotes.upvoting ? 'Upvoting' : 'Upvote'}</Button>
+        }} variant={'outline'}>{currentUpvoteCount} {optimisticUpvotes.upvoting ? 'Progressing' : [statusText]}</Button>
     )
 }

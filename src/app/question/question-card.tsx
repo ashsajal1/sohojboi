@@ -5,12 +5,25 @@ import UpvoteBtn from "./upvote-btn";
 import { formatDate } from "@/lib/date-format";
 import { auth } from "@clerk/nextjs/server";
 import { Question } from "@prisma/client";
+import prisma from "@/lib/prisma";
 
 interface QuestionProps {
     question: Question;
 }
 export default async function QuestionCard({ question }: QuestionProps) {
     const actorId = await auth().userId;
+    let isUpvotedQuestion;
+
+    isUpvotedQuestion = await prisma.upvote.findUnique({
+        where: {
+            userId_questionId: {
+                userId: actorId || '',
+                questionId: question.id
+            }
+        }
+    })
+    isUpvotedQuestion = !!isUpvotedQuestion
+
     return (
         <Card>
             <CardHeader>
@@ -23,7 +36,7 @@ export default async function QuestionCard({ question }: QuestionProps) {
 
             <CardFooter className="flex items-center gap-3">
                 <Link href={`/question/${question.id}`}><Button>Answer</Button></Link>
-                <UpvoteBtn question={question} actorId={actorId || ''} />
+                <UpvoteBtn isUpvotedQuestion={isUpvotedQuestion} question={question} actorId={actorId || ''} />
             </CardFooter>
         </Card>
     )
