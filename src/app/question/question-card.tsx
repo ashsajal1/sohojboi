@@ -51,7 +51,7 @@ export default async function QuestionCard({ question }: QuestionProps) {
 
                 <div className="flex items-center gap-2">
                     <Link href={`/question/${question.id}`}>
-                        <Button>Answer</Button>
+                        <Button size={'sm'}>Answer</Button>
                     </Link>
                     <UpvoteBtn isUpvotedQuestion={isUpvotedQuestion} question={question} actorId={actorId || ''} />
                 </div>

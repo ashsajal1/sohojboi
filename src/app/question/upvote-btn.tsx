@@ -25,7 +25,7 @@ export default function UpvoteBtn({ question, actorId, isUpvotedQuestion }: {
     const statusText = getStatusText(isUpvotedQuestion)
 
     return (
-        <Button onClick={async () => {
+        <Button size={'sm'} onClick={async () => {
             startTransition(async () => {
                 addOptimisticUpvote(optimisticUpvotes.currentUpvoteCount + 1);
                 await handleQuestionUpvote(question, actorId)
