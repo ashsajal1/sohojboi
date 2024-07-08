@@ -84,7 +84,10 @@ export default async function Page({ searchParams }: { searchParams: { id: strin
                     ))}
                 </TabsContent>
                 <TabsContent value="answers">
-                    <Answers answers={answers} />
+                    {/* <Answers question={questions} answers={answers} /> */}
+                    {questions.map(question => (
+                        <Answers key={question.id} question={question} answers={answers.filter(answer => answer.questionId === question.id)} />
+                    ))}
                 </TabsContent>
                 <TabsContent value="challenges">
                     {challenges.map(challenge => (
