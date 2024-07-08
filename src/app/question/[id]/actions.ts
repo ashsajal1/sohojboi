@@ -30,6 +30,8 @@ export const handleUpvote = async (
     },
   });
 
+  console.log(existingUpvote)
+
   if (existingUpvote) {
     await prisma.answer.update({
       where: {
@@ -43,7 +45,6 @@ export const handleUpvote = async (
     await prisma.notification.deleteMany({
       where: {
         answerId: answer.id,
-        userId: actorId,
         type: NotificationType.UPVOTE_ANSWER,
       },
     });
