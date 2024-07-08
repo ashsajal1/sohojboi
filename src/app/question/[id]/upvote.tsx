@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { handleUpvote } from "./actions";
 import { useOptimistic, useTransition } from "react";
 import { Answer, Question } from "@prisma/client";
+import { getStatusText } from "@/lib/utils";
 
 interface AnswersParams {
     answer: Answer;
@@ -35,16 +36,4 @@ export default function Upvote({ answer, userId, question, isUpvotedAnswer }: An
             })
         }} variant="outline">{upvoteCount} {optimisticUpvotes.upvoting ? 'Progressing' : [statusText]}</Button>
     )
-}
-
-
-function getStatusText(status: boolean): string {
-    switch (status) {
-        case true:
-            return "Downvote"
-        case false:
-            "Upvote"
-        default:
-            return "Upvote"
-    }
 }

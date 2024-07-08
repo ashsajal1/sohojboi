@@ -1,22 +1,35 @@
-import { NotificationType, Notification } from "@prisma/client"
-import { type ClassValue, clsx } from "clsx"
-import { twMerge } from "tailwind-merge"
+import { NotificationType, Notification } from "@prisma/client";
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
 }
 
-export const getPathnameByNotificationType = (notification: Notification | null): string | undefined => {
+export const getPathnameByNotificationType = (
+  notification: Notification | null
+): string | undefined => {
   switch (notification?.type) {
-      case NotificationType.ANSWER:
-          return `/question/${notification.questionId}`
-      case NotificationType.CHALLENGE:
-          return `/challenge/result?competitionId=${notification.competitionId}`
-      case NotificationType.UPVOTE_ANSWER:
-          return `/question/${notification.questionId}`
-      case NotificationType.UPVOTE_QUESTION:
-          return `/question/${notification.questionId}`
-      default:
-          return undefined
+    case NotificationType.ANSWER:
+      return `/question/${notification.questionId}`;
+    case NotificationType.CHALLENGE:
+      return `/challenge/result?competitionId=${notification.competitionId}`;
+    case NotificationType.UPVOTE_ANSWER:
+      return `/question/${notification.questionId}`;
+    case NotificationType.UPVOTE_QUESTION:
+      return `/question/${notification.questionId}`;
+    default:
+      return undefined;
+  }
+};
+
+export function getStatusText(status: boolean): string {
+  switch (status) {
+    case true:
+      return "Downvote";
+    case false:
+      "Upvote";
+    default:
+      return "Upvote";
   }
 }
