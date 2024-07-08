@@ -13,7 +13,6 @@ export const handleUpvote = async (
 ) => {
   let actor;
   let actorName;
-  const currentUpvoteCount = answer.upvoteCount;
 
   try {
     actor = await clerkClient().users.getUser(actorId);
@@ -22,27 +21,53 @@ export const handleUpvote = async (
     redirect("/login");
   }
 
-  const count = currentUpvoteCount + 1;
-  await prisma.answer.update({
+  const existingUpvote = await prisma.upvote.findUnique({
     where: {
-      id: answer.id,
-    },
-    data: {
-      upvoteCount: count,
+      userId_answerId: {
+        userId: actorId,
+        answerId: answer.id,
+      },
     },
   });
 
-  const message = `${actorName} upvoted your answer to question "${question?.questionTitle}"`;
-
-  if (actorId !== answer.userId) {
-    const notif = await prisma.notification.create({
+  if (existingUpvote) {
+    await prisma.answer.update({
+      where: {
+        id: answer.id,
+      },
       data: {
-        userId: answer.userId,
-        type: NotificationType.UPVOTE_ANSWER,
-        message: message,
-        questionId: question?.id,
+        upvoteCount: { decrement: 1 },
       },
     });
+  } else {
+    await prisma.answer.update({
+      where: {
+        id: answer.id,
+      },
+      data: {
+        upvoteCount: { increment: 1 },
+      },
+    });
+
+    await prisma.upvote.create({
+      data: {
+        userId: actorId,
+        answerId: answer.id,
+      },
+    });
+
+    const message = `${actorName} upvoted your answer to question "${question?.questionTitle}"`;
+
+    if (actorId !== answer.userId) {
+      const notif = await prisma.notification.create({
+        data: {
+          userId: answer.userId,
+          type: NotificationType.UPVOTE_ANSWER,
+          message: message,
+          questionId: question?.id,
+        },
+      });
+    }
   }
 
   revalidatePath("");
