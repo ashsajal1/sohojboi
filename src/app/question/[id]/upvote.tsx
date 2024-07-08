@@ -29,7 +29,7 @@ export default function Upvote({ answer, userId, question, isUpvotedAnswer }: An
 
     let [_, startTransition] = useTransition();
     return (
-        <Button onClick={async () => {
+        <Button size={'sm'} onClick={async () => {
             startTransition(async () => {
                 addOptimisticUpvote(optimisticUpvotes.upvoteCount + 1);
                 await handleUpvote(answer, userId, question)

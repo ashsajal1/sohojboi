@@ -8,6 +8,7 @@ import { formatDate } from "@/lib/date-format";
 import Link from "next/link";
 import prisma from "@/lib/prisma";
 import { chekcIsAnswerUpvoted } from "@/lib/utils";
+import ProfileImgCard from "@/components/profile-img-card";
 
 interface AnswersProps {
     answers: Answer[];
@@ -37,7 +38,7 @@ const Answer = async ({ answer, question }: { answer: Answer, question: Question
     let currentUser;
     let profileImageSrc;
     const user = await auth()
-    let isUpvotedAnswer = await chekcIsAnswerUpvoted( user.userId || '', answer.id);
+    let isUpvotedAnswer = await chekcIsAnswerUpvoted(user.userId || '', answer.id);
 
     try {
         answeredUser = await clerkClient().users.getUser(answer.userId);
@@ -58,13 +59,7 @@ const Answer = async ({ answer, question }: { answer: Answer, question: Question
             <div className="flex items-center justify-between w-full">
                 <Upvote isUpvotedAnswer={isUpvotedAnswer || false} question={question} userId={currentUser?.userId || ''} answer={answer} />
 
-                <Link className="flex items-center gap-2" href={`/profile?id=${answer.userId}`}>
-                    {profileImageSrc && <Image className="rounded-full" width={30} height={30} src={profileImageSrc} alt={"Profile image"} />}
-                    <p className="flex flex-col">
-                        {answer.userFullName}
-                        <span className="text-sm text-muted-foreground">Answered {formatDate(answer.createdAt)}</span>
-                    </p>
-                </Link>
+                <ProfileImgCard profileImageSrc={profileImageSrc || ''} fullName={answer.userFullName} type={"answer"} userId={answer.userId} createdAt={answer.createdAt || new Date()} />
             </div>
 
         </CardFooter>
