@@ -21,7 +21,8 @@ export default async function page() {
                 },
                 orderBy: {
                     createdAt: 'desc'
-                }
+                },
+                take: 10
             })
         } catch (error) {
             notifications = null
