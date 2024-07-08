@@ -36,7 +36,7 @@ export const handleQuestionUpvote = async (
   if (actorId !== question.userId) {
     const notif = await prisma.notification.create({
       data: {
-        userId: actorId,
+        userId: question.userId,
         type: NotificationType.UPVOTE_QUESTION,
         message: message,
         questionId: question?.id,
