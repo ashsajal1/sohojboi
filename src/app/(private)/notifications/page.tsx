@@ -1,7 +1,7 @@
 import prisma from '@/lib/prisma';
 import { auth } from '@clerk/nextjs/server';
 import React from 'react'
-import { Notification, NotificationType } from "@prisma/client"
+import { Notification } from "@prisma/client"
 import { Card, CardHeader, CardTitle } from '@/components/ui/card';
 import { formatDate } from '@/lib/date-format';
 import MarkReadBtn from './mark-read-btn';
@@ -9,6 +9,7 @@ import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
 import ViewBtn from './view-btn';
 import { cn, getPathnameByNotificationType } from '@/lib/utils';
+import MarkAllReadBtn from './mark-all-read-btn';
 
 export default async function page() {
     const userId = auth().userId;
@@ -29,12 +30,11 @@ export default async function page() {
         }
     }
 
-    // console.log(notifications)
-
     const oldNotificatons = notifications?.filter(n => n.read === true)
     const newNotificatons = notifications?.filter(n => n.read === false)
     return (
         <div className='flex flex-col gap-2'>
+            {(newNotificatons?.length || 0 > 0) && <MarkAllReadBtn />}
             {(newNotificatons !== null && newNotificatons?.length !== 0) && <h3>Unread notifications</h3>}
             {newNotificatons?.map(notification => (
                 <Card key={notification.id}>

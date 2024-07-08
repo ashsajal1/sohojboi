@@ -15,3 +15,17 @@ export const handleMarkRead = async (notificationId: string) => {
 
   revalidatePath("/notifications");
 };
+
+export const readAllNotificaiton = async (userId: string) => {
+  await prisma.notification.updateMany({
+    where: {
+      userId: userId,
+      read: false,
+    },
+    data: {
+      read: true,
+    },
+  });
+
+  revalidatePath("/notifications");
+};
