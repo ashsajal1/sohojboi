@@ -90,7 +90,3 @@ export const handleUpvote = async (
 
   revalidatePath("");
 };
-
-export const checkIsUpvoted = async (userId: string, answerId: string) => {
-  
-};
