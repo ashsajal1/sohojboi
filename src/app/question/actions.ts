@@ -20,7 +20,7 @@ export const handleQuestionUpvote = async (
   } catch (error) {
     redirect("/login");
   }
-  
+
   const count = currentUpvoteCount + 1;
   await prisma.question.update({
     where: {
@@ -33,14 +33,16 @@ export const handleQuestionUpvote = async (
 
   const message = `${actorName} upvoted your question "${question?.questionTitle}"`;
 
-  const notif = await prisma.notification.create({
-    data: {
-      userId: actorId,
-      type: NotificationType.UPVOTE_QUESTION,
-      message: message,
-      questionId: question?.id,
-    },
-  });
+  if (actorId !== question.userId) {
+    const notif = await prisma.notification.create({
+      data: {
+        userId: actorId,
+        type: NotificationType.UPVOTE_QUESTION,
+        message: message,
+        questionId: question?.id,
+      },
+    });
+  }
 
   revalidatePath("");
 };
