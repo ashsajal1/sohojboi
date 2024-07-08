@@ -8,7 +8,6 @@ import { redirect } from "next/navigation";
 
 export const handleQuestionUpvote = async (
   question: Question,
-  currentUpvoteCount: number,
   actorId: string
 ) => {
   let actor;
@@ -21,27 +20,69 @@ export const handleQuestionUpvote = async (
     redirect("/login");
   }
 
-  const count = currentUpvoteCount + 1;
-  await prisma.question.update({
+  const existingUpvote = await prisma.upvote.findUnique({
     where: {
-      id: question.id,
-    },
-    data: {
-      upvoteCount: count,
+      userId_questionId: {
+        userId: actorId,
+        questionId: question.id,
+      },
     },
   });
 
-  const message = `${actorName} upvoted your question "${question?.questionTitle}"`;
-
-  if (actorId !== question.userId) {
-    const notif = await prisma.notification.create({
+  if (existingUpvote) {
+    await prisma.question.update({
+      where: {
+        id: question.id,
+      },
       data: {
-        userId: question.userId,
-        type: NotificationType.UPVOTE_QUESTION,
-        message: message,
-        questionId: question?.id,
+        upvoteCount: { decrement: 1 },
       },
     });
+
+    await prisma.notification.deleteMany({
+      where: {
+        questionId: question.id,
+        type: NotificationType.UPVOTE_QUESTION,
+      },
+    });
+
+    await prisma.upvote.delete({
+      where: {
+        userId_questionId: {
+          userId: actorId,
+          questionId: question.id,
+        },
+      },
+    });
+  } else {
+    await prisma.question.update({
+      where: {
+        id: question.id,
+      },
+      data: {
+        upvoteCount: { increment: 1 },
+      },
+    });
+
+    await prisma.upvote.create({
+      data: {
+        userId: actorId,
+        questionId: question.id,
+      },
+    });
+
+    const message = `${actorName} upvoted your question "${question?.questionTitle}"`;
+
+    if (actorId !== question.userId) {
+      const notif = await prisma.notification.create({
+        data: {
+          userId: question.userId,
+          type: NotificationType.UPVOTE_QUESTION,
+          message: message,
+          questionId: question?.id,
+        },
+      });
+    }
   }
 
   revalidatePath("");
