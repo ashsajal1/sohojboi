@@ -1,12 +1,8 @@
 import { Badge } from "@/components/ui/badge";
-import { Card, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardDescription, CardFooter, CardHeader, } from "@/components/ui/card";
 import Upvote from "./upvote";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { Question, type Answer } from "@prisma/client";
-import Image from "next/image";
-import { formatDate } from "@/lib/date-format";
-import Link from "next/link";
-import prisma from "@/lib/prisma";
 import { chekcIsAnswerUpvoted } from "@/lib/utils";
 import ProfileImgCard from "@/components/profile-img-card";
 
@@ -14,8 +10,6 @@ interface AnswersProps {
     answers: Answer[];
     question: Question | null
 }
-
-
 
 export const Answers = async ({ answers, question }: AnswersProps) => {
 
@@ -50,9 +44,9 @@ const Answer = async ({ answer, question }: { answer: Answer, question: Question
 
     return <Card>
         <CardHeader>
-            <CardTitle>
+            <CardDescription>
                 {answer.answer}
-            </CardTitle>
+            </CardDescription>
         </CardHeader>
 
         <CardFooter>
