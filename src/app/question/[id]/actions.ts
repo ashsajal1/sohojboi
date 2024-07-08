@@ -4,6 +4,7 @@ import prisma from "@/lib/prisma";
 import { clerkClient } from "@clerk/nextjs/server";
 import { NotificationType, Question } from "@prisma/client";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 // export const createAnswer = async (questionId: string, answerText: string) => {
 //   const answer = await prisma.answer.create({
@@ -22,8 +23,15 @@ export const handleUpvote = async (
   actorId: string,
   question: Question | null
 ) => {
-  const actor = await clerkClient().users.getUser(actorId);
-  const actorName = actor.fullName || `${actor.firstName} ${actor.lastName}`;
+  let actor;
+  let actorName;
+
+  try {
+    actor = await clerkClient().users.getUser(actorId);
+    actorName = actor.fullName || `${actor.firstName} ${actor.lastName}`;
+  } catch (error) {
+    redirect("/login");
+  }
 
   const count = currentUpvoteCount + 1;
   await prisma.answer.update({
