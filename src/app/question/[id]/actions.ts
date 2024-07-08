@@ -30,7 +30,7 @@ export const handleUpvote = async (
     },
   });
 
-  console.log(existingUpvote)
+  // console.log(existingUpvote)
 
   if (existingUpvote) {
     await prisma.answer.update({
@@ -48,6 +48,15 @@ export const handleUpvote = async (
         type: NotificationType.UPVOTE_ANSWER,
       },
     });
+
+    await prisma.upvote.delete({
+      where: {
+        userId_answerId:{
+          userId: actorId,
+          answerId: answer.id
+        }
+      }
+    })
   } else {
     await prisma.answer.update({
       where: {
