@@ -8,25 +8,16 @@ import { Question } from "@prisma/client";
 import prisma from "@/lib/prisma";
 import Image from "next/image";
 import ProfileImgCard from "@/components/profile-img-card";
+import { chekcIsQuestionUpvoted } from "@/lib/utils";
 
 interface QuestionProps {
     question: Question;
 }
 export default async function QuestionCard({ question }: QuestionProps) {
     const actorId = await auth().userId;
-    let isUpvotedQuestion;
+    let isUpvotedQuestion = await chekcIsQuestionUpvoted( actorId || '', question.id);
     let profileImageSrc;
     let questionUser;
-
-    isUpvotedQuestion = await prisma.upvote.findUnique({
-        where: {
-            userId_questionId: {
-                userId: actorId || '',
-                questionId: question.id
-            }
-        }
-    })
-    isUpvotedQuestion = !!isUpvotedQuestion
 
     try {
         questionUser = await clerkClient().users.getUser(question.userId);
