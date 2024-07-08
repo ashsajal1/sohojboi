@@ -48,7 +48,7 @@ const Answer = async ({ answer, question }: { answer: Answer, question: Question
 
         <CardFooter>
             <div className="flex items-center justify-between w-full">
-                <Upvote question={question} userId={currentUser?.userId || ''} answerId={answer.id} upvoteCount={answer.upvoteCount} />
+                <Upvote question={question} userId={currentUser?.userId || ''} answer={answer} />
 
                 <Link className="flex items-center gap-2" href={`/profile?id=${answer.userId}`}>
                     {profileImageSrc && <Image className="rounded-full" width={30} height={30} src={profileImageSrc} alt={"Profile image"} />}

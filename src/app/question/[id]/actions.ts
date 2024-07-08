@@ -2,29 +2,18 @@
 
 import prisma from "@/lib/prisma";
 import { clerkClient } from "@clerk/nextjs/server";
-import { NotificationType, Question } from "@prisma/client";
+import { Answer, NotificationType, Question } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-// export const createAnswer = async (questionId: string, answerText: string) => {
-//   const answer = await prisma.answer.create({
-//     data: {
-//       userId: "123",
-//       questionId: questionId,
-//       upvoteCount: 0,
-//       answer: answerText,
-//     },
-//   });
-// };
-
 export const handleUpvote = async (
-  answerId: string,
-  currentUpvoteCount: number,
+  answer: Answer,
   actorId: string,
   question: Question | null
 ) => {
   let actor;
   let actorName;
+  const currentUpvoteCount = answer.upvoteCount;
 
   try {
     actor = await clerkClient().users.getUser(actorId);
@@ -36,7 +25,7 @@ export const handleUpvote = async (
   const count = currentUpvoteCount + 1;
   await prisma.answer.update({
     where: {
-      id: answerId,
+      id: answer.id,
     },
     data: {
       upvoteCount: count,
@@ -45,14 +34,16 @@ export const handleUpvote = async (
 
   const message = `${actorName} upvoted your answer to question "${question?.questionTitle}"`;
 
-  const notif = await prisma.notification.create({
-    data: {
-      userId: actorId,
-      type: NotificationType.UPVOTE_ANSWER,
-      message: message,
-      questionId: question?.id,
-    },
-  });
+  if (actorId !== answer.userId) {
+    const notif = await prisma.notification.create({
+      data: {
+        userId: actorId,
+        type: NotificationType.UPVOTE_ANSWER,
+        message: message,
+        questionId: question?.id,
+      },
+    });
+  }
 
   revalidatePath("");
 };
