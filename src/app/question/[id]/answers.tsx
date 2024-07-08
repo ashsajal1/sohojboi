@@ -57,9 +57,9 @@ const Answer = async ({ answer, question }: { answer: Answer, question: Question
 
         <CardFooter>
             <div className="flex items-center justify-between w-full">
-                <Upvote isUpvotedAnswer={isUpvotedAnswer || false} question={question} userId={currentUser?.userId || ''} answer={answer} />
-
                 <ProfileImgCard profileImageSrc={profileImageSrc || ''} fullName={answer.userFullName} type={"answer"} userId={answer.userId} createdAt={answer.createdAt || new Date()} />
+
+                <Upvote isUpvotedAnswer={isUpvotedAnswer || false} question={question} userId={currentUser?.userId || ''} answer={answer} />
             </div>
 
         </CardFooter>
