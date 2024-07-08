@@ -36,9 +36,6 @@ export default async function Navbar() {
                         </Button></Link>
                 </SignedIn>
 
-                <Link href={'/question'}>
-                    <Button>Question</Button>
-                </Link>
                 <SignedIn>
                     <UserButton />
                 </SignedIn>
