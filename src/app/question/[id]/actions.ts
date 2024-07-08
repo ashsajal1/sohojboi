@@ -39,6 +39,14 @@ export const handleUpvote = async (
         upvoteCount: { decrement: 1 },
       },
     });
+
+    await prisma.notification.deleteMany({
+      where: {
+        answerId: answer.id,
+        userId: actorId,
+        type: NotificationType.UPVOTE_ANSWER,
+      },
+    });
   } else {
     await prisma.answer.update({
       where: {
