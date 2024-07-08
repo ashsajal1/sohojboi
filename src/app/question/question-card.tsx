@@ -4,20 +4,10 @@ import Link from "next/link";
 import UpvoteBtn from "./upvote-btn";
 import { formatDate } from "@/lib/date-format";
 import { auth } from "@clerk/nextjs/server";
+import { Question } from "@prisma/client";
 
 interface QuestionProps {
-    question: {
-        id: string;
-        userId: string;
-        questionTitle: string;
-        questionDescription: string;
-        upvoteCount: number;
-        createdAt: Date;
-        updatedAt: Date;
-        userFirstName: string,
-        userLastName: string,
-        userFullName: string,
-    }
+    question: Question;
 }
 export default async function QuestionCard({ question }: QuestionProps) {
     const actorId = await auth().userId;
