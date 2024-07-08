@@ -50,5 +50,23 @@ export const chekcIsQuestionUpvoted = async (
     },
   });
 
-  return isUpvotedQuestion = !!isUpvotedQuestion;
+  return (isUpvotedQuestion = !!isUpvotedQuestion);
+};
+
+export const chekcIsAnswerUpvoted = async (
+  actorId: string,
+  answerId: string
+) => {
+  let isUpvotedAnswer;
+
+  isUpvotedAnswer = await prisma.upvote.findUnique({
+    where: {
+      userId_answerId: {
+        userId: actorId || "",
+        answerId: answerId,
+      },
+    },
+  });
+
+  return (isUpvotedAnswer = !!isUpvotedAnswer);
 };

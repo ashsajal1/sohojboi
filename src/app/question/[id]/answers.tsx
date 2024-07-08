@@ -7,6 +7,7 @@ import Image from "next/image";
 import { formatDate } from "@/lib/date-format";
 import Link from "next/link";
 import prisma from "@/lib/prisma";
+import { chekcIsAnswerUpvoted } from "@/lib/utils";
 
 interface AnswersProps {
     answers: Answer[];
@@ -36,17 +37,8 @@ const Answer = async ({ answer, question }: { answer: Answer, question: Question
     let currentUser;
     let profileImageSrc;
     const user = await auth()
-    let isUpvotedAnswer;
+    let isUpvotedAnswer = await chekcIsAnswerUpvoted( user.userId || '', answer.id);
 
-    isUpvotedAnswer = await prisma.upvote.findUnique({
-        where: {
-            userId_answerId: {
-                userId: user.userId || '',
-                answerId: answer.id
-            }
-        }
-    })
-    isUpvotedAnswer = !!isUpvotedAnswer
     try {
         answeredUser = await clerkClient().users.getUser(answer.userId);
         profileImageSrc = answeredUser.imageUrl;
