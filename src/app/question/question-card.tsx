@@ -3,6 +3,7 @@ import { Card, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
 import UpvoteBtn from "./upvote-btn";
 import { formatDate } from "@/lib/date-format";
+import { auth } from "@clerk/nextjs/server";
 
 interface QuestionProps {
     question: {
@@ -18,7 +19,8 @@ interface QuestionProps {
         userFullName: string,
     }
 }
-export default function QuestionCard({ question }: QuestionProps) {
+export default async function QuestionCard({ question }: QuestionProps) {
+    const actorId = await auth().userId;
     return (
         <Card>
             <CardHeader>
@@ -31,7 +33,7 @@ export default function QuestionCard({ question }: QuestionProps) {
 
             <CardFooter className="flex items-center gap-3">
                 <Link href={`/question/${question.id}`}><Button>Answer</Button></Link>
-                <UpvoteBtn id={question.id} upvoteCount={question.upvoteCount} />
+                <UpvoteBtn question={question} actorId={actorId || ''} />
             </CardFooter>
         </Card>
     )
