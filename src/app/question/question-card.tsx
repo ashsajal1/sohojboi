@@ -7,6 +7,7 @@ import { auth, clerkClient } from "@clerk/nextjs/server";
 import { Question } from "@prisma/client";
 import prisma from "@/lib/prisma";
 import Image from "next/image";
+import ProfileImgCard from "@/components/profile-img-card";
 
 interface QuestionProps {
     question: Question;
@@ -46,13 +47,7 @@ export default async function QuestionCard({ question }: QuestionProps) {
 
             <CardFooter className="flex items-center justify-between">
 
-                <Link className="flex items-center gap-2" href={`/profile?id=${question.userId}`}>
-                    {profileImageSrc && <Image className="rounded-full" width={30} height={30} src={profileImageSrc} alt={"Profile image"} />}
-                    <p className="flex flex-col">
-                        {question.userFullName}
-                        <span className="text-sm text-muted-foreground">Asked {formatDate(question.createdAt)}</span>
-                    </p>
-                </Link>
+                <ProfileImgCard fullName={question.userFullName} type="question" createdAt={question.createdAt} profileImageSrc={profileImageSrc || ''} userId={question.userId} />
 
                 <div className="flex items-center gap-2">
                     <Link href={`/question/${question.id}`}>
