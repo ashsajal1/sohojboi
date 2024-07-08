@@ -9,9 +9,9 @@ export default function ProfileImgCard({ profileImageSrc, fullName, type, userId
     return (
         <Link className="flex items-center gap-2" href={`/profile?id=${userId}`}>
             {profileImageSrc && <Image className="rounded-full" width={30} height={30} src={profileImageSrc} alt={"Profile image"} />}
-            <p className="flex flex-col">
+            <p className="flex flex-col text-sm">
                 {fullName}
-                <span className="text-sm text-muted-foreground">
+                <span className="text-[12px] text-muted-foreground">
                     {type === 'question' ? 'Asked' : 'Answered'} {formatDate(createdAt)}</span>
             </p>
         </Link>
