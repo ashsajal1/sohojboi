@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import prisma from "@/lib/prisma"
 import { isValidObjectId } from "@/lib/validate";
@@ -72,7 +72,7 @@ export default async function Question({ params }: Params) {
             });
 
 
-            
+
         } catch (error) {
             throw new Error('Error fetching question:', error || '');
         }
@@ -87,13 +87,14 @@ export default async function Question({ params }: Params) {
                     <CardTitle>
                         {question?.questionTitle}
                     </CardTitle>
+                    <CardDescription>
+                        {question?.questionDescription}
+                    </CardDescription>
+
                 </CardHeader>
 
                 <CardContent>
-                    <div className="mb-4 border-b flex flex-col pb-4">
-                        <Badge variant={'secondary'}>Desciption : </Badge>
-                        <p className="mt-2">{question?.questionDescription}</p>
-                    </div>
+
                     <SignedIn>
                         <form action={postAnswer}>
                             <Textarea name="answerText" rows={6} placeholder="Enter your asnwer..."></Textarea>
