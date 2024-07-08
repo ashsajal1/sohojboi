@@ -22,9 +22,9 @@ export const handleUpvote = async (
   actorId: string,
   question: Question | null
 ) => {
-    const actor = await clerkClient().users.getUser(actorId);
-    const actorName = actor.fullName || `${actor.firstName} ${actor.lastName}`;
-    
+  const actor = await clerkClient().users.getUser(actorId);
+  const actorName = actor.fullName || `${actor.firstName} ${actor.lastName}`;
+
   const count = currentUpvoteCount + 1;
   await prisma.answer.update({
     where: {
@@ -39,11 +39,12 @@ export const handleUpvote = async (
 
   const notif = await prisma.notification.create({
     data: {
-        userId: actorId,
-        type: NotificationType.UPVOTE_ANSWER,
-        message: message
-    }
-  })
+      userId: actorId,
+      type: NotificationType.UPVOTE_ANSWER,
+      message: message,
+      questionId: question?.id,
+    },
+  });
 
   revalidatePath("");
 };
