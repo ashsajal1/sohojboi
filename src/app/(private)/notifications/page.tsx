@@ -8,7 +8,7 @@ import MarkReadBtn from './mark-read-btn';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
 import ViewBtn from './view-btn';
-import { cn } from '@/lib/utils';
+import { cn, getPathnameByNotificationType } from '@/lib/utils';
 
 export default async function page() {
     const userId = auth().userId;
@@ -71,15 +71,4 @@ export default async function page() {
             {notifications?.length === 0 && <h1 className='font-bold text-2xl text-muted-foreground text-center p-4'>Notification is empty!</h1>}
         </div>
     )
-}
-
-const getPathnameByNotificationType = (notification: Notification | null): string | undefined => {
-    switch (notification?.type) {
-        case NotificationType.ANSWER:
-            return `/question/${notification.questionId}`
-        case NotificationType.CHALLENGE:
-            return `/challenge/result?competitionId=${notification.competitionId}`
-        default:
-            return undefined
-    }
 }

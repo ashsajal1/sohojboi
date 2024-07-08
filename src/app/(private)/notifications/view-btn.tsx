@@ -4,21 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import React from 'react'
 import { Notification, NotificationType } from '@prisma/client';
 import { handleMarkRead } from './actions';
-
-const getPathnameByNotificationType = (notification: Notification | null): string | undefined => {
-    switch (notification?.type) {
-        case NotificationType.ANSWER:
-            return `/question/${notification.questionId}`
-        case NotificationType.CHALLENGE:
-            return `/challenge/result?competitionId=${notification.competitionId}`
-        case NotificationType.UPVOTE_ANSWER:
-            return `/question/${notification.questionId}`
-        case NotificationType.UPVOTE_QUESTION:
-            return `/question/${notification.questionId}`
-        default:
-            return undefined
-    }
-}
+import { getPathnameByNotificationType } from '@/lib/utils';
 
 export default function ViewBtn({ notification }: { notification: Notification | null }) {
     return (
