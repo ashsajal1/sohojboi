@@ -8,10 +8,11 @@ import { Answer, Question } from "@prisma/client";
 interface AnswersParams {
     answer: Answer;
     userId: string;
-    question: Question | null
+    question: Question | null;
+    isUpvotedAnswer: boolean
 }
 
-export default function Upvote({ answer, userId, question }: AnswersParams) {
+export default function Upvote({ answer, userId, question, isUpvotedAnswer }: AnswersParams) {
     const upvoteCount = answer.upvoteCount;
     const [optimisticUpvotes, addOptimisticUpvote] = useOptimistic(
         { upvoteCount, upvoting: false },
@@ -22,6 +23,9 @@ export default function Upvote({ answer, userId, question }: AnswersParams) {
         })
 
     )
+
+    const statusText = getStatusText(isUpvotedAnswer)
+
     let [_, startTransition] = useTransition();
     return (
         <Button onClick={async () => {
@@ -29,6 +33,18 @@ export default function Upvote({ answer, userId, question }: AnswersParams) {
                 addOptimisticUpvote(optimisticUpvotes.upvoteCount + 1);
                 await handleUpvote(answer, userId, question)
             })
-        }} variant="outline">{upvoteCount} {optimisticUpvotes.upvoting ? 'Upvoting' : 'Upvote'}</Button>
+        }} variant="outline">{upvoteCount} {optimisticUpvotes.upvoting ? 'Progressing' : [statusText]}</Button>
     )
+}
+
+
+function getStatusText(status: boolean): string {
+    switch (status) {
+        case true:
+            return "Downvote"
+        case false:
+            "Upvote"
+        default:
+            return "Upvote"
+    }
 }

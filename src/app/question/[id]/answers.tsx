@@ -6,11 +6,15 @@ import { Question, type Answer } from "@prisma/client";
 import Image from "next/image";
 import { formatDate } from "@/lib/date-format";
 import Link from "next/link";
+import prisma from "@/lib/prisma";
 
 interface AnswersProps {
     answers: Answer[];
     question: Question | null
 }
+
+
+
 export const Answers = async ({ answers, question }: AnswersProps) => {
 
     if (answers.length === 0) {
@@ -31,6 +35,18 @@ const Answer = async ({ answer, question }: { answer: Answer, question: Question
     let answeredUser;
     let currentUser;
     let profileImageSrc;
+    const user = await auth()
+    let isUpvotedAnswer;
+
+    isUpvotedAnswer = await prisma.upvote.findUnique({
+        where: {
+            userId_answerId: {
+                userId: user.userId || '',
+                answerId: answer.id
+            }
+        }
+    })
+    isUpvotedAnswer = !!isUpvotedAnswer
     try {
         answeredUser = await clerkClient().users.getUser(answer.userId);
         profileImageSrc = answeredUser.imageUrl;
@@ -48,7 +64,7 @@ const Answer = async ({ answer, question }: { answer: Answer, question: Question
 
         <CardFooter>
             <div className="flex items-center justify-between w-full">
-                <Upvote question={question} userId={currentUser?.userId || ''} answer={answer} />
+                <Upvote isUpvotedAnswer={isUpvotedAnswer || false} question={question} userId={currentUser?.userId || ''} answer={answer} />
 
                 <Link className="flex items-center gap-2" href={`/profile?id=${answer.userId}`}>
                     {profileImageSrc && <Image className="rounded-full" width={30} height={30} src={profileImageSrc} alt={"Profile image"} />}

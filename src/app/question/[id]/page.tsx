@@ -70,6 +70,9 @@ export default async function Question({ params }: Params) {
                     createdAt: 'desc'
                 }
             });
+
+
+            
         } catch (error) {
             throw new Error('Error fetching question:', error || '');
         }

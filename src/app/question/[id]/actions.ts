@@ -51,12 +51,12 @@ export const handleUpvote = async (
 
     await prisma.upvote.delete({
       where: {
-        userId_answerId:{
+        userId_answerId: {
           userId: actorId,
-          answerId: answer.id
-        }
-      }
-    })
+          answerId: answer.id,
+        },
+      },
+    });
   } else {
     await prisma.answer.update({
       where: {
@@ -89,4 +89,8 @@ export const handleUpvote = async (
   }
 
   revalidatePath("");
+};
+
+export const checkIsUpvoted = async (userId: string, answerId: string) => {
+  
 };
