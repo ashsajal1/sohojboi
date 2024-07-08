@@ -7,10 +7,13 @@ import { revalidatePath } from "next/cache";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
-import { currentUser } from '@clerk/nextjs/server';
+import { clerkClient, currentUser } from '@clerk/nextjs/server';
 import { Answers } from "./answers";
 import { Input } from "@/components/ui/input";
-import { NotificationType } from "@prisma/client";
+import { NotificationType, type Question } from "@prisma/client";
+import UpvoteBtn from "../upvote-btn";
+import ProfileImgCard from "@/components/profile-img-card";
+import { chekcIsQuestionUpvoted } from "@/lib/utils";
 
 interface Params {
     params: {
@@ -55,6 +58,10 @@ export default async function Question({ params }: Params) {
     }
     let question = null;
     let answers = null;
+    let profileImageSrc;
+    let questionUser;
+
+
     if (isValidObjectId(params.id)) {
         try {
             question = await prisma.question.findUnique({
@@ -80,6 +87,15 @@ export default async function Question({ params }: Params) {
         throw new Error('Invalid ObjectId');
     }
 
+    try {
+        questionUser = await clerkClient().users.getUser(question?.userId || "");
+        profileImageSrc = questionUser.imageUrl;
+    } catch (error: any) {
+        // throw new Error(error.message)
+    }
+
+    const isUpvotedQuestion = await chekcIsQuestionUpvoted(user?.id || '', question?.id || '');
+
     return (
         <div className="mt-2">
             <Card>
@@ -94,6 +110,14 @@ export default async function Question({ params }: Params) {
                 </CardHeader>
 
                 <CardContent>
+
+                    <div className="flex items-center justify-between mb-4 mt-2 border-b pb-4">
+                        <ProfileImgCard fullName={question?.userFullName || ''} type="question" createdAt={question?.createdAt || new Date()} profileImageSrc={profileImageSrc || ''} userId={question?.userId || ''} />
+
+                        <div className="flex items-center gap-2">
+                            <UpvoteBtn isUpvotedQuestion={isUpvotedQuestion} question={question || {} as Question} actorId={user?.id || ''} />
+                        </div>
+                    </div>
 
                     <SignedIn>
                         <form action={postAnswer}>

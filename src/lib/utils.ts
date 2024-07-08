@@ -1,6 +1,7 @@
 import { NotificationType, Notification } from "@prisma/client";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import prisma from "./prisma";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -33,3 +34,21 @@ export function getStatusText(status: boolean): string {
       return "Upvote";
   }
 }
+
+export const chekcIsQuestionUpvoted = async (
+  actorId: string,
+  quesitonId: string
+) => {
+  let isUpvotedQuestion;
+
+  isUpvotedQuestion = await prisma.upvote.findUnique({
+    where: {
+      userId_questionId: {
+        userId: actorId || "",
+        questionId: quesitonId,
+      },
+    },
+  });
+
+  return isUpvotedQuestion = !!isUpvotedQuestion;
+};
