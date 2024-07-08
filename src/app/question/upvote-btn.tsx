@@ -24,7 +24,7 @@ export default function UpvoteBtn({ question, actorId }: {
         <Button onClick={async () => {
             startTransition(async () => {
                 addOptimisticUpvote(optimisticUpvotes.currentUpvoteCount + 1);
-                await handleQuestionUpvote(question, currentUpvoteCount, actorId)
+                await handleQuestionUpvote(question, actorId)
             })
         }} variant={'outline'}>{currentUpvoteCount} {optimisticUpvotes.upvoting ? 'Upvoting' : 'Upvote'}</Button>
     )
