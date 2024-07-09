@@ -159,14 +159,18 @@ export const updateAnswer = async (
   updatedAnswerText: string,
   questionId: string
 ) => {
-  const updatedAnswer = await prisma.answer.update({
-    where: {
-      id: answerId,
-    },
-    data: {
-      answer: updatedAnswerText as string,
-    },
-  });
+  try {
+    if (updatedAnswerText) {
+      const updatedAnswer = await prisma.answer.update({
+        where: {
+          id: answerId,
+        },
+        data: {
+          answer: updatedAnswerText as string,
+        },
+      });
 
-  revalidatePath("/");
+      revalidatePath("/");
+    }
+  } catch (error) {}
 };

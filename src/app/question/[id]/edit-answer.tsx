@@ -32,6 +32,7 @@ export default function EditAnswer({ answerId, answerText, questionId }: { answe
                 <DialogHeader>
                     <DialogTitle>Edit your answer</DialogTitle>
                     <Textarea placeholder="Enter updated answer..."
+                        required
                         disabled={isPending}
                         name="updatedAnswerText" defaultValue={answerText} onChange={(e) => setUpdatedAnswer(e.target.value)} />
                 </DialogHeader>
