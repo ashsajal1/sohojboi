@@ -5,6 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import prisma from "@/lib/prisma";
 import { currentUser } from '@clerk/nextjs/server';
 import { redirect } from "next/navigation";
+import CreateForm from "./create-form";
 
 export default async function Create() {
   const user = await currentUser();
@@ -32,16 +33,7 @@ export default async function Create() {
         <CardHeader>
           <CardTitle>Create question</CardTitle>
         </CardHeader>
-        <form action={createQuestion}>
-          <CardContent>
-            <Input name="title" placeholder="Enter title..." />
-            <Textarea name="description" rows={12} placeholder="Enter description..." className="mt-3" />
-
-          </CardContent>
-          <CardFooter>
-            <Button>Submit</Button>
-          </CardFooter>
-        </form>
+        <CreateForm />
       </Card>
     </div>
   )
