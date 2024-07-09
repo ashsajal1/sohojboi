@@ -19,7 +19,7 @@ import { formatDate } from "@/lib/date-format";
 export default async function Page({ searchParams }: { searchParams: { id: string } }) {
     let user: User | null;
 
-    if(!searchParams.id) {
+    if (!searchParams.id) {
         user = await currentUser();
     } else {
         user = await clerkClient().users.getUser(searchParams.id)
@@ -45,8 +45,12 @@ export default async function Page({ searchParams }: { searchParams: { id: strin
                 { challengerId: user?.id },
                 { challengeeId: user?.id },
             ],
-            status: "completed"
+            status: "completed",
         },
+        orderBy: {
+            createdAt: 'desc'
+        },
+        take: 10
     })
 
 
