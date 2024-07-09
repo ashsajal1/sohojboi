@@ -11,9 +11,15 @@ import {
     AlertTitle,
 } from "@/components/ui/alert"
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
+import { ZodFormattedError } from 'zod';
+
+type ErrorState = ZodFormattedError<{ title: string; description: string; }, string> | { error: string } | null
+
 
 export default function CreateForm() {
     const [errorState, createQuestionAction] = useFormState(createQuestion, null);
+
+    const errorMessage: ErrorState = errorState;
 
     return (
         <div>
@@ -22,12 +28,12 @@ export default function CreateForm() {
                     <InputFields />
                     {
                         errorState && <Alert className="mt-2" variant="destructive">
-                        <ExclamationTriangleIcon />
-                        <AlertTitle>Error</AlertTitle>
-                        <AlertDescription>
-                            {errorState}
-                        </AlertDescription>
-                    </Alert>
+                            <ExclamationTriangleIcon />
+                            <AlertTitle>Error</AlertTitle>
+                            <AlertDescription>
+                                {renderErrorState(errorMessage)}
+                            </AlertDescription>
+                        </Alert>
                     }
 
                 </CardContent>
@@ -55,3 +61,22 @@ const InputFields = () => {
         <Textarea disabled={pending} name="description" rows={12} placeholder="Enter description..." className="mt-3" />
     </>
 }
+
+const renderErrorState = (errorState: ErrorState) => {
+    if (errorState !== null) {
+        if ('error' in errorState) {
+            return <div>{errorState.error}</div>;
+        }
+
+        return (
+            <>
+                {errorState.title && errorState.title._errors.map((error: any, index: any) => (
+                    <div key={index}>{error}</div>
+                ))}
+                {errorState.description && errorState.description._errors.map((error: any, index: any) => (
+                    <div key={index}>{error}</div>
+                ))}
+            </>
+        );
+    }
+};
