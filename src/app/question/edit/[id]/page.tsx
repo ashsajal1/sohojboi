@@ -10,15 +10,16 @@ import DeleteQuestion from "./delete-question";
 export default async function Create({ params }: { params: { id: string } }) {
     const userId = await (await currentUser())?.id;
     const questionId = params.id;
-    if(questionId !== userId) {
-        throw new Error("Unauthorized access!")
-    }
 
     const questionData = await prisma.question.findUnique({
         where: {
             id: questionId
         }
     });
+
+    if(questionData?.userId !== userId) {
+        throw new Error("Unauthorized access!")
+    }
 
     if((!questionId && questionData)) {
         throw new Error("Please enter a valid question id!")
