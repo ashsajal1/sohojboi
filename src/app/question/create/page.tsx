@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import prisma from "@/lib/prisma";
 import { currentUser } from '@clerk/nextjs/server';
+import { redirect } from "next/navigation";
 
 export default async function Create() {
   const user = await currentUser();
@@ -23,7 +24,7 @@ export default async function Create() {
       }
     })
 
-    // console.log(newQuestion)
+    redirect(`/question/${newQuestion.id}`)
   }
   return (
     <div className="p-4">
