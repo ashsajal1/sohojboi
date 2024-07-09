@@ -31,11 +31,17 @@ export default async function Page({ searchParams }: { searchParams: { id: strin
     const questions = await prisma.question.findMany({
         where: {
             userId: user?.id
+        },
+        orderBy: {
+            updatedAt: 'desc'
         }
     })
     const answers = await prisma.answer.findMany({
         where: {
             userId: user?.id
+        },
+        orderBy: {
+            updatedAt: 'desc'
         }
     })
 
