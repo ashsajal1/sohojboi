@@ -90,3 +90,15 @@ export const handleUpvote = async (
 
   revalidatePath("");
 };
+
+export const deleteAnswer = async (answerId: string, questionId: string) => {
+  try {
+    const deletedQuestion = await prisma.answer.delete({
+      where: {
+        id: answerId,
+      },
+    });
+  } catch (error) {}
+
+  redirect(`/question/${questionId}`);
+};
