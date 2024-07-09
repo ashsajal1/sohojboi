@@ -20,7 +20,7 @@ export default function DeleteQuestion({ questionId }: { questionId: string }) {
     const [isPending, startTransition] = useTransition();
     return (
         <Dialog>
-            <DialogTrigger>
+            <DialogTrigger asChild>
                 <Button className="mt-2" variant={'destructive'}>
                     <TrashIcon className="mr-1" />
                     Delete Question
