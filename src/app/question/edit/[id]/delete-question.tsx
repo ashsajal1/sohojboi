@@ -11,6 +11,7 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
+    DialogClose
 } from "@/components/ui/dialog"
 import { deleteQuestion } from "./actions";
 
@@ -32,7 +33,9 @@ export default function DeleteQuestion({ questionId }: { questionId: string }) {
                     </DialogDescription>
                 </DialogHeader>
                 <DialogFooter>
-                    <Button variant={'ghost'}>No</Button>
+                    <DialogClose asChild>
+                        <Button variant={'ghost'}>No</Button>
+                    </DialogClose>
                     <Button onClick={() => deleteQuestion(questionId)} variant={'destructive'}>Yes</Button>
                 </DialogFooter>
             </DialogContent>
