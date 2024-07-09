@@ -98,7 +98,7 @@ export const deleteAnswer = async (answerId: string, questionId: string) => {
     });
   } catch (error) {}
 
-  redirect(`/question/${questionId}`);
+  revalidatePath("/");
 };
 
 import z from "zod";
@@ -154,8 +154,11 @@ export const createAnswer = async (_: any, formData: FormData) => {
   }
 };
 
-export const updateAnswer = async (answerId: string,updatedAnswerText: string, questionId: string ) => {
-
+export const updateAnswer = async (
+  answerId: string,
+  updatedAnswerText: string,
+  questionId: string
+) => {
   const updatedAnswer = await prisma.answer.update({
     where: {
       id: answerId,
@@ -165,5 +168,5 @@ export const updateAnswer = async (answerId: string,updatedAnswerText: string, q
     },
   });
 
-  redirect(`/question/${questionId}`)
+  revalidatePath("/");
 };
