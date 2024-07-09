@@ -20,6 +20,7 @@ import {
     HoverCardContent,
     HoverCardTrigger,
 } from "@/components/ui/hover-card"
+import AnswerForm from "./answer-form";
 
 interface Params {
     params: {
@@ -147,11 +148,7 @@ export default async function Question({ params }: Params) {
                     </div>
 
                     <SignedIn>
-                        <form action={postAnswer}>
-                            <Textarea name="answerText" rows={6} placeholder="Enter your asnwer..."></Textarea>
-                            <Input className="hidden" value={question?.userId} name="userId" />
-                            <Button className="mt-3">Submit</Button>
-                        </form>
+                        <AnswerForm question={question} />
                     </SignedIn>
                     <SignedOut>
                         <h3 className="font-bold text-muted-foreground text-xl"><Link className="text-primary border-b" href={'/login'}>Login</Link> to post your answer</h3>
