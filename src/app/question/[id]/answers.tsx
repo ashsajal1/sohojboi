@@ -24,9 +24,7 @@ interface AnswersProps {
 export const Answers = async ({ answers, question }: AnswersProps) => {
     const user = await currentUser();
     if (answers.length === 0) {
-        return <h2 className="font-bold text-xl text-center text-muted-foreground">
-            Answers is empty!
-        </h2>
+        return null;
     }
 
     return <div className="flex flex-col gap-2 w-full">

@@ -157,6 +157,9 @@ export default async function Question({ params }: Params) {
                 </CardContent>
 
                 <CardFooter className="flex flex-col items-start">
+                    {answers.length === 0 && <h2 className="font-bold text-xl text-center text-muted-foreground">
+            Answers is empty!
+        </h2> }
                     <Answers question={question} answers={answers} />
                 </CardFooter>
             </Card>
