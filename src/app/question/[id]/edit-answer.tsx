@@ -17,7 +17,7 @@ import { deleteAnswer, updateAnswer } from "./actions";
 import { useState, useTransition } from "react";
 import { Textarea } from "@/components/ui/textarea";
 
-export default function EditAnswer({ answerId, answerText }: { answerId: string, answerText: string }) {
+export default function EditAnswer({ answerId, answerText, questionId }: { answerId: string, answerText: string, questionId: string }) {
     const [updatedAnswer, setUpdatedAnswer] = useState(answerText)
     const [isPending, startTransition] = useTransition();
     return (
@@ -41,7 +41,7 @@ export default function EditAnswer({ answerId, answerText }: { answerId: string,
                     </DialogClose>
                     <Button disabled={isPending} onClick={async () => {
                         startTransition(async () => {
-                            await updateAnswer(answerId, updatedAnswer)
+                            await updateAnswer(answerId, updatedAnswer, questionId)
                         })
 
                     }} variant={'destructive'}>

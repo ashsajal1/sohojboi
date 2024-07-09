@@ -70,7 +70,7 @@ const Answer = async ({ answer, question }: { answer: Answer, question: Question
                         </HoverCardTrigger>
                         <HoverCardContent>
                             <div className="flex items-center gap-2 justify-between">
-                                <EditAnswer answerId={answer.id} answerText={answer.answer} />
+                                <EditAnswer answerId={answer.id} answerText={answer.answer} questionId={question?.id || ''} />
                                 <DeleteAnswer questionId={answer.questionId} answerId={answer.id} />
                             </div>
                         </HoverCardContent>

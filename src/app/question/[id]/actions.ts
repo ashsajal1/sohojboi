@@ -154,7 +154,7 @@ export const createAnswer = async (_: any, formData: FormData) => {
   }
 };
 
-export const updateAnswer = async (answerId: string,updatedAnswerText: string ) => {
+export const updateAnswer = async (answerId: string,updatedAnswerText: string, questionId: string ) => {
 
   const updatedAnswer = await prisma.answer.update({
     where: {
@@ -165,7 +165,5 @@ export const updateAnswer = async (answerId: string,updatedAnswerText: string ) 
     },
   });
 
-  console.log(updatedAnswer)
-
-  revalidatePath('/')
+  redirect(`/question/${questionId}`)
 };
