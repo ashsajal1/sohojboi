@@ -4,17 +4,20 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import prisma from "@/lib/prisma";
 import { currentUser } from '@clerk/nextjs/server';
-import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import DeleteQuestion from "./delete-question";
 
 export default async function Create({ params }: { params: { id: string } }) {
     const questionId = params.id;
-    const user = await currentUser();
     const questionData = await prisma.question.findUnique({
         where: {
             id: questionId
         }
     });
+
+    if((!questionId && questionData)) {
+        throw new Error("Please enter a valid question id!")
+    }
 
     const createQuestion = async (formData: FormData) => {
         "use server"
@@ -38,7 +41,11 @@ export default async function Create({ params }: { params: { id: string } }) {
         <div className="p-4">
             <Card>
                 <CardHeader>
-                    <CardTitle>Edit question</CardTitle>
+                    <div className="flex justify-between items-center w-full">
+                        <CardTitle>Edit question</CardTitle>
+                        
+                        <DeleteQuestion questionId={questionId} />
+                    </div>
                 </CardHeader>
                 <form action={createQuestion}>
                     <CardContent>
