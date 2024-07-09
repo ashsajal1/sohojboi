@@ -10,7 +10,7 @@ export const deleteQuestion = async (questionId: string) => {
         id: questionId,
       },
     });
-
-    if(deletedQuestion) redirect('/question')
   } catch (error) {}
+
+  redirect('/question')
 };
