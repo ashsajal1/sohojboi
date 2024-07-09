@@ -106,7 +106,7 @@ export const deleteAnswer = async (answerId: string, questionId: string) => {
 import z from "zod";
 
 const questionSchema = z.object({
-  title: z
+  answerText: z
     .string()
     .min(1, "Answer text is required")
     .max(100, "Answer text must be 100 characters or less"),
@@ -114,10 +114,12 @@ const questionSchema = z.object({
 
 export const createAnswer = async (_: any, formData: FormData) => {
   const user = await currentUser();
+  console.log("Current user : ", user)
   const answerText = await formData.get("answerText");
 
   const result = questionSchema.safeParse({ answerText });
   if (!result.success) {
+    console.log(result.error.format())
     return result.error.format();
   }
 
@@ -127,7 +129,7 @@ export const createAnswer = async (_: any, formData: FormData) => {
     try {
       const answer = await prisma.answer.create({
         data: {
-          userId: user?.id as string,
+          userId: user?.id as string || '',
           questionId: questionId as string,
           upvoteCount: 0,
           answer: answerText as string,
@@ -137,10 +139,12 @@ export const createAnswer = async (_: any, formData: FormData) => {
         },
       });
 
+      // console.log(answer)
+
       if (user?.id !== questionUserId) {
         const notif = await prisma.notification.create({
           data: {
-            userId: questionUserId as string,
+            userId: questionUserId as string || '',
             message: `${user?.fullName} has answered your questions.`,
             type: NotificationType.ANSWER,
             answerId: answer.id,
@@ -151,7 +155,8 @@ export const createAnswer = async (_: any, formData: FormData) => {
 
       revalidatePath(`/question/${questionId}`);
     } catch (error) {
-      return { error: "An unexpected error occurred. Try again." };
+      console.log(error)
+      return { error: `An unexpected error occurred. Try again.` };
     }
   }
 };

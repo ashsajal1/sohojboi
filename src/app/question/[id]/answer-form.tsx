@@ -16,7 +16,7 @@ import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 
 import { ZodFormattedError } from 'zod';
 
-type ErrorState = ZodFormattedError<{ title: string; }, string> | { error: string } | null
+type ErrorState = ZodFormattedError<{ answerText: string; }, string> | { error: string } | null
 
 export default function AnswerForm({ question }: { question: Question | null}) {
     const [errorState, createAnswerAction] = useFormState(createAnswer, null);
@@ -70,7 +70,7 @@ const renderErrorState = (errorState: ErrorState) => {
 
         return (
             <>
-                {errorState.title && errorState.title._errors.map((error: any, index: any) => (
+                {errorState.answerText && errorState.answerText._errors.map((error: any, index: any) => (
                     <div key={index}>{error}</div>
                 ))}
             </>
