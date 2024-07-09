@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import prisma from "@/lib/prisma";
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
@@ -14,6 +14,7 @@ import { Answers } from "@/app/question/[id]/answers";
 import { clerkClient, currentUser, User } from '@clerk/nextjs/server';
 import { Competition } from "@prisma/client";
 import { getUserWinLoseStats } from "@/lib/db-query";
+import { formatDate } from "@/lib/date-format";
 
 export default async function Page({ searchParams }: { searchParams: { id: string } }) {
     let user: User | null;
@@ -103,6 +104,7 @@ export default async function Page({ searchParams }: { searchParams: { id: strin
                                 <CardTitle>
                                     Competition between: {challenge.title}
                                 </CardTitle>
+                                <CardDescription>{formatDate(challenge.createdAt)}</CardDescription>
                             </CardHeader>
                             <CardContent>
                                 <Names challenge={challenge} />
