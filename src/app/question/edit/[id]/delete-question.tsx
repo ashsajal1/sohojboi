@@ -14,8 +14,10 @@ import {
     DialogClose
 } from "@/components/ui/dialog"
 import { deleteQuestion } from "./actions";
+import { useTransition } from "react";
 
 export default function DeleteQuestion({ questionId }: { questionId: string }) {
+    const [isPending, startTransition] = useTransition();
     return (
         <Dialog>
             <DialogTrigger>
@@ -34,9 +36,16 @@ export default function DeleteQuestion({ questionId }: { questionId: string }) {
                 </DialogHeader>
                 <DialogFooter>
                     <DialogClose asChild>
-                        <Button variant={'ghost'}>No</Button>
+                        <Button disabled={isPending} variant={'ghost'}>No</Button>
                     </DialogClose>
-                    <Button onClick={() => deleteQuestion(questionId)} variant={'destructive'}>Yes</Button>
+                    <Button onClick={async () => {
+                        startTransition(async () => {
+                            await deleteQuestion(questionId)
+                        })
+
+                    }} variant={'destructive'}>
+                        {isPending? 'Deleting...':'Yes'}
+                    </Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
