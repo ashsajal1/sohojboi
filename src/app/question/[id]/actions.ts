@@ -30,7 +30,6 @@ export const handleUpvote = async (
     },
   });
 
-
   if (existingUpvote) {
     await prisma.answer.update({
       where: {
@@ -126,7 +125,7 @@ export const createAnswer = async (_: any, formData: FormData) => {
     try {
       const answer = await prisma.answer.create({
         data: {
-          userId: user?.id as string || '',
+          userId: (user?.id as string) || "",
           questionId: questionId as string,
           upvoteCount: 0,
           answer: answerText as string,
@@ -136,11 +135,10 @@ export const createAnswer = async (_: any, formData: FormData) => {
         },
       });
 
-
       if (user?.id !== questionUserId) {
         const notif = await prisma.notification.create({
           data: {
-            userId: questionUserId as string || '',
+            userId: (questionUserId as string) || "",
             message: `${user?.fullName} has answered your questions.`,
             type: NotificationType.ANSWER,
             answerId: answer.id,
@@ -154,4 +152,20 @@ export const createAnswer = async (_: any, formData: FormData) => {
       return { error: `An unexpected error occurred. Try again.` };
     }
   }
+};
+
+export const updateAnswer = async (answerId: string,updatedAnswerText: string ) => {
+
+  const updatedAnswer = await prisma.answer.update({
+    where: {
+      id: answerId,
+    },
+    data: {
+      answer: updatedAnswerText as string,
+    },
+  });
+
+  console.log(updatedAnswer)
+
+  revalidatePath('/')
 };

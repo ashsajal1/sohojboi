@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/hover-card"
 import Link from "next/link";
 import DeleteAnswer from "./delete-answer";
+import EditAnswer from "./edit-answer";
 
 interface AnswersProps {
     answers: Answer[];
@@ -69,11 +70,7 @@ const Answer = async ({ answer, question }: { answer: Answer, question: Question
                         </HoverCardTrigger>
                         <HoverCardContent>
                             <div className="flex items-center gap-2 justify-between">
-                                <Link className="w-full" href={`/question/edit/${question?.id}`}>
-                                    <Button className="w-full" size={'sm'} variant={'secondary'}>
-                                        <Pencil1Icon className="mr-1" />
-                                        Edit</Button>
-                                </Link>
+                                <EditAnswer answerId={answer.id} answerText={answer.answer} />
                                 <DeleteAnswer questionId={answer.questionId} answerId={answer.id} />
                             </div>
                         </HoverCardContent>
