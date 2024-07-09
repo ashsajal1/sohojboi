@@ -30,7 +30,6 @@ export const handleUpvote = async (
     },
   });
 
-  // console.log(existingUpvote)
 
   if (existingUpvote) {
     await prisma.answer.update({
@@ -114,12 +113,10 @@ const questionSchema = z.object({
 
 export const createAnswer = async (_: any, formData: FormData) => {
   const user = await currentUser();
-  console.log("Current user : ", user)
   const answerText = await formData.get("answerText");
 
   const result = questionSchema.safeParse({ answerText });
   if (!result.success) {
-    console.log(result.error.format())
     return result.error.format();
   }
 
@@ -139,7 +136,6 @@ export const createAnswer = async (_: any, formData: FormData) => {
         },
       });
 
-      // console.log(answer)
 
       if (user?.id !== questionUserId) {
         const notif = await prisma.notification.create({
@@ -155,7 +151,6 @@ export const createAnswer = async (_: any, formData: FormData) => {
 
       revalidatePath(`/question/${questionId}`);
     } catch (error) {
-      console.log(error)
       return { error: `An unexpected error occurred. Try again.` };
     }
   }
