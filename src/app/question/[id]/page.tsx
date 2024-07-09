@@ -14,6 +14,12 @@ import { NotificationType, type Question } from "@prisma/client";
 import UpvoteBtn from "../upvote-btn";
 import ProfileImgCard from "@/components/profile-img-card";
 import { chekcIsQuestionUpvoted } from "@/lib/utils";
+import { GearIcon, Pencil1Icon, TrashIcon } from "@radix-ui/react-icons";
+import {
+    HoverCard,
+    HoverCardContent,
+    HoverCardTrigger,
+} from "@/components/ui/hover-card"
 
 interface Params {
     params: {
@@ -114,7 +120,28 @@ export default async function Question({ params }: Params) {
                     <div className="flex items-center justify-between mb-4 mt-2 border-b pb-4">
                         <ProfileImgCard fullName={question?.userFullName || ''} type="question" createdAt={question?.createdAt || new Date()} profileImageSrc={profileImageSrc || ''} userId={question?.userId || ''} />
 
+
+
                         <div className="flex items-center gap-2">
+                            {user?.id === question?.userId && <HoverCard>
+                                <HoverCardTrigger>
+                                    <Button size='sm' variant='outline'><GearIcon className="mr-2" />Settings</Button>
+                                </HoverCardTrigger>
+                                <HoverCardContent>
+                                    <div className="flex items-center gap-2 justify-between">
+                                        <Link className="w-full" href={`/question/edit/${question?.id}`}>
+                                            <Button className="w-full" size={'sm'} variant={'secondary'}>
+                                                <Pencil1Icon className="mr-1" />
+                                                Edit</Button>
+                                        </Link>
+                                        <Link className="w-full" href={`/question/edit/${question?.id}`}>
+                                            <Button className="w-full" size={'sm'} variant={'destructive'}>
+                                            <TrashIcon className="mr-1" />
+                                            Delete</Button>
+                                        </Link>
+                                    </div>
+                                </HoverCardContent>
+                            </HoverCard>}
                             <UpvoteBtn isUpvotedQuestion={isUpvotedQuestion} question={question || {} as Question} actorId={user?.id || ''} />
                         </div>
                     </div>
