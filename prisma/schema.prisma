@@ -133,3 +133,19 @@ model Upvote {
   @@unique([userId, answerId])
   @@unique([userId, questionId])
 }
+
+model View {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId     String?
+  ipAddress  String?
+  answerId   String?  @db.ObjectId
+  questionId String?  @db.ObjectId
+  count      Int      @default(1)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([userId, answerId], name: "user_answer_unique")
+  @@unique([userId, questionId], name: "user_question_unique")
+  @@unique([ipAddress, answerId], name: "ip_answer_unique")
+  @@unique([ipAddress, questionId], name: "ip_question_unique")
+}
