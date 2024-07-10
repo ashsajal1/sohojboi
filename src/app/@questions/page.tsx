@@ -11,21 +11,18 @@ export default async function QuestionsSlot() {
         }
     });
     if (questions.length === 0) {
-        return <Questions>
-            <Card className="p-4 m-12">
-                <CardTitle>Question is empty!</CardTitle>
-            </Card>
-        </Questions>
+        return <Card className="p-4 m-12">
+            <CardTitle>Question is empty!</CardTitle>
+        </Card>
+
     }
     return (
         <>
-            <Questions>
-                <div className="p-4 grid md:grid-cols-2 gap-2">
-                    {questions.map(question => (
-                        <QuestionCard key={question.id} question={question} />
-                    ))}
-                </div>
-            </Questions>
+            <div className="p-4 grid md:grid-cols-2 gap-2">
+                {questions.map(question => (
+                    <QuestionCard key={question.id} question={question} />
+                ))}
+            </div>
         </>
     )
 }
