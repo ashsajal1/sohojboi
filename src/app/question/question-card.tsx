@@ -2,20 +2,20 @@ import { Button } from "@/components/ui/button";
 import { Card, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
 import UpvoteBtn from "./upvote-btn";
-import { formatDate } from "@/lib/date-format";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { Question } from "@prisma/client";
 import prisma from "@/lib/prisma";
-import Image from "next/image";
 import ProfileImgCard from "@/components/profile-img-card";
 import { chekcIsQuestionUpvoted } from "@/lib/utils";
+import { EyeOpenIcon } from "@radix-ui/react-icons";
+import { Separator } from "@/components/ui/separator";
 
 interface QuestionProps {
     question: Question;
 }
 export default async function QuestionCard({ question }: QuestionProps) {
     const actorId = await auth().userId;
-    let isUpvotedQuestion = await chekcIsQuestionUpvoted( actorId || '', question.id);
+    let isUpvotedQuestion = await chekcIsQuestionUpvoted(actorId || '', question.id);
     let profileImageSrc;
     let questionUser;
 
@@ -26,12 +26,29 @@ export default async function QuestionCard({ question }: QuestionProps) {
         // throw new Error(error.message)
     }
 
+    const viewCount = await prisma.view.aggregate({
+        _sum: {
+            count: true,
+        },
+        where: {
+            questionId: {
+                in: [question?.id!]
+            }
+        }
+    })
+
     return (
         <Card>
             <CardHeader>
                 <CardTitle>{question.questionTitle}</CardTitle>
                 <div className="text-sm text-muted-foreground flex items-center gap-2">
-                    <span>Upvoted by {question.upvoteCount} people{question.upvoteCount > 0? 's':''}</span>
+                    <span>Upvoted by {question.upvoteCount} people{question.upvoteCount > 0 ? 's' : ''}</span>
+                    <Separator orientation="vertical" />
+
+                    <div className="flex items-center gap-1">
+                        <EyeOpenIcon className="mr-1" />
+                        {viewCount._sum.count || 0}
+                    </div>
                 </div>
             </CardHeader>
 
