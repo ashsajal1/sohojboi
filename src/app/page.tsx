@@ -5,7 +5,6 @@ import HeroSection from "@/components/hero-section";
 
 export default async function Home() {
   const questions = await prisma.question.findMany();
-  // console.log(questions)
   if (questions.length === 0) {
     return <Card className="p-4 m-12">
       <CardTitle>Question is empty!</CardTitle>
@@ -14,7 +13,7 @@ export default async function Home() {
   return (
     <>
       <HeroSection />
-      <div className="p-4 flex flex-col gap-2">
+      <div className="p-4 md:grid-cols-2 gap-2">
         {questions.map(question => (
           <QuestionCard key={question.id} question={question} />
         ))}
