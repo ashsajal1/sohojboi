@@ -15,6 +15,7 @@ import {
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 
 import { ZodFormattedError } from 'zod';
+import { SubmitButton } from "@/components/submit-btn";
 
 type ErrorState = ZodFormattedError<{ answerText: string; }, string> | { error: string } | null
 
@@ -44,15 +45,6 @@ export default function AnswerForm({ question }: { question: Question | null}) {
             </form>
         </div>
     )
-}
-
-const SubmitButton = () => {
-    const { pending } = useFormStatus();
-    return <>
-        <Button className="mt-2">
-            {pending ? 'Submitting...' : 'Submit'}
-        </Button>
-    </>
 }
 
 const InputFields = () => {
