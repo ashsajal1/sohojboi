@@ -5,6 +5,7 @@ import React, { useOptimistic, useTransition } from 'react'
 import { handleQuestionUpvote } from './actions'
 import { Question } from '@prisma/client'
 import { getStatusText } from '@/lib/utils'
+import { TriangleUpIcon } from '@radix-ui/react-icons'
 
 export default function UpvoteBtn({ question, actorId, isUpvotedQuestion }: {
     question: Question,
@@ -30,6 +31,7 @@ export default function UpvoteBtn({ question, actorId, isUpvotedQuestion }: {
                 addOptimisticUpvote(optimisticUpvotes.currentUpvoteCount + 1);
                 await handleQuestionUpvote(question, actorId)
             })
-        }} variant={'outline'}>{currentUpvoteCount} {optimisticUpvotes.upvoting ? 'Progressing' : [statusText]}</Button>
+        }} variant={isUpvotedQuestion? 'secondary':'outline'}>
+            <TriangleUpIcon className='mr-1' /> {optimisticUpvotes.upvoting ? 'Progressing' : [statusText]}</Button>
     )
 }
