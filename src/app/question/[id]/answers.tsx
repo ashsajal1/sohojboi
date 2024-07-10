@@ -6,7 +6,7 @@ import { Question, type Answer } from "@prisma/client";
 import { chekcIsAnswerUpvoted } from "@/lib/utils";
 import ProfileImgCard from "@/components/profile-img-card";
 import { Button } from "@/components/ui/button";
-import { GearIcon, Pencil1Icon, TrashIcon } from "@radix-ui/react-icons";
+import { DotsHorizontalIcon, GearIcon, Pencil1Icon, TrashIcon } from "@radix-ui/react-icons";
 import {
     HoverCard,
     HoverCardContent,
@@ -52,9 +52,23 @@ const Answer = async ({ answer, question }: { answer: Answer, question: Question
 
     return <Card>
         <CardHeader>
-            <CardDescription>
-                {answer.answer}
-            </CardDescription>
+            <div className="flex justify-between items-start">
+                <CardDescription>
+                    {answer.answer}
+                </CardDescription>
+                {user.userId === answer?.userId && <HoverCard>
+                    <HoverCardTrigger>
+                        <Button size='sm' variant='ghost'><DotsHorizontalIcon /></Button>
+                    </HoverCardTrigger>
+                    <HoverCardContent>
+                        <div className="flex items-center gap-2 justify-between">
+                            <EditAnswer answerId={answer.id} answerText={answer.answer} questionId={question?.id || ''} />
+                            <DeleteAnswer questionId={answer.questionId} answerId={answer.id} />
+                        </div>
+                    </HoverCardContent>
+                </HoverCard>}
+            </div>
+
         </CardHeader>
 
         <CardFooter>
@@ -62,17 +76,6 @@ const Answer = async ({ answer, question }: { answer: Answer, question: Question
                 <ProfileImgCard profileImageSrc={profileImageSrc || ''} fullName={answer.userFullName} type={"answer"} userId={answer.userId} createdAt={answer.createdAt || new Date()} />
 
                 <div className="flex items-center gap-2">
-                    {user.userId === answer?.userId && <HoverCard>
-                        <HoverCardTrigger>
-                            <Button size='sm' variant='outline'><GearIcon /></Button>
-                        </HoverCardTrigger>
-                        <HoverCardContent>
-                            <div className="flex items-center gap-2 justify-between">
-                                <EditAnswer answerId={answer.id} answerText={answer.answer} questionId={question?.id || ''} />
-                                <DeleteAnswer questionId={answer.questionId} answerId={answer.id} />
-                            </div>
-                        </HoverCardContent>
-                    </HoverCard>}
                     <Upvote isUpvotedAnswer={isUpvotedAnswer || false} question={question} userId={currentUser?.userId || ''} answer={answer} />
                 </div>
             </div>
