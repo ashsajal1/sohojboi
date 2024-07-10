@@ -18,7 +18,7 @@ export default async function Home() {
   return (
     <>
       <HeroSection />
-      <div className="p-4 md:grid-cols-2 gap-2">
+      <div className="p-4 grid md:grid-cols-2 gap-2">
         {questions.map(question => (
           <QuestionCard key={question.id} question={question} />
         ))}
