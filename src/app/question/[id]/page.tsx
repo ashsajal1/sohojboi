@@ -14,7 +14,7 @@ import { NotificationType, type Question } from "@prisma/client";
 import UpvoteBtn from "../upvote-btn";
 import ProfileImgCard from "@/components/profile-img-card";
 import { chekcIsQuestionUpvoted } from "@/lib/utils";
-import { GearIcon, Pencil1Icon, TrashIcon } from "@radix-ui/react-icons";
+import { CaretUpIcon, EyeOpenIcon, GearIcon, Pencil1Icon, TrashIcon } from "@radix-ui/react-icons";
 import {
     HoverCard,
     HoverCardContent,
@@ -65,7 +65,7 @@ export default async function Question({ params }: Params) {
         }
     }
 
-    
+
     let question = null;
     let answers = null;
     let profileImageSrc;
@@ -102,11 +102,22 @@ export default async function Question({ params }: Params) {
         // throw new Error(error.message)
     }
 
-    if(user?.id) {
+    if (user?.id) {
         increaseView(user?.id!, question?.id!)
     }
 
     const isUpvotedQuestion = await chekcIsQuestionUpvoted(user?.id || '', question?.id || '');
+
+    const viewCount = await prisma.view.aggregate({
+        _sum: {
+            count: true,
+        },
+        where: {
+            questionId: {
+                in:  [question?.id!]
+            }
+        }
+    })
 
     return (
         <div className="mt-2">
@@ -118,6 +129,15 @@ export default async function Question({ params }: Params) {
                     <CardDescription>
                         {question?.questionDescription}
                     </CardDescription>
+
+                    <div className="flex items-center gap-2">
+                        <Badge variant={'secondary'}>
+                            <EyeOpenIcon className="mr-2" />{viewCount._sum.count}
+                        </Badge>
+                        <Badge variant={'secondary'}>
+                            <CaretUpIcon className="mr-2" />{question?.upvoteCount!}
+                        </Badge>
+                    </div>
 
                 </CardHeader>
 
@@ -142,8 +162,8 @@ export default async function Question({ params }: Params) {
                                         </Link>
                                         <Link className="w-full" href={`/question/edit/${question?.id}`}>
                                             <Button className="w-full" size={'sm'} variant={'destructive'}>
-                                            <TrashIcon className="mr-1" />
-                                            Delete</Button>
+                                                <TrashIcon className="mr-1" />
+                                                Delete</Button>
                                         </Link>
                                     </div>
                                 </HoverCardContent>
@@ -163,8 +183,8 @@ export default async function Question({ params }: Params) {
 
                 <CardFooter className="flex flex-col items-start">
                     {answers.length === 0 && <h2 className="font-bold text-xl text-center text-muted-foreground">
-            Answers is empty!
-        </h2> }
+                        Answers is empty!
+                    </h2>}
                     <Answers question={question} answers={answers} />
                 </CardFooter>
             </Card>
