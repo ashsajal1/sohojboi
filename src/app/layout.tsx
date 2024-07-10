@@ -14,8 +14,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
+  questions
 }: Readonly<{
   children: React.ReactNode;
+  questions: React.ReactNode;
 }>) {
   return (
     <ClerkProvider>
@@ -30,6 +32,7 @@ export default function RootLayout({
             <Navbar />
             <main className="p-2">
               {children}
+              {questions}
             </main>
           </ThemeProvider>
         </body>
