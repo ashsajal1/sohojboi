@@ -15,13 +15,15 @@ import {
 } from "@/components/ui/dialog"
 import { deleteQuestion } from "./actions";
 import { useTransition } from "react";
+import { useFormStatus } from "react-dom";
 
 export default function DeleteQuestion({ questionId }: { questionId: string }) {
     const [isPending, startTransition] = useTransition();
+    const { pending } = useFormStatus();
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button className="mt-2" variant={'destructive'}>
+                <Button disabled={pending} className="mt-2" variant={'destructive'}>
                     <TrashIcon className="mr-1" />
                     Delete Question
                 </Button>
@@ -44,7 +46,7 @@ export default function DeleteQuestion({ questionId }: { questionId: string }) {
                         })
 
                     }} variant={'destructive'}>
-                        {isPending? 'Deleting...':'Yes'}
+                        {isPending ? 'Deleting...' : 'Yes'}
                     </Button>
                 </DialogFooter>
             </DialogContent>
