@@ -27,7 +27,7 @@ export const getPathnameByNotificationType = (
 export function getStatusText(status: boolean): string {
   switch (status) {
     case true:
-      return "Downvote";
+      return "Upvoted";
     case false:
       "Upvote";
     default:
