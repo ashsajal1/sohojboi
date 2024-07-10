@@ -14,7 +14,7 @@ import { NotificationType, type Question } from "@prisma/client";
 import UpvoteBtn from "../upvote-btn";
 import ProfileImgCard from "@/components/profile-img-card";
 import { chekcIsQuestionUpvoted } from "@/lib/utils";
-import { CaretUpIcon, EyeOpenIcon, GearIcon, Pencil1Icon, TrashIcon } from "@radix-ui/react-icons";
+import { CaretUpIcon, DotsHorizontalIcon, EyeOpenIcon, GearIcon, Pencil1Icon, TrashIcon } from "@radix-ui/react-icons";
 import {
     HoverCard,
     HoverCardContent,
@@ -114,7 +114,7 @@ export default async function Question({ params }: Params) {
         },
         where: {
             questionId: {
-                in:  [question?.id!]
+                in: [question?.id!]
             }
         }
     })
@@ -123,9 +123,31 @@ export default async function Question({ params }: Params) {
         <div className="mt-2">
             <Card>
                 <CardHeader>
-                    <CardTitle>
-                        {question?.questionTitle}
-                    </CardTitle>
+                    <div className="flex justify-between items-start">
+                        <CardTitle>
+                            {question?.questionTitle}
+                        </CardTitle>
+                        {user?.id === question?.userId && <HoverCard>
+                            <HoverCardTrigger>
+                                <Button size='sm' variant='outline'><DotsHorizontalIcon /></Button>
+                            </HoverCardTrigger>
+                            <HoverCardContent>
+                                <div className="flex items-center gap-2 justify-between">
+                                    <Link className="w-full" href={`/question/edit/${question?.id}`}>
+                                        <Button className="w-full" size={'sm'} variant={'secondary'}>
+                                            <Pencil1Icon className="mr-1" />
+                                            Edit</Button>
+                                    </Link>
+                                    <Link className="w-full" href={`/question/edit/${question?.id}`}>
+                                        <Button className="w-full" size={'sm'} variant={'destructive'}>
+                                            <TrashIcon className="mr-1" />
+                                            Delete</Button>
+                                    </Link>
+                                </div>
+                            </HoverCardContent>
+                        </HoverCard>}
+                    </div>
+
                     <CardDescription>
                         {question?.questionDescription}
                     </CardDescription>
@@ -138,36 +160,20 @@ export default async function Question({ params }: Params) {
                             <CaretUpIcon className="mr-2" />{question?.upvoteCount!}
                         </Badge>
                     </div>
-
                 </CardHeader>
 
                 <CardContent>
-
                     <div className="flex items-center justify-between mb-4 mt-2 border-b pb-4">
                         <ProfileImgCard fullName={question?.userFullName || ''} type="question" createdAt={question?.createdAt || new Date()} profileImageSrc={profileImageSrc || ''} userId={question?.userId || ''} />
 
-
-
                         <div className="flex items-center gap-2">
-                            {user?.id === question?.userId && <HoverCard>
-                                <HoverCardTrigger>
-                                    <Button size='sm' variant='outline'><GearIcon className="mr-2" />Settings</Button>
-                                </HoverCardTrigger>
-                                <HoverCardContent>
-                                    <div className="flex items-center gap-2 justify-between">
-                                        <Link className="w-full" href={`/question/edit/${question?.id}`}>
-                                            <Button className="w-full" size={'sm'} variant={'secondary'}>
-                                                <Pencil1Icon className="mr-1" />
-                                                Edit</Button>
-                                        </Link>
-                                        <Link className="w-full" href={`/question/edit/${question?.id}`}>
-                                            <Button className="w-full" size={'sm'} variant={'destructive'}>
-                                                <TrashIcon className="mr-1" />
-                                                Delete</Button>
-                                        </Link>
-                                    </div>
-                                </HoverCardContent>
-                            </HoverCard>}
+                            {user?.id === question?.userId &&
+                                <Link className="w-full" href={`/question/edit/${question?.id}`}>
+                                    <Button className="w-full" size={'sm'} variant={'outline'}>
+                                        <Pencil1Icon className="mr-1" />
+                                        Edit</Button>
+                                </Link>
+                            }
                             <UpvoteBtn isUpvotedQuestion={isUpvotedQuestion} question={question || {} as Question} actorId={user?.id || ''} />
                         </div>
                     </div>
