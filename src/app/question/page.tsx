@@ -6,7 +6,8 @@ export default async function Question() {
     const questions = await prisma.question.findMany({
         orderBy: {
             createdAt: 'desc'
-        }
+        },
+        take: 10
     });
  
     if(questions.length === 0) {
