@@ -174,3 +174,24 @@ export const updateAnswer = async (
     }
   } catch (error) {}
 };
+
+export const increaseView = async (userId: string, questionId: string) => {
+  await prisma.view.upsert({
+    where: {
+      user_question_unique: {
+        userId: userId,
+        questionId: questionId,
+      },
+    },
+    update: {
+      count: {
+        increment: 1,
+      },
+    },
+    create: {
+      userId: userId,
+      count: 1,
+      questionId: questionId
+    },
+  });
+};

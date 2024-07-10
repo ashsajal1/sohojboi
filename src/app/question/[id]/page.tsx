@@ -21,6 +21,7 @@ import {
     HoverCardTrigger,
 } from "@/components/ui/hover-card"
 import AnswerForm from "./answer-form";
+import { increaseView } from "./actions";
 
 interface Params {
     params: {
@@ -63,6 +64,8 @@ export default async function Question({ params }: Params) {
             revalidatePath(`/question/${params.id}`)
         }
     }
+
+    
     let question = null;
     let answers = null;
     let profileImageSrc;
@@ -85,8 +88,6 @@ export default async function Question({ params }: Params) {
                 }
             });
 
-
-
         } catch (error) {
             throw new Error('Error fetching question:', error || '');
         }
@@ -99,6 +100,10 @@ export default async function Question({ params }: Params) {
         profileImageSrc = questionUser.imageUrl;
     } catch (error: any) {
         // throw new Error(error.message)
+    }
+
+    if(user?.id) {
+        increaseView(user?.id!, question?.id!)
     }
 
     const isUpvotedQuestion = await chekcIsQuestionUpvoted(user?.id || '', question?.id || '');
