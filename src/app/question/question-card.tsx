@@ -31,8 +31,7 @@ export default async function QuestionCard({ question }: QuestionProps) {
             <CardHeader>
                 <CardTitle>{question.questionTitle}</CardTitle>
                 <div className="text-sm text-muted-foreground flex items-center gap-2">
-                    <span>Asked {formatDate(question.createdAt)} by</span>
-                    <Link href={`/profile?id=${question.userId}`} className="text-primary border-b">{question.userFullName}</Link>
+                    <span>Upvoted {question.upvoteCount} peoples</span>
                 </div>
             </CardHeader>
 
