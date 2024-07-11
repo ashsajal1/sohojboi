@@ -48,7 +48,6 @@ model Quiz {
   topic           String?
   chapter         String?
   questions       QuizQuestion[]
-  userQuizResults UserQuizResult[]
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
   Competition     Competition[]
@@ -72,17 +71,6 @@ model AnswerOption {
   question   QuizQuestion @relation(fields: [questionId], references: [id])
   createdAt  DateTime     @default(now())
   updatedAt  DateTime     @updatedAt
-}
-
-model UserQuizResult {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId      String
-  quizId      String   @db.ObjectId
-  score       Int
-  completedAt DateTime @default(now())
-  quiz        Quiz     @relation(fields: [quizId], references: [id])
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
 }
 
 model Competition {
