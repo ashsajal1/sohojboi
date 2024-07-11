@@ -9,27 +9,24 @@ export const createCompetition = async (
   challangerId: string,
   questionIds: string[],
   challengerScore: number
-  // challengerName: string,
 ) => {
-  console.log("Users ids : ", challangeeId, challangerId)
   try {
     const challengerName = (await clerkClient().users.getUser(challangerId))
-      .fullName as string;
+      .fullName as string | '';
     const challengeeName = (await clerkClient().users.getUser(challangeeId))
-      .fullName as string;
+      .fullName as string | '';
 
     const competition = await prisma.competition.create({
       data: {
         title: `${challengerName} vs ${challengeeName}`,
         description: `A competition between ${challengerName} and ${challengeeName}`,
         questionIds: questionIds,
-        challengerId: challangerId,
-        challengeeId: challangeeId,
+        challengerId: challangerId || '',
+        challengeeId: challangeeId || '',
         challengerScore: challengerScore,
         status: "pending",
       },
     });
-    console.log(competition);
 
     const notif = await prisma.notification.create({
       data: {
@@ -40,8 +37,7 @@ export const createCompetition = async (
       },
     });
   } catch (error) {
-    console.error("Error creating competition:", error);
-    throw error
+    throw error;
   }
 
   // console.log(notif)

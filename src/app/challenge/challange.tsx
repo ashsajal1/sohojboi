@@ -24,7 +24,6 @@ const Challenge: React.FC<ChallengeProps> = ({ challengeeId, challengerId, quizI
     };
 
     const questionsIds = quizQuestions.map(q => q.id)
-    console.log(questionsIds)
 
     const nextQuestion = async () => {
         const currentQuestion = quizQuestions[currentQuestionIndex];
@@ -39,6 +38,7 @@ const Challenge: React.FC<ChallengeProps> = ({ challengeeId, challengerId, quizI
             setSelectedOption(null);
         } else {
             setShowResults(true);
+            console.log(challengeeId, challengerId, "user ids from client")
             await createCompetition(challengeeId, challengerId, questionsIds, score);
         }
     };

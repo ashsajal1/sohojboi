@@ -21,8 +21,6 @@ export default async function page({ searchParams }: { searchParams: any }) {
         options: true, // Include options associated with each question
       },
     });
-
-    console.log("Questions:", questions);
   } catch (error) {
     console.error("Error fetching questions:", error);
   }
@@ -59,7 +57,7 @@ export default async function page({ searchParams }: { searchParams: any }) {
           </CardContent>
         </Card>
       ))}
-      {showQuiz && <Challange quizId={questions![0].id} challangerId={user.userId as string} challangeeId={challengeeId} quizQuestions={questions} />}
+      {showQuiz && <Challange quizId={questions![0].id} challengerId={user.userId as string} challengeeId={challengeeId} quizQuestions={questions!} />}
     </div>
   )
 }
