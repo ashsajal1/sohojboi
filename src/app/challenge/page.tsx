@@ -23,7 +23,7 @@ export default async function page({ searchParams }: { searchParams: any }) {
       take: 3
     });
   } catch (error) {
-    console.error("Error fetching questions:", error);
+    throw new Error("Error fetching questions:");
   }
 
   const competitions = await prisma.competition.findMany({
