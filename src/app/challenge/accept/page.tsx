@@ -9,7 +9,7 @@ export default async function AcceptChallengePage({ searchParams }: { searchPara
     if (!competitionId) {
         return <div>No competition selected.</div>;
     }
-    
+
     const competition = await prisma.competition.findUnique({
         where: {
             id: competitionId
@@ -17,6 +17,9 @@ export default async function AcceptChallengePage({ searchParams }: { searchPara
     });
 
     const questionIds = competition?.questionIds;
+    if(competition?.status === 'completed') {
+        throw new Error("Already played this challenged.")
+    }
 
     let questions;
     try {
