@@ -77,6 +77,7 @@ export default function CreateForm({ topics }: { topics: Topic[] }) {
             {errors.content && <ErrorText text={errors.content.message!} />}
 
             <br />
+            <Label className='mb-1 block'>Select Topic</Label>
             <Controller
                 control={control}
                 name="topic"
@@ -142,7 +143,7 @@ export default function CreateForm({ topics }: { topics: Topic[] }) {
                 <Label>Correct Option</Label>
                 <Input placeholder='Correct option' {...register('correctOption')} />
                 {errors.correctOption && <ErrorText text={errors.correctOption.message!} />}
-                <Label>Options</Label>
+                <Label className='mt-3'>Wrong Options</Label>
                 {fields.map((field, index) => (
                     <div key={field.id} className="flex items-center gap-1 my-2">
                         <Input
@@ -164,7 +165,7 @@ export default function CreateForm({ topics }: { topics: Topic[] }) {
                 {options.length === 0 && 'Add Option'}
 
             </Button>
-            <Button type="submit">Submit</Button>
+            <Button className='w-full' type="submit">Submit</Button>
         </form>
     );
 }
