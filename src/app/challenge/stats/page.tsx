@@ -2,13 +2,11 @@ import prisma from '@/lib/prisma'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import React from 'react'
 import { clerkClient } from '@clerk/nextjs/server';
+import { Competition } from '@prisma/client';
 
 export default async function page() {
     const competitions = await prisma.competition.findMany()
 
-   
-
-    // console.log(competitions)
     return (
         <div>
             {competitions.map(competition => (
@@ -18,20 +16,7 @@ export default async function page() {
     )
 }
 
-interface CompetitonProps {
-    id: string;
-    title: string;
-    description: string | null;
-    quizId: string;
-    challengerId: string;
-    challengeeId: string;
-    challengerScore: number;
-    challengeeScore: number | null;
-    status: string;
-    createdAt: Date;
-    updatedAt: Date;
-}
-const StatusCard = async ({ competition }: { competition: CompetitonProps }) => {
+const StatusCard = async ({ competition }: { competition: Competition }) => {
     const challangerName = await (await clerkClient().users.getUser(competition.challengerId)).fullName;
     const challangeeName = await (await clerkClient().users.getUser(competition.challengeeId)).fullName;
     

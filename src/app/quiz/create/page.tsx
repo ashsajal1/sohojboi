@@ -2,60 +2,75 @@ import prisma from '@/lib/prisma';
 import React from 'react';
 
 export default async function page() {
-  const quiz = await prisma.quiz.create({
+  const tag1 = await prisma.tag.create({
     data: {
-      title: 'Physics Quiz',
-      description: 'A quiz on basic concepts of physics',
-      topic: 'Physics',
-      chapter: 'Gravitation',
-      questions: {
+      name: "Math",
+    },
+  });
+
+  const tag2 = await prisma.tag.create({
+    data: {
+      name: "Science",
+    },
+  });
+
+  // Create topics
+  const topic = await prisma.topic.create({
+    data: {
+      name: "Algebra",
+    },
+  });
+
+  // Create chapters
+  const chapter = await prisma.chapter.create({
+    data: {
+      name: "Chapter 1",
+    },
+  });
+  const question1 = await prisma.challengeQuestion.create({
+    data: {
+      content: "What is 2 + 2?",
+      topic: { connect: { id: topic.id } },
+      chapter: { connect: { id: chapter.id } },
+      options: {
         create: [
-          {
-            content: 'What is the acceleration due to gravity on Earth?',
-            options: {
-              create: [
-                { content: '9.8 m/s²', isCorrect: true }, // Marking correct option
-                { content: '10.8 m/s²' },
-                { content: '8.8 m/s²' },
-                { content: '7.8 m/s²' },
-              ],
-            },
-          },
-          {
-            content: 'Who formulated the law of universal gravitation?',
-            options: {
-              create: [
-                { content: 'Albert Einstein' },
-                { content: 'Isaac Newton', isCorrect: true }, // Marking correct option
-                { content: 'Galileo Galilei' },
-                { content: 'Nikola Tesla' },
-              ],
-            },
-          },
-          {
-            content: 'What is the gravitational force between two 1 kg masses 1 meter apart?',
-            options: {
-              create: [
-                { content: '9.8 N' },
-                { content: '1 N' },
-                { content: '0.1 N' },
-                { content: '6.674 × 10^-11 N', isCorrect: true }, // Marking correct option
-              ],
-            },
-          },
+          { content: "3", isCorrect: false },
+          { content: "4", isCorrect: true },
+          { content: "5", isCorrect: false },
         ],
       },
-    },
-    include: {
-      questions: {
-        include: {
-          options: true,
-        },
+      tags: {
+        create: [
+          { tag: { connect: { id: tag1.id } } },
+          { tag: { connect: { id: tag2.id } } },
+        ],
       },
     },
   });
 
-  console.log('Quiz created:', quiz);
+  const question2 = await prisma.challengeQuestion.create({
+    data: {
+      content: "What is H2O?",
+      topic: { connect: { id: topic.id } },
+      chapter: { connect: { id: chapter.id } },
+      options: {
+        create: [
+          { content: "Water", isCorrect: true },
+          { content: "Oxygen", isCorrect: false },
+          { content: "Hydrogen", isCorrect: false },
+        ],
+      },
+      tags: {
+        create: [
+          { tag: { connect: { id: tag1.id } } },
+          { tag: { connect: { id: tag2.id } } },
+        ],
+      },
+    },
+  });
+
+
+  console.log('Quiz created:', question1, question2);
 
   return (
     <div>page</div>
