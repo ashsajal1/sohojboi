@@ -1,0 +1,156 @@
+"use client"
+import React from 'react';
+import { z } from 'zod';
+import { useForm, useFieldArray, Controller } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+import { Topic } from '@prisma/client';
+import { ArrowUpIcon, CheckIcon } from "@radix-ui/react-icons"
+import {
+    Command,
+    CommandEmpty,
+    CommandGroup,
+    CommandInput,
+    CommandItem,
+} from "@/components/ui/command"
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover"
+import { cn } from '@/lib/utils';
+import { CommandList } from 'cmdk';
+
+const questionSchema = z.object({
+    content: z.string().nonempty({ message: 'Content is required' }),
+    correctOption: z.string().nonempty({ message: 'Correct option is required' }),
+    topic: z.string().optional(),
+    tags: z.string().optional(),
+    options: z.array(z.object({
+        content: z.string().nonempty({ message: 'Option content is required' })
+    })).min(2, { message: 'At least 2 options are required' })
+        .max(4, { message: 'No more than 4 options are allowed' })
+});
+
+type QuestionFormData = z.infer<typeof questionSchema>;
+
+export default function CreateForm({ topics }: { topics: Topic[] }) {
+    const [open, setOpen] = React.useState(false)
+    const [value, setValue] = React.useState("")
+    const { register, handleSubmit, formState: { errors }, control } = useForm<QuestionFormData>({
+        resolver: zodResolver(questionSchema)
+    });
+
+    const { fields, append, remove } = useFieldArray({
+        control,
+        name: 'options'
+    });
+
+    const addOption = () => {
+        if (fields.length < 4) {
+            append({ content: '' });
+        }
+    };
+
+    const removeOption = (index: number) => {
+        if (fields.length > 0) {
+            remove(index);
+        }
+    };
+
+    const onSubmit = async (data: QuestionFormData) => {
+        console.log(data);
+    };
+
+    return (
+        <form onSubmit={handleSubmit(onSubmit)}>
+
+            <Label>Content</Label>
+            <Input placeholder='Enter the question... eg, Who created education?' {...register('content')} />
+            {errors.content && <p>{errors.content.message}</p>}
+
+            <Label>Correct Option</Label>
+            <Input placeholder='Correct option' {...register('correctOption')} />
+            {errors.correctOption && <p>{errors.correctOption.message}</p>}
+
+            <br />
+            <Controller
+                control={control}
+                name="topic"
+                render={({ field }) => (
+                    <Popover open={open} onOpenChange={setOpen}>
+                        <PopoverTrigger asChild>
+                            <Button
+                                variant="outline"
+                                role="combobox"
+                                aria-expanded={open}
+                                className="w-[200px] justify-between"
+                                onClick={() => setOpen(true)}
+                            >
+                                {field.value
+                                    ? topics.find((topic) => topic.name === field.value)?.name
+                                    : "Select topic..."}
+                                <ArrowUpIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                            </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-[200px] p-0">
+                            <Command>
+                                <CommandInput placeholder="Search topic..." />
+                                <CommandEmpty>No topic found.</CommandEmpty>
+                                <CommandGroup>
+                                    <CommandList>
+                                        {Array.isArray(topics) && topics.length > 0 ? (
+                                            topics.map((topic) => (
+                                                <CommandItem
+                                                    key={topic.id}
+                                                    value={topic.name}
+                                                    onSelect={(currentValue) => {
+                                                        field.onChange(currentValue);
+                                                        setOpen(false);
+                                                    }}
+                                                >
+                                                    <CheckIcon
+                                                        className={cn(
+                                                            "mr-2 h-4 w-4",
+                                                            field.value === topic.name ? "opacity-100" : "opacity-0"
+                                                        )}
+                                                    />
+                                                    {topic.name}
+                                                </CommandItem>
+                                            ))
+                                        ) : (
+                                            <CommandEmpty>No topics available</CommandEmpty>
+                                        )}
+                                    </CommandList>
+                                </CommandGroup>
+                            </Command>
+                        </PopoverContent>
+                    </Popover>
+                )}
+            />
+
+            <br />
+            <Label>Tags</Label>
+            <Input placeholder='Tags' {...register('tags')} />
+
+            <div>
+                <Label>Options</Label>
+                {fields.map((field, index) => (
+                    <div key={field.id} className="option-field">
+                        <Input
+                            placeholder={`Option ${index + 1}`}
+                            {...register(`options.${index}.content` as const)}
+                        />
+                        <Button type="button" onClick={() => removeOption(index)}>Remove</Button>
+                    </div>
+                ))}
+                {errors.options && <p>{errors.options.message}</p>}
+            </div>
+
+            <Button type="button" onClick={addOption}>Add Option</Button>
+            <Button type="submit">Submit</Button>
+        </form>
+    );
+}
