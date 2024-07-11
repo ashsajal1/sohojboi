@@ -4,39 +4,33 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { createCompetition } from './actions';
-interface QuizQuestionsProps {
-    challangeeId: string,
-    challangerId: string,
-    quizId: string,
-    quizQuestions: {
-        id: string;
-        text: string;
-        options: {
-            id: string;
-            text: string;
-            isCorrect: boolean;
-        }[];
-    }[];
+import { AnswerOption, ChallengeQuestion } from '@prisma/client';
+
+interface ChallengeProps {
+    challengeeId: string;
+    challengerId: string;
+    quizId: string;
+    quizQuestions: (ChallengeQuestion & { options: AnswerOption[] })[];
 }
 
-const Challange: React.FC<QuizQuestionsProps> = ({challangeeId, challangerId, quizQuestions, quizId }) => {
+const Challenge: React.FC<ChallengeProps> = ({ challengeeId, challengerId, quizId, quizQuestions }) => {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [selectedOption, setSelectedOption] = useState<string | null>(null);
     const [score, setScore] = useState(0);
     const [showResults, setShowResults] = useState(false);
-    console.log(quizQuestions);
 
     const handleOptionSelect = (optionId: string) => {
         setSelectedOption(optionId);
     };
 
-    const nextQuestion = async () => {
-        const currentQuestion = quizQuestions[currentQuestionIndex]; // Access the current question directly
-        const isCorrect = currentQuestion.options.find(
-            (option) => option.id === selectedOption
-        )?.isCorrect;
+    const questionsIds = quizQuestions.map(q => q.id)
+    console.log(questionsIds)
 
-        if (isCorrect) {
+    const nextQuestion = async () => {
+        const currentQuestion = quizQuestions[currentQuestionIndex];
+        const selectedOptionObject = currentQuestion.options.find((option) => option.id === selectedOption);
+
+        if (selectedOptionObject?.isCorrect) {
             setScore(score + 1);
         }
 
@@ -45,7 +39,7 @@ const Challange: React.FC<QuizQuestionsProps> = ({challangeeId, challangerId, qu
             setSelectedOption(null);
         } else {
             setShowResults(true);
-            await createCompetition(challangeeId, challangerId,quizId, score)
+            await createCompetition(challengeeId, challengerId, questionsIds, score);
         }
     };
 
@@ -56,36 +50,34 @@ const Challange: React.FC<QuizQuestionsProps> = ({challangeeId, challangerId, qu
                     {showResults ? (
                         <Card>
                             <CardHeader>
-                                <CardTitle>Results: </CardTitle>
+                                <CardTitle>Results:</CardTitle>
                             </CardHeader>
                             <CardContent>
-                                <p>
-                                    You scored {score} out of {quizQuestions.length}
-                                </p>
+                                <p>You scored {score} out of {quizQuestions.length}</p>
                             </CardContent>
                         </Card>
                     ) : (
                         <Card>
                             <CardHeader>
                                 <h3>Question {currentQuestionIndex + 1}</h3>
-                                <CardTitle><p>{quizQuestions[currentQuestionIndex].text}</p></CardTitle>
+                                <CardTitle><p>{quizQuestions[currentQuestionIndex].content}</p></CardTitle>
                             </CardHeader>
-
                             <CardContent>
                                 <ul>
                                     {quizQuestions[currentQuestionIndex].options.map((option) => (
                                         <li key={option.id}>
-                                            <Button variant={'outline'} className='w-full mb-2'
+                                            <Button
+                                                variant={'outline'}
+                                                className='w-full mb-2'
                                                 onClick={() => handleOptionSelect(option.id)}
                                                 disabled={selectedOption !== null}
                                             >
-                                                {option.text}
+                                                {option.content}
                                             </Button>
                                         </li>
                                     ))}
                                 </ul>
                             </CardContent>
-
                             <CardFooter>
                                 {selectedOption !== null && (
                                     <Button className='w-full' onClick={nextQuestion}>Next</Button>
@@ -99,4 +91,4 @@ const Challange: React.FC<QuizQuestionsProps> = ({challangeeId, challangerId, qu
     );
 };
 
-export default Challange;
+export default Challenge;

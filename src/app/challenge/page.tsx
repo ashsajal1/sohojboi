@@ -11,36 +11,26 @@ export default async function page({ searchParams }: { searchParams: any }) {
   const user = auth();
   const challengeeId = searchParams.challengeeId;
   const showQuiz = challengeeId;
-  const quizzes = await prisma.quiz.findMany({
-    orderBy: {
-      createdAt: 'desc'
-    },
-    include: {
-      questions: {
-        include: {
-          options: true
-        }
+  let questions;
+  try {
+    questions = await prisma.challengeQuestion.findMany({
+      include: {
+        tags: true, // Include tags associated with each question
+        topic: true, // Include topic associated with each question
+        chapter: true, // Include chapter associated with each question
+        options: true, // Include options associated with each question
       },
-    }
-  })
+    });
 
-  const quizQuestions = quizzes.map((quiz) => ({
-    id: quiz.id,
-    title: quiz.title,
-    questions: quiz.questions.map((question) => ({
-      id: question.id,
-      text: question.content,
-      options: question.options.map((option) => ({
-        id: option.id,
-        text: option.content,
-        isCorrect: option.isCorrect
-      }))
-    }))
-  })).map(quesitons => quesitons.questions)[0];
+    console.log("Questions:", questions);
+  } catch (error) {
+    console.error("Error fetching questions:", error);
+  }
+
   const competitions = await prisma.competition.findMany({
     where: {
       challengerId: {
-        not: user.userId as string
+        not: user.userId as string || ''
       },
       status: { equals: "pending" }
     }
@@ -69,7 +59,7 @@ export default async function page({ searchParams }: { searchParams: any }) {
           </CardContent>
         </Card>
       ))}
-      {showQuiz && <Challange quizId={quizzes[0].id} challangerId={user.userId as string} challangeeId={challengeeId} quizQuestions={quizQuestions} />}
+      {showQuiz && <Challange quizId={questions![0].id} challangerId={user.userId as string} challangeeId={challengeeId} quizQuestions={questions} />}
     </div>
   )
 }
