@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Topic } from '@prisma/client';
-import { ArrowUpIcon, CheckIcon } from "@radix-ui/react-icons"
+import { ArrowUpIcon, CheckIcon, PlusCircledIcon, TrashIcon } from "@radix-ui/react-icons"
 import {
     Command,
     CommandEmpty,
@@ -23,6 +23,7 @@ import {
 import { cn } from '@/lib/utils';
 import { CommandList } from 'cmdk';
 import { createChallengeQuestion } from './actions';
+import { Separator } from '@/components/ui/separator';
 
 const questionSchema = z.object({
     content: z.string().nonempty({ message: 'Content is required' }),
@@ -44,13 +45,17 @@ export default function CreateForm({ topics }: { topics: Topic[] }) {
         resolver: zodResolver(questionSchema)
     });
 
+
+
     const { fields, append, remove } = useFieldArray({
         control,
         name: 'options',
     });
 
+    const options = fields.map((field) => ('options' in field ? field.options : []));
+
     const addOption = () => {
-        if (fields.length < 4) {
+        if (fields.length < 3) {
             append({ content: '' });
         }
     };
@@ -136,21 +141,30 @@ export default function CreateForm({ topics }: { topics: Topic[] }) {
             <Label>Tags</Label>
             <Input placeholder='Tags' {...register('tags')} />
 
-            <div>
+            <Separator className='mt-2' />
+            <div className='mt-3'>
                 <Label>Options</Label>
                 {fields.map((field, index) => (
-                    <div key={field.id} className="option-field">
+                    <div key={field.id} className="flex items-center gap-1 my-2">
                         <Input
                             placeholder={`Option ${index + 1}`}
                             {...register(`options.${index}.content` as const)}
                         />
-                        <Button type="button" onClick={() => removeOption(index)}>Remove</Button>
+                        <Button type="button" variant={'destructive'} onClick={() => removeOption(index)}>
+                            <TrashIcon className='mr-1' />
+                            Remove</Button>
                     </div>
                 ))}
                 {errors.options && <p>{errors.options.message}</p>}
             </div>
 
-            <Button type="button" onClick={addOption}>Add Option</Button>
+            <Button disabled={options.length === 3} type="button" variant={'secondary'} className='w-full my-2' onClick={addOption}>
+                <PlusCircledIcon className='mr-1' />
+                {options.length === 3 && 'Options limit exceed.'}
+                {options.length > 0 && options.length < 3 && 'Add Another Option'}
+                {options.length === 0 && 'Add Option'}
+
+            </Button>
             <Button type="submit">Submit</Button>
         </form>
     );
