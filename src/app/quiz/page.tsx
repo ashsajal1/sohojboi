@@ -5,49 +5,38 @@ import React from 'react'
 import QuizComponent from './quizzes';
 
 export default async function page() {
-    const quizzes = await prisma.quiz.findMany({
-        orderBy: {
-            createdAt: 'desc'
-        },
-        include: {
-            questions: {
-                include: {
-                    options: true
-                }
-            },
-        }
-    })
+    let questions;
+    try {
+        questions = await prisma.challengeQuestion.findMany({
+          include: {
+            tags: true, // Include tags associated with each question
+            topic: true, // Include topic associated with each question
+            chapter: true, // Include chapter associated with each question
+            options: true, // Include options associated with each question
+          },
+        });
+    
+        console.log("Questions:", questions);
+      } catch (error) {
+        console.error("Error fetching questions:", error);
+      } 
 
-    const quizQuestions = quizzes.map((quiz) => ({
-        id: quiz.id,
-        title: quiz.title,
-        questions: quiz.questions.map((question) => ({
-            id: question.id,
-            text: question.content,
-            options: question.options.map((option) => ({
-                id: option.id,
-                text: option.content,
-                isCorrect: option.isCorrect
-            }))
-        }))
-    })).map(quesitons => quesitons.questions)[0];
-
-    console.log(quizQuestions)
+    console.log(questions)
     return (
         <div className='flex flex-col gap-2'>
-            {/* {quizQuestions.map(question => (
+            {questions!.map(question => (
                 <Card key={question.id}>
                     <CardHeader>
-                        <CardTitle>{question.text}</CardTitle>
+                        <CardTitle>{question.content}</CardTitle>
                     </CardHeader>
                     <CardContent>
                         {question.options.map(option => (
-                            <Button className='mr-2' key={option.id}>{option.text}</Button>
+                            <Button className='mr-2' key={option.id}>{option.content}</Button>
                         ))}
                     </CardContent>
                 </Card>
-            ))} */}
-            <QuizComponent quizQuestions={quizQuestions} />
+            ))}
+            {/* <QuizComponent quizQuestions={questions} /> */}
         </div>
     )
 }
