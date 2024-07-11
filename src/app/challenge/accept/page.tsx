@@ -64,7 +64,7 @@ export default async function AcceptChallengePage({ searchParams }: { searchPara
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <Challange winnerId={winnerId} challengerId={competition.challengerId} competitionId={competition.id} quizQuestions={questions!} />
+                    <Challange winnerId={winnerId} challengerId={competition.challengerId} competitionId={competition.id} challengeeId={competition.challengeeId} quizQuestions={questions!} />
                 </CardContent>
             </Card>
         </div>

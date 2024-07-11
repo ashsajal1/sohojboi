@@ -8,7 +8,8 @@ export const completeCompetition = async (
   competitionId: string,
   challengeeScore: number,
   challangerId: string,
-  winnerId: string | null
+  winnerId: string | null,
+  challengeeId: string
 ) => {
   const competition = await prisma.competition.update({
     where: {
@@ -20,23 +21,23 @@ export const completeCompetition = async (
     },
   });
 
-  const challengerName = await (await clerkClient().users.getUser(challangerId)).fullName;
-
-  const winnerName = await (await clerkClient().users.getUser(winnerId!)).fullName;
+  const challengeeName = await (
+    await clerkClient().users.getUser(challengeeId)
+  ).fullName;
 
   let notificationMessage;
-  if (winnerId !== null && winnerId !== challangerId) {
-    notificationMessage = `Congrats! You beat ${challengerName} in a challenge.`;
+  if (winnerId === challangerId) {
+    notificationMessage = `Congrats! You beat ${challengeeName} in a challenge.`;
   } else if (winnerId === null) {
-    notificationMessage = `Challenge completed against ${challengerName}! It's draw.`;
-  } else {
-    notificationMessage = `You lost a challenge against ${winnerName}.`;
+    notificationMessage = `Challenge completed against ${challengeeName}! It's draw.`;
+  } else if (winnerId === challengeeId) {
+    notificationMessage = `You lost a challenge against ${challengeeName}.`;
   }
 
   await prisma.notification.create({
     data: {
       userId: challangerId,
-      message: notificationMessage,
+      message: notificationMessage!,
       type: NotificationType.CHALLENGE,
       competitionId: competition.id,
     },

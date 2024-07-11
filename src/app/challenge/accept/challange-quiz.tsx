@@ -8,12 +8,13 @@ import { AnswerOption, ChallengeQuestion } from '@prisma/client';
 interface ChallengeProps {
     competitionId: string,
     challengerId: string;
+    challengeeId: string;
     winnerId: string | null,
     quizQuestions: (ChallengeQuestion & { options: AnswerOption[] })[];
 }
 
 
-const Challange: React.FC<ChallengeProps> = ({ quizQuestions, competitionId, challengerId, winnerId }) => {
+const Challange: React.FC<ChallengeProps> = ({ quizQuestions, competitionId, challengerId, winnerId, challengeeId }) => {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [selectedOption, setSelectedOption] = useState<string | null>(null);
     const [score, setScore] = useState(0);
@@ -39,7 +40,7 @@ const Challange: React.FC<ChallengeProps> = ({ quizQuestions, competitionId, cha
             setSelectedOption(null);
         } else {
             setShowResults(true);
-            await completeCompetition(competitionId, score, challengerId, winnerId)
+            await completeCompetition(competitionId, score, challengerId, winnerId, challengeeId)
         }
     };
 
