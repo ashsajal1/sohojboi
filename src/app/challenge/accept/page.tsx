@@ -1,7 +1,6 @@
 import React from 'react';
 import prisma from '@/lib/prisma';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import AcceptBtn from './accept-btn';
 import Challange from './challange-quiz';
 
 export default async function AcceptChallengePage({ searchParams }: { searchParams: any }) {
@@ -10,7 +9,7 @@ export default async function AcceptChallengePage({ searchParams }: { searchPara
     if (!competitionId) {
         return <div>No competition selected.</div>;
     }
-
+    
     const competition = await prisma.competition.findUnique({
         where: {
             id: competitionId
@@ -63,7 +62,6 @@ export default async function AcceptChallengePage({ searchParams }: { searchPara
                 </CardHeader>
                 <CardContent>
                     <Challange winnerId={winnerId} challengerId={competition.challengerId} competitionId={competition.id} quizQuestions={questions!} />
-                    <AcceptBtn competitionId={competitionId} />
                 </CardContent>
             </Card>
         </div>
