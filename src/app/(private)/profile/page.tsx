@@ -110,9 +110,9 @@ export default async function Page({ searchParams }: { searchParams: { id: strin
                         <Answers key={question.id} question={question} answers={answers.filter(answer => answer.questionId === question.id)} />
                     ))}
                 </TabsContent>
-                <TabsContent value="challenges">
+                <TabsContent className="grid md:grid-cols-2 gap-2" value="challenges">
                     {challenges.map(challenge => (
-                        <Card className="mb-2" key={challenge.id}>
+                        <Card key={challenge.id}>
                             <CardHeader>
                                 <Winner
                                     challengerId={challenge.challengerId}
