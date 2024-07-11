@@ -47,8 +47,8 @@ export default async function ResultPage({ searchParams }: { searchParams: any }
           </div>}
         </CardContent>
       </Card>
-      <div>
-        <Link href="/challenge">
+      <div className='grid place-items-center'>
+        <Link className='mt-2' href="/challenge">
           <Button>Back to Competitions</Button>
         </Link>
       </div>
