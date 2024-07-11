@@ -134,9 +134,9 @@ export default function CreateForm({ topics }: { topics: Topic[] }) {
             />
             {errors.topic && <ErrorText text={errors.topic.message!} />}
 
-            <br />
+            {/* <br />
             <Label>Tags</Label>
-            <Input placeholder='Tags' {...register('tags')} />
+            <Input placeholder='Tags' {...register('tags')} /> */}
 
             <Separator className='mt-2' />
             <div className='mt-3'>
