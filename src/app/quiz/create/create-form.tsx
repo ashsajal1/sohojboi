@@ -1,5 +1,5 @@
 "use client"
-import React from 'react';
+import React, { useEffect } from 'react';
 import { z } from 'zod';
 import { useForm, useFieldArray, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -25,6 +25,7 @@ import { CommandList } from 'cmdk';
 import { createChallengeQuestion } from './actions';
 import { Separator } from '@/components/ui/separator';
 import ErrorText from './error-text';
+import ConfirmDialog from './confirm-dialog';
 
 const questionSchema = z.object({
     content: z.string().nonempty({ message: 'Content is required' }),
@@ -41,6 +42,8 @@ export type QuestionFormData = z.infer<typeof questionSchema>;
 
 export default function CreateForm({ topics }: { topics: Topic[] }) {
     const [open, setOpen] = React.useState(false)
+    const [formData, setFormData] = React.useState<QuestionFormData | null>(null)
+    const [isDialogOpen, setIsDialogOpen] = React.useState(false)
     const [value, setValue] = React.useState("")
     const { register, handleSubmit, formState: { errors }, control } = useForm<QuestionFormData>({
         resolver: zodResolver(questionSchema)
@@ -66,8 +69,15 @@ export default function CreateForm({ topics }: { topics: Topic[] }) {
     };
 
     const onSubmit = async (data: QuestionFormData) => {
-        createChallengeQuestion(data)
+        // createChallengeQuestion(data)
+        setFormData(data)
     };
+
+    useEffect(() => {
+        if (formData !== null) {
+            setIsDialogOpen(true)
+        }
+    }, [formData])
 
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -163,9 +173,9 @@ export default function CreateForm({ topics }: { topics: Topic[] }) {
                 {options.length === 3 && 'Options limit exceed.'}
                 {options.length > 0 && options.length < 3 && 'Add Another Option'}
                 {options.length === 0 && 'Add Option'}
-
             </Button>
             <Button className='w-full' type="submit">Submit</Button>
+           {formData &&  <ConfirmDialog formData={formData!} isDialogOpen={isDialogOpen} />}
         </form>
     );
 }
