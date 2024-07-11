@@ -29,7 +29,7 @@ import ErrorText from './error-text';
 const questionSchema = z.object({
     content: z.string().nonempty({ message: 'Content is required' }),
     correctOption: z.string().nonempty({ message: 'Correct option is required' }),
-    topic: z.string().optional(),
+    topic: z.string().nonempty({ message: 'Topic is required' }),
     tags: z.string().optional(),
     options: z.array(z.object({
         content: z.string().nonempty({ message: 'Option content is required' })
@@ -131,6 +131,7 @@ export default function CreateForm({ topics }: { topics: Topic[] }) {
                     </Popover>
                 )}
             />
+            {errors.topic && <ErrorText text={errors.topic.message!} />}
 
             <br />
             <Label>Tags</Label>
