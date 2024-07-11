@@ -17,13 +17,6 @@ export default async function ResultPage({ searchParams }: { searchParams: any }
     where: {
       id: competitionId
     },
-    include: {
-      quiz: {
-        include: {
-          questions: true
-        }
-      },
-    }
   });
 
   if (!competition) {
