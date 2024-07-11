@@ -3,6 +3,7 @@
 import prisma from "@/lib/prisma";
 import { clerkClient } from "@clerk/nextjs/server";
 import { NotificationType } from "@prisma/client";
+import { redirect } from "next/navigation";
 
 export const completeCompetition = async (
   competitionId: string,
@@ -20,6 +21,10 @@ export const completeCompetition = async (
       status: "completed",
     },
   });
+
+  if (competition.status === "completed") {
+    redirect(`/challenge/result?competitionId=${competitionId}`);
+  }
 
   const challengeeName = await (
     await clerkClient().users.getUser(challengeeId)
