@@ -4,22 +4,16 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { completeCompetition } from './actions';
-interface QuizQuestionsProps {
+import { AnswerOption, ChallengeQuestion } from '@prisma/client';
+interface ChallengeProps {
     competitionId: string,
-    challengerId: string,
+    challengerId: string;
     winnerId: string | null,
-    quizQuestions: {
-        id: string;
-        text: string;
-        options: {
-            id: string;
-            text: string;
-            isCorrect: boolean;
-        }[];
-    }[];
+    quizQuestions: (ChallengeQuestion & { options: AnswerOption[] })[];
 }
 
-const Challange: React.FC<QuizQuestionsProps> = ({ quizQuestions, competitionId, challengerId, winnerId }) => {
+
+const Challange: React.FC<ChallengeProps> = ({ quizQuestions, competitionId, challengerId, winnerId }) => {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [selectedOption, setSelectedOption] = useState<string | null>(null);
     const [score, setScore] = useState(0);
@@ -68,7 +62,7 @@ const Challange: React.FC<QuizQuestionsProps> = ({ quizQuestions, competitionId,
                         <Card>
                             <CardHeader>
                                 <h3>Question {currentQuestionIndex + 1}</h3>
-                                <CardTitle><p>{quizQuestions[currentQuestionIndex].text}</p></CardTitle>
+                                <CardTitle><p>{quizQuestions[currentQuestionIndex].content}</p></CardTitle>
                             </CardHeader>
 
                             <CardContent>
@@ -79,7 +73,7 @@ const Challange: React.FC<QuizQuestionsProps> = ({ quizQuestions, competitionId,
                                                 onClick={() => handleOptionSelect(option.id)}
                                                 disabled={selectedOption !== null}
                                             >
-                                                {option.text}
+                                                {option.content}
                                             </Button>
                                         </li>
                                     ))}

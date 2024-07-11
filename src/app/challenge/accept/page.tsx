@@ -15,62 +15,28 @@ export default async function AcceptChallengePage({ searchParams }: { searchPara
         where: {
             id: competitionId
         },
-        include: {
-            quiz: {
-                include: {
-                    questions: {
-                        include: {
-                            options: true
-                        }
-                    }
-                }
-            }
-        }
     });
 
-    const quizzes = await prisma.quiz.findMany({
-        orderBy: {
-            createdAt: 'desc'
-        },
-        where: {
-            id: competition?.quizId
-        },
-        include: {
-            questions: {
-                include: {
-                    options: true
+    const questionIds = competition?.questionIds;
+
+    let questions;
+    try {
+        questions = await prisma.challengeQuestion.findMany({
+            where: {
+                id: {
+                    in: questionIds
                 }
             },
-        }
-    })
-
-    const quizQuestions = quizzes.map((quiz) => ({
-        id: quiz.id,
-        title: quiz.title,
-        questions: quiz.questions.map((question) => ({
-            id: question.id,
-            text: question.content,
-            options: question.options.map((option) => ({
-                id: option.id,
-                text: option.content,
-                isCorrect: option.isCorrect
-            }))
-        }))
-    })).map(quesitons => quesitons.questions)[0];
-
-    // const quizQuestions = quizzes.map((quiz) => ({
-    //     id: quiz.id,
-    //     title: quiz.title,
-    //     questions: quiz.questions.map((question) => ({
-    //       id: question.id,
-    //       text: question.content,
-    //       options: question.options.map((option) => ({
-    //         id: option.id,
-    //         text: option.content,
-    //         isCorrect: option.isCorrect
-    //       }))
-    //     }))
-    //   })).map(quesitons => quesitons.questions)[0];
+            include: {
+                tags: true,
+                topic: true,
+                chapter: true,
+                options: true,
+            },
+        });
+    } catch (error) {
+        throw new Error("Error fetching questions.");
+    }
 
     if (!competition) {
         return <div>Competition not found.</div>;
@@ -79,7 +45,7 @@ export default async function AcceptChallengePage({ searchParams }: { searchPara
     let winnerId;
     const isDraw = competition.challengeeScore || 0 === competition.challengerScore;
     const isChallengeeWinner = competition.challengeeScore || 0 > competition.challengerScore;
-    if(isDraw) {
+    if (isDraw) {
         winnerId = null
     } else if (isChallengeeWinner) {
         winnerId = competition.challengeeId
@@ -96,7 +62,7 @@ export default async function AcceptChallengePage({ searchParams }: { searchPara
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <Challange winnerId={winnerId} challengerId={competition.challengerId} competitionId={competition.id} quizQuestions={quizQuestions} />
+                    <Challange winnerId={winnerId} challengerId={competition.challengerId} competitionId={competition.id} quizQuestions={questions!} />
                     <AcceptBtn competitionId={competitionId} />
                 </CardContent>
             </Card>
