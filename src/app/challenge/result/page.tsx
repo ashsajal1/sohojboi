@@ -40,10 +40,10 @@ export default async function ResultPage({ searchParams }: { searchParams: any }
           <p><strong>Opponent&apos;s Score:</strong> {opponentScore}</p>
           <p><strong>Status:</strong> {competition.status}</p>
           {userId === competition.challengeeId && <div className='mt-2'>
-            <Link href={`/challenge/accept?competitionId=${competition.id}`}>
+            {competition.status === 'pending' && <Link href={`/challenge/accept?competitionId=${competition.id}`}>
               <Button variant={'destructive'}>
                 Accept Challange
-              </Button></Link>
+              </Button></Link>}
           </div>}
         </CardContent>
       </Card>
