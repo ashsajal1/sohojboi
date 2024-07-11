@@ -26,8 +26,6 @@ export default async function Page({ searchParams }: { searchParams: { id: strin
     }
 
     const challangeStats = await getUserWinLoseStats(user?.id || '')
-
-    // console.log(user)
     const questions = await prisma.question.findMany({
         where: {
             userId: user?.id
@@ -59,8 +57,6 @@ export default async function Page({ searchParams }: { searchParams: { id: strin
         take: 10
     })
 
-
-
     return (
         <>
             <Card className="mt-2">
@@ -89,13 +85,12 @@ export default async function Page({ searchParams }: { searchParams: { id: strin
                     <TabsTrigger value="challenges">Challenges</TabsTrigger>
                 </TabsList>
 
-                <TabsContent value="questions">
+                <TabsContent className="flex flex-col gap-2" value="questions">
                     {questions.map(question => (
                         <QuestionCard key={question.id} question={question} />
                     ))}
                 </TabsContent>
                 <TabsContent value="answers">
-                    {/* <Answers question={questions} answers={answers} /> */}
                     {questions.map(question => (
                         <Answers key={question.id} question={question} answers={answers.filter(answer => answer.questionId === question.id)} />
                     ))}
