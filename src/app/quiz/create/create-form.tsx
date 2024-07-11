@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/popover"
 import { cn } from '@/lib/utils';
 import { CommandList } from 'cmdk';
+import { createChallengeQuestion } from './actions';
 
 const questionSchema = z.object({
     content: z.string().nonempty({ message: 'Content is required' }),
@@ -34,7 +35,7 @@ const questionSchema = z.object({
         .max(4, { message: 'No more than 4 options are allowed' })
 });
 
-type QuestionFormData = z.infer<typeof questionSchema>;
+export type QuestionFormData = z.infer<typeof questionSchema>;
 
 export default function CreateForm({ topics }: { topics: Topic[] }) {
     const [open, setOpen] = React.useState(false)
@@ -45,7 +46,7 @@ export default function CreateForm({ topics }: { topics: Topic[] }) {
 
     const { fields, append, remove } = useFieldArray({
         control,
-        name: 'options'
+        name: 'options',
     });
 
     const addOption = () => {
@@ -61,7 +62,7 @@ export default function CreateForm({ topics }: { topics: Topic[] }) {
     };
 
     const onSubmit = async (data: QuestionFormData) => {
-        console.log(data);
+        createChallengeQuestion(data)
     };
 
     return (
@@ -90,7 +91,7 @@ export default function CreateForm({ topics }: { topics: Topic[] }) {
                                 onClick={() => setOpen(true)}
                             >
                                 {field.value
-                                    ? topics.find((topic) => topic.name === field.value)?.name
+                                    ? topics.find((topic) => topic.id === field.value)?.name
                                     : "Select topic..."}
                                 <ArrowUpIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                             </Button>
@@ -105,7 +106,7 @@ export default function CreateForm({ topics }: { topics: Topic[] }) {
                                             topics.map((topic) => (
                                                 <CommandItem
                                                     key={topic.id}
-                                                    value={topic.name}
+                                                    value={topic.id}
                                                     onSelect={(currentValue) => {
                                                         field.onChange(currentValue);
                                                         setOpen(false);
