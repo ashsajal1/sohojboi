@@ -19,24 +19,26 @@ export const completeCompetition = async (
       status: "completed",
     },
   });
-  // console.log(competition);
-  const challengerName = (await clerkClient().users.getUser(challangerId))
-    .fullName;
+
+  const challengerName = await (await clerkClient().users.getUser(challangerId)).fullName;
+
+  const winnerName = await (await clerkClient().users.getUser(winnerId!)).fullName;
+
   let notificationMessage;
   if (winnerId !== null && winnerId !== challangerId) {
     notificationMessage = `Congrats! You beat ${challengerName} in a challenge.`;
   } else if (winnerId === null) {
     notificationMessage = `Challenge completed against ${challengerName}! It's draw.`;
   } else {
-    notificationMessage = `You lost a challenge against ${challengerName}.`;
+    notificationMessage = `You lost a challenge against ${winnerName}.`;
   }
-  
+
   await prisma.notification.create({
     data: {
       userId: challangerId,
       message: notificationMessage,
       type: NotificationType.CHALLENGE,
-      competitionId: competition.id
+      competitionId: competition.id,
     },
   });
 };
