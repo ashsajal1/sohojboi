@@ -16,6 +16,21 @@ import { Competition } from "@prisma/client";
 import { getUserWinLoseStats } from "@/lib/db-query";
 import { formatDate } from "@/lib/date-format";
 
+export async function generateMetadata({ searchParams }: { searchParams: { id: string } }) {
+    let user: User | null;
+
+    if (!searchParams.id) {
+        user = await currentUser();
+    } else {
+        user = await clerkClient().users.getUser(searchParams.id)
+    }
+    return {
+        title: `Profile of ${user?.fullName}`,
+        description: `View profile of ${user?.fullName}`,
+        tags: [`${user?.fullName}`, `Profile of ${user?.fullName}`, `Sohojboi profile of ${user?.fullName}`]
+    }
+}
+
 export default async function Page({ searchParams }: { searchParams: { id: string } }) {
     let user: User | null;
 
