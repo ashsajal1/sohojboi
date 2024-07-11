@@ -2,6 +2,7 @@ import React from 'react';
 import prisma from '@/lib/prisma';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Challange from './challange-quiz';
+import RedirectToResult from './redirect-to-result';
 
 export default async function AcceptChallengePage({ searchParams }: { searchParams: any }) {
     const { competitionId } = searchParams;
@@ -18,7 +19,7 @@ export default async function AcceptChallengePage({ searchParams }: { searchPara
 
     const questionIds = competition?.questionIds;
     if(competition?.status === 'completed') {
-        throw new Error("Already played this challenged.")
+        return <RedirectToResult competitionId={competition.id} />
     }
 
     let questions;
