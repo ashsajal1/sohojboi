@@ -24,6 +24,7 @@ import { cn } from '@/lib/utils';
 import { CommandList } from 'cmdk';
 import { createChallengeQuestion } from './actions';
 import { Separator } from '@/components/ui/separator';
+import ErrorText from './error-text';
 
 const questionSchema = z.object({
     content: z.string().nonempty({ message: 'Content is required' }),
@@ -44,8 +45,6 @@ export default function CreateForm({ topics }: { topics: Topic[] }) {
     const { register, handleSubmit, formState: { errors }, control } = useForm<QuestionFormData>({
         resolver: zodResolver(questionSchema)
     });
-
-
 
     const { fields, append, remove } = useFieldArray({
         control,
@@ -75,11 +74,7 @@ export default function CreateForm({ topics }: { topics: Topic[] }) {
 
             <Label>Content</Label>
             <Input placeholder='Enter the question... eg, Who created education?' {...register('content')} />
-            {errors.content && <p>{errors.content.message}</p>}
-
-            <Label>Correct Option</Label>
-            <Input placeholder='Correct option' {...register('correctOption')} />
-            {errors.correctOption && <p>{errors.correctOption.message}</p>}
+            {errors.content && <ErrorText text={errors.content.message!} />}
 
             <br />
             <Controller
@@ -143,6 +138,9 @@ export default function CreateForm({ topics }: { topics: Topic[] }) {
 
             <Separator className='mt-2' />
             <div className='mt-3'>
+                <Label>Correct Option</Label>
+                <Input placeholder='Correct option' {...register('correctOption')} />
+                {errors.correctOption && <ErrorText text={errors.correctOption.message!} />}
                 <Label>Options</Label>
                 {fields.map((field, index) => (
                     <div key={field.id} className="flex items-center gap-1 my-2">
@@ -155,7 +153,7 @@ export default function CreateForm({ topics }: { topics: Topic[] }) {
                             Remove</Button>
                     </div>
                 ))}
-                {errors.options && <p>{errors.options.message}</p>}
+                {errors.options && <ErrorText text={errors.options.message!} />}
             </div>
 
             <Button disabled={options.length === 3} type="button" variant={'secondary'} className='w-full my-2' onClick={addOption}>
