@@ -41,17 +41,26 @@ model Answer {
   userFullName  String
 }
 
+enum ChallengeQuestionStatus {
+  PENDING
+  PUBLISHED
+  ARCHIVED
+}
+
 model ChallengeQuestion {
-  id        String         @id @default(auto()) @map("_id") @db.ObjectId
-  content   String
-  options   AnswerOption[]
-  topic     Topic?         @relation(fields: [topicId], references: [id])
-  topicId   String?        @db.ObjectId
-  chapter   Chapter?       @relation(fields: [chapterId], references: [id])
-  chapterId String?        @db.ObjectId
-  tags      QuestionTag[]
-  createdAt DateTime       @default(now())
-  updatedAt DateTime       @updatedAt
+  id         String                   @id @default(auto()) @map("_id") @db.ObjectId
+  content    String
+  creatorId  String?
+  approvedBy String?
+  status     ChallengeQuestionStatus? @default(PENDING)
+  options    AnswerOption[]
+  topic      Topic?                   @relation(fields: [topicId], references: [id])
+  topicId    String?                  @db.ObjectId
+  chapter    Chapter?                 @relation(fields: [chapterId], references: [id])
+  chapterId  String?                  @db.ObjectId
+  tags       QuestionTag[]
+  createdAt  DateTime                 @default(now())
+  updatedAt  DateTime                 @updatedAt
 }
 
 model AnswerOption {
