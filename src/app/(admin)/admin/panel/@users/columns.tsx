@@ -52,11 +52,26 @@ export const columns: ColumnDef<User>[] = [
   },
   {
     accessorKey: "firstName",
-    header: ({ column }) => {
-      return (
-        <DataTableColumnHeader column={column} title="First Name" />
-      )
-    },
+    header: () => null,
+    cell: () => null,
+    enableSorting: false,
+    enableHiding: false,
+  },
+  {
+    accessorKey: "lastName",
+    header: () => null,
+    cell: () => null,
+    enableSorting: false,
+    enableHiding: false,
+  },
+  {
+    accessorFn: row => `${row.firstName} ${row.lastName}`,
+    id: "fullName",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Full Name" />,
+    cell: ({ row }) => {
+      const fullName: string = row.getValue("fullName");
+      return <div className="text-left font-medium">{fullName}</div>;
+    }
   },
   {
     accessorKey: "emailAddresses",
@@ -68,18 +83,18 @@ export const columns: ColumnDef<User>[] = [
     cell: ({ row }) => {
       const emails = row.getValue("emailAddresses") as { emailAddress: string }[];
       const primaryEmail = emails && emails.length > 0 ? emails[0].emailAddress : "N/A";
-      
+
       return <div className="text-left font-medium">{primaryEmail}</div>;
     },
   },
   {
     accessorKey: "createdAt",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Joinded date" />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Joined date" />,
     cell: ({ row }) => {
       const date = new Date(row.getValue("createdAt"));
-    const formattedDate = date.toISOString().split('T')[0];
+      const formattedDate = date.toISOString().split('T')[0];
 
-    return <div className="text-left font-medium">{formattedDate}</div>;
+      return <div className="text-left font-medium">{formattedDate}</div>;
     },
   },
   {
