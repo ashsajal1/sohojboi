@@ -21,7 +21,7 @@ export default function ConfirmDialog({ isDialogOpen, formData }: { isDialogOpen
 
                 <div>
                     <p className='font-extralight text-lg'>Question : {formData.content}</p>
-                    <p>Correct option : <span><Badge variant={'outline'}>{formData.content}</Badge></span></p>
+                    <p>Correct option : <span><Badge variant={'outline'}>{formData.correctOption}</Badge></span></p>
                     <Separator className='my-2' />
                     <div>
                         <p> Wrong options :</p>
