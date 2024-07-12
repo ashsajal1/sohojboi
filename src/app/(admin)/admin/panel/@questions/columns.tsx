@@ -54,27 +54,34 @@ export const columns: ColumnDef<ChallengeQuestion>[] = [
     accessorKey: "content",
     header: ({column}) => <DataTableColumnHeader column={column} title="Question" />,
     // cell: ({row}) => <div></div>,
-    enableSorting: false,
-    enableHiding: false,
+    enableSorting: true,
+    enableHiding: true,
   },
   {
     accessorKey: "creatorId",
-    header: () => null,
-    cell: () => null,
-    enableSorting: false,
-    enableHiding: false,
+    header: ({column}) => <DataTableColumnHeader column={column} title="Creator" />,
+    // cell: () => null,
+    enableSorting: true,
+    enableHiding: true,
   },
   {
-    accessorKey: "approvedBy",
-    header: () => null,
-    cell: () => null,
-    enableSorting: false,
-    enableHiding: false,
+    accessorKey: "status",
+    header: ({column}) => <DataTableColumnHeader column={column} title="Status" />,
+    // cell: () => null,
+    enableSorting: true,
+    enableHiding: true,
+  },
+  {
+    accessorKey: "approverdBy",
+    header: ({column}) => <DataTableColumnHeader column={column} title="Approver" />,
+    // cell: () => null,
+    enableSorting: true,
+    enableHiding: true,
   },
 
   {
     accessorKey: "createdAt",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Joined date" />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Created On" />,
     cell: ({ row }) => {
       const date = new Date(row.getValue("createdAt"));
       const formattedDate = date.toISOString().split('T')[0];
