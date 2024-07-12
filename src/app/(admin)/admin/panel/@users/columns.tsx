@@ -86,6 +86,11 @@ export const columns: ColumnDef<User>[] = [
 
       return <div className="text-left font-medium">{primaryEmail}</div>;
     },
+    filterFn: (row, columnId, filterValue) => {
+      const emails = row.getValue(columnId) as { emailAddress: string }[];
+      const primaryEmail = emails && emails.length > 0 ? emails[0].emailAddress : "";
+      return primaryEmail.toLowerCase().includes(filterValue.toLowerCase());
+    }
   },
   {
     accessorKey: "createdAt",
