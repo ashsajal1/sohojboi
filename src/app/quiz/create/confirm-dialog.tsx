@@ -4,8 +4,10 @@ import { QuestionFormData } from "./create-form";
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { createChallengeQuestion } from './actions';
+import { useTransition } from 'react';
 
 export default function ConfirmDialog({ isDialogOpen, formData }: { isDialogOpen: boolean, formData: QuestionFormData }) {
+    const [isPending, startTransition] = useTransition();
     const options = formData.options.map((option) => {
         return {
             content: option.content || '',
@@ -40,7 +42,13 @@ export default function ConfirmDialog({ isDialogOpen, formData }: { isDialogOpen
                     <DialogClose asChild>
                         <Button variant={'ghost'}>Cancle</Button>
                     </DialogClose>
-                    <Button onClick={() => createChallengeQuestion(formData)}>Confirm</Button>
+                    <Button onClick={async () => {
+                        startTransition(async () => {
+                            await createChallengeQuestion(formData)
+                        })
+                    }}>
+                        {isPending? 'Creating...' :'Confirm'}
+                    </Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
