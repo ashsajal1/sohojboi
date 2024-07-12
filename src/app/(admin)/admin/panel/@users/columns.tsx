@@ -15,17 +15,19 @@ import {
 
 import { ArrowUpDown, MoreHorizontal } from "lucide-react"
 import { DataTableColumnHeader } from "./table-header"
+import { User } from "@clerk/nextjs/server"
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
-export type Payment = {
-  id: string
-  amount: number
-  status: "pending" | "processing" | "completed" | "failed"
-  email: string
-}
+// export type UserData = {
+//   id: string
+//   fullName: string
+//   createdAt: Date
+//   imageUrl: string
+//   email: string
+// }
 
-export const columns: ColumnDef<Payment>[] = [
+export const columns: ColumnDef<User>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -49,38 +51,41 @@ export const columns: ColumnDef<Payment>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "status",
+    accessorKey: "firstName",
     header: ({ column }) => {
       return (
-        <DataTableColumnHeader column={column} title="Status" />
+        <DataTableColumnHeader column={column} title="First Name" />
       )
     },
   },
   {
-    accessorKey: "email",
+    accessorKey: "emailAddresses",
     header: ({ column }) => {
       return (
         <DataTableColumnHeader column={column} title="Email" />
       )
     },
+    cell: ({ row }) => {
+      const emails = row.getValue("emailAddresses") as { emailAddress: string }[];
+      const primaryEmail = emails && emails.length > 0 ? emails[0].emailAddress : "N/A";
+      
+      return <div className="text-left font-medium">{primaryEmail}</div>;
+    },
   },
   {
-    accessorKey: "amount",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Amount" />,
+    accessorKey: "createdAt",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Joinded date" />,
     cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("amount"))
-      const formatted = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-      }).format(amount)
+      const date = new Date(row.getValue("createdAt"));
+    const formattedDate = date.toISOString().split('T')[0];
 
-      return <div className="text-right font-medium">{formatted}</div>
+    return <div className="text-left font-medium">{formattedDate}</div>;
     },
   },
   {
     id: "actions",
     cell: ({ row }) => {
-      const payment = row.original
+      const user = row.original
 
       return (
         <DropdownMenu>
@@ -93,13 +98,12 @@ export const columns: ColumnDef<Payment>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
+              onClick={() => navigator.clipboard.writeText(user.id)}
             >
-              Copy payment ID
+              Copy user ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
+            <DropdownMenuItem>View user details</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       )
