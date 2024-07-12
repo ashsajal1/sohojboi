@@ -40,14 +40,14 @@ export default function ConfirmDialog({ isDialogOpen, formData }: { isDialogOpen
                 </div>
                 <DialogFooter>
                     <DialogClose asChild>
-                        <Button variant={'ghost'}>Cancle</Button>
+                        <Button disabled={isPending} variant={'ghost'}>Cancle</Button>
                     </DialogClose>
-                    <Button onClick={async () => {
+                    <Button disabled={isPending} onClick={async () => {
                         startTransition(async () => {
                             await createChallengeQuestion(formData)
                         })
                     }}>
-                        {isPending? 'Creating...' :'Confirm'}
+                        {isPending ? 'Creating...' : 'Confirm'}
                     </Button>
                 </DialogFooter>
             </DialogContent>
