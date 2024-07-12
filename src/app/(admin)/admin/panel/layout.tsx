@@ -7,7 +7,7 @@ export default function AdminLayout({ children, questions, users, summary }: { c
                 {summary}
             </div>
             {children}
-            <section className='flex items-start'>
+            <section className='flex flex-col md:flex-row items-start'>
                 {users}
                 {questions}
             </section>
