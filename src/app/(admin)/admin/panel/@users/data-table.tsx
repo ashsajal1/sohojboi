@@ -32,7 +32,7 @@ import {
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { DataTablePagination } from "./table-pagination"
+import { DataTablePagination } from "../../../../../components/table-pagination"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]

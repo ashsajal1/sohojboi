@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 
 import { ArrowUpDown, MoreHorizontal } from "lucide-react"
-import { DataTableColumnHeader } from "./table-header"
+import { DataTableColumnHeader } from "../../../../../components/table-header"
 import { User } from "@clerk/nextjs/server"
 
 // This type is used to define the shape of our data.
