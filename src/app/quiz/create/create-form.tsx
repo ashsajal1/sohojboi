@@ -34,7 +34,7 @@ const questionSchema = z.object({
     tags: z.string().optional(),
     options: z.array(z.object({
         content: z.string().nonempty({ message: 'Option content is required' })
-    })).min(2, { message: 'At least 2 options are required' })
+    })).min(1, { message: 'At least 1 options are required' })
         .max(4, { message: 'No more than 4 options are allowed' })
 });
 
