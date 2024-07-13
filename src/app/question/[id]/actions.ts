@@ -107,7 +107,7 @@ const questionSchema = z.object({
   answerText: z
     .string()
     .min(1, "Answer text is required")
-    .max(1000, "Answer text must be 100 characters or less"),
+    .max(5000, "Answer text must be 5000 characters or less"),
 });
 
 export const createAnswer = async (_: any, formData: FormData) => {
