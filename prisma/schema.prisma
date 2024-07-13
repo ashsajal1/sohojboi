@@ -25,6 +25,8 @@ model Question {
   userFirstName       String
   userLastName        String
   userFullName        String
+  topicId             String?  @db.ObjectId
+  topic               Topic?   @relation(fields: [topicId], references: [id])
 }
 
 model Answer {
@@ -39,6 +41,8 @@ model Answer {
   userFirstName String
   userLastName  String
   userFullName  String
+  topicId       String?  @db.ObjectId
+  topic         Topic?   @relation(fields: [topicId], references: [id])
 }
 
 enum ChallengeQuestionStatus {
@@ -79,6 +83,8 @@ model Topic {
   questions ChallengeQuestion[]
   createdAt DateTime            @default(now())
   updatedAt DateTime            @updatedAt
+  Question  Question[]
+  Answer    Answer[]
 }
 
 model Chapter {
