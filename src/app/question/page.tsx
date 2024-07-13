@@ -2,6 +2,13 @@ import prisma from "@/lib/prisma"
 import QuestionCard from "./question-card";
 import { Card, CardTitle } from "@/components/ui/card";
 
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Explore Questions on Various Topics | Sohojboi",
+    description: "Discover and engage with a wide range of questions on diverse topics. Join the Sohojboi community to ask, answer, and learn interactively.",  
+}
+
 export default async function Question() {
     const questions = await prisma.question.findMany({
         orderBy: {

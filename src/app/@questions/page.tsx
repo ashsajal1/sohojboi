@@ -1,7 +1,6 @@
 import prisma from "@/lib/prisma"
 import { Card, CardTitle } from "@/components/ui/card";
 import QuestionCard from "../question/question-card";
-import Questions from "./questions";
 
 export default async function QuestionsSlot() {
     const questions = await prisma.question.findMany({
