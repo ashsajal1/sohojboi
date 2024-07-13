@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/hover-card"
 import AnswerForm from "./answer-form";
 import { increaseView } from "./actions";
+import ReactMarkDown from 'react-markdown'
 
 interface Params {
     params: {
@@ -142,7 +143,9 @@ export default async function Question({ params }: Params) {
                     </div>
 
                     <CardDescription>
-                        {question?.questionDescription}
+                        <ReactMarkDown>
+                            {question?.questionDescription}
+                        </ReactMarkDown>
                     </CardDescription>
 
                     <div className="flex items-center gap-2">
