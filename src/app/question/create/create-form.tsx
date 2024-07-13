@@ -69,7 +69,7 @@ const InputFields = ({ topics }: { topics: Topic[] }) => {
             <Label>Select topic : </Label>
             <PopoverTrigger className="mt-2" asChild>
                 <Button onClick={() => setOpen(true)} variant={'outline'} type={'button'}>
-                    {selectedTopic ? topics.find(t => t.id === selectedTopic).name || '' : 'Select topic'}
+                    {selectedTopic ? topics.find(t => t.id === selectedTopic)?.name || '' : 'Select topic'}
                 </Button>
             </PopoverTrigger>
             <PopoverContent>
