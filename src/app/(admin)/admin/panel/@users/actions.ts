@@ -3,6 +3,7 @@
 import { Roles } from "@/app/types/globals";
 import { checkRole } from "@/lib/roles";
 import { clerkClient } from "@clerk/nextjs/server";
+import { revalidatePath } from "next/cache";
 
 export async function setRole(userId: string, role: Roles) {
   // Check that the user trying to set the role is an admin
@@ -11,12 +12,10 @@ export async function setRole(userId: string, role: Roles) {
   }
 
   try {
-    const res = await clerkClient().users.updateUser(
-      userId,
-      {
-        publicMetadata: { role: role },
-      }
-    );
+    const res = await clerkClient().users.updateUser(userId, {
+      publicMetadata: { role: role },
+    });
+    revalidatePath('/')
     return { message: res.publicMetadata };
   } catch (err) {
     return { message: err };
