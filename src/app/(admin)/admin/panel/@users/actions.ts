@@ -12,10 +12,19 @@ export async function setRole(userId: string, role: Roles) {
   }
 
   try {
+    const isMod = (await clerkClient().users.getUser(userId)).publicMetadata.role;
+    if(role === 'moderator') {
+      await clerkClient().users.updateUser(userId, {
+        publicMetadata: { role: 'user' },
+      });
+      revalidatePath("/");
+      return;
+    }
+
     const res = await clerkClient().users.updateUser(userId, {
       publicMetadata: { role: role },
     });
-    revalidatePath('/')
+    revalidatePath("/");
     return { message: res.publicMetadata };
   } catch (err) {
     return { message: err };
