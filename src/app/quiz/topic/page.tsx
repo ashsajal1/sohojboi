@@ -1,6 +1,7 @@
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import prisma from "@/lib/prisma"
+import CreateTopic from "./create-topic"
 
 export default async function TopicPage() {
     const topics = await prisma.topic.findMany()
@@ -18,6 +19,8 @@ export default async function TopicPage() {
                     </div>
                 </CardContent>
             </Card>
+
+            <CreateTopic />
         </div>
     )
 }
