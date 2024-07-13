@@ -12,6 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { Dialog, DialogFooter, DialogHeader, DialogContent, DialogTitle } from '@/components/ui/dialog';
 
 import { ArrowUpDown, MoreHorizontal } from "lucide-react"
 import { DataTableColumnHeader } from "../../../../../components/table-header"
@@ -108,10 +109,14 @@ export const columns: ColumnDef<User>[] = [
     id: "actions",
     cell: ({ row }) => {
       const user = row.original;
-      // const [open, setOpen] = useState(false);
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      const [open, setOpen] = useState(false);
 
       return (
         <>
+
+          <SetRole userId={user.id} role={'moderator'} open={open} setOpen={setOpen} />
+
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="h-8 w-8 p-0">
@@ -128,7 +133,7 @@ export const columns: ColumnDef<User>[] = [
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem>View user details</DropdownMenuItem>
-              <SetRole userId={user.id} role={'moderator'} />
+              <DropdownMenuItem onClick={() => setOpen(true)}>Make a moderator</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </>
