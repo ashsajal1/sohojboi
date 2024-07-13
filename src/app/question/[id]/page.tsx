@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/hover-card"
 import AnswerForm from "./answer-form";
 import { increaseView } from "./actions";
-import ReactMarkDown from 'react-markdown'
+import ReactMarkDown from 'react-markdown';
 
 interface Params {
     params: {
@@ -30,6 +30,34 @@ interface Params {
     }
 }
 
+export async function generateMetadata({ params }: Params) {
+    let question = null;
+
+    if (isValidObjectId(params.id)) {
+        try {
+            question = await prisma.question.findUnique({
+                where: {
+                    id: params.id,
+                },
+                include: {
+                    answers: true,
+                    topic: true,
+                }
+            });
+
+        } catch (error) {
+            throw new Error('Error fetching question:', error || '');
+        }
+    } else {
+        throw new Error('Invalid ObjectId');
+    }
+
+    return {
+        title: question?.questionTitle,
+        description: question?.questionDescription.slice(1, 150),
+        tags: question?.questionTitle.split(' ')
+    }
+}
 export default async function Question({ params }: Params) {
     const user = await currentUser();
 
