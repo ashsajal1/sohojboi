@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 "use client"
 
 import { ColumnDef } from "@tanstack/react-table"
@@ -16,6 +17,8 @@ import {
 import { ArrowUpDown, MoreHorizontal } from "lucide-react"
 import { DataTableColumnHeader } from "../../../../../components/table-header"
 import { ChallengeQuestion } from "@prisma/client"
+import DeleteQuestion from "./delete-qeustion"
+import { useState } from "react"
 
 // id: string;
 // content: string;
@@ -52,28 +55,28 @@ export const columns: ColumnDef<ChallengeQuestion>[] = [
   },
   {
     accessorKey: "content",
-    header: ({column}) => <DataTableColumnHeader column={column} title="Question" />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Question" />,
     // cell: ({row}) => <div></div>,
     enableSorting: true,
     enableHiding: true,
   },
   {
     accessorKey: "creatorId",
-    header: ({column}) => <DataTableColumnHeader column={column} title="Creator" />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Creator" />,
     // cell: () => null,
     enableSorting: true,
     enableHiding: true,
   },
   {
     accessorKey: "status",
-    header: ({column}) => <DataTableColumnHeader column={column} title="Status" />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
     // cell: () => null,
     enableSorting: true,
     enableHiding: true,
   },
   {
     accessorKey: "approverdBy",
-    header: ({column}) => <DataTableColumnHeader column={column} title="Approver" />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Approver" />,
     // cell: () => null,
     enableSorting: true,
     enableHiding: true,
@@ -92,27 +95,32 @@ export const columns: ColumnDef<ChallengeQuestion>[] = [
   {
     id: "actions",
     cell: ({ row }) => {
-      const user = row.original
+      const question = row.original;
+      const [open, setOpen] = useState(false)
 
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(user.id)}
-            >
-              Copy question ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View question details</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <>
+          <DeleteQuestion setOpen={setOpen} open={open} questionId={question.id} />
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuItem
+                onClick={() => navigator.clipboard.writeText(question.id)}
+              >
+                Copy question ID
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>View question details</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setOpen(true)}>Delete question</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </>
       )
     },
   },
