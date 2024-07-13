@@ -8,10 +8,10 @@ export default async function TopicPage() {
     return (
         <div>
             <Card>
+                <CardHeader>
+                    <CardTitle>Here is the list of topics</CardTitle>
+                </CardHeader>
                 <CardContent>
-                    <CardHeader>
-                        <CardTitle>Here is the list of topics</CardTitle>
-                    </CardHeader>
                     <div className="flex items-center gap-2 flex-wrap">
                         {topics.map(topic => (
                             <Badge key={topic.id}>{topic.name}</Badge>
