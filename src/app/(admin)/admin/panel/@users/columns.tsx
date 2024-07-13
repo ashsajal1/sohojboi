@@ -12,23 +12,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Dialog, DialogFooter, DialogHeader, DialogContent, DialogTitle } from '@/components/ui/dialog';
 
-import { ArrowUpDown, MoreHorizontal } from "lucide-react"
+import { MoreHorizontal } from "lucide-react"
 import { DataTableColumnHeader } from "../../../../../components/table-header"
 import { User } from "@clerk/nextjs/server"
 import SetRole from "./set-role"
 import { useState } from "react"
-
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
-// export type UserData = {
-//   id: string
-//   fullName: string
-//   createdAt: Date
-//   imageUrl: string
-//   email: string
-// }
 
 export const columns: ColumnDef<User>[] = [
   {
@@ -111,10 +100,17 @@ export const columns: ColumnDef<User>[] = [
       const user = row.original;
       // eslint-disable-next-line react-hooks/rules-of-hooks
       const [open, setOpen] = useState(false);
+      const isMod = user.publicMetadata?.role === 'moderator';
+
+      let content;
+      if (isMod) {
+        content = <DropdownMenuItem onClick={() => setOpen(true)}>Remove moderator role</DropdownMenuItem>
+      } else {
+        content = <DropdownMenuItem onClick={() => setOpen(true)}>Make a moderator</DropdownMenuItem>
+      }
 
       return (
         <>
-
           <SetRole userId={user.id} role={'moderator'} open={open} setOpen={setOpen} />
 
           <DropdownMenu>
@@ -133,7 +129,7 @@ export const columns: ColumnDef<User>[] = [
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem>View user details</DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setOpen(true)}>Make a moderator</DropdownMenuItem>
+              {content}
             </DropdownMenuContent>
           </DropdownMenu>
         </>
