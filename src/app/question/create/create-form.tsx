@@ -13,7 +13,7 @@ import {
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import { ZodFormattedError } from 'zod';
 import { PopoverTrigger, Popover, PopoverContent } from "@/components/ui/popover";
-import { Command, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import { Command, CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { useState } from "react";
 import { Topic } from "@prisma/client";
 import { Label } from "@radix-ui/react-label";
@@ -72,19 +72,22 @@ const InputFields = ({ topics }: { topics: Topic[] }) => {
             </PopoverTrigger>
             <PopoverContent>
                 <Command>
+
+                    <CommandInput placeholder="Search topic..."></CommandInput>
+
                     <CommandList>
-                        <CommandInput placeholder="Search topic..."></CommandInput>
+                        <CommandEmpty>No results found.</CommandEmpty>
+                        <CommandGroup>
+
+                            {topics.map(topic => (
+                                <CommandItem key={topic.id} value={topic.id} onSelect={(currentValue) => {
+                                    setSelectedTopic(currentValue);
+                                    setOpen(false);
+                                }}>{topic.name}</CommandItem>
+                            ))}
+
+                        </CommandGroup>
                     </CommandList>
-                    <CommandGroup>
-
-                        {topics.map(topic => (
-                            <CommandItem key={topic.id} value={topic.id} onSelect={(currentValue) => {
-                                setSelectedTopic(currentValue);
-                                setOpen(false);
-                            }}>{topic.name}</CommandItem>
-                        ))}
-
-                    </CommandGroup>
                 </Command>
             </PopoverContent>
         </Popover>
