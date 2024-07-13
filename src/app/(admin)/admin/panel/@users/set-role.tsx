@@ -17,8 +17,8 @@ export default function SetRole({ userId, role, open, setOpen }: { userId: strin
                         <DialogTitle>Are you sure to make him moderator?</DialogTitle>
                     </DialogHeader>
                     <DialogFooter>
-                        <Button disabled={open} variant={'ghost'} onClick={() => setOpen(false)}>No</Button>
-                        <Button disabled={open} onClick={
+                        <Button disabled={isPending} variant={'ghost'} onClick={() => setOpen(false)}>No</Button>
+                        <Button disabled={isPending} onClick={
                             async () => {
                                 startTransition(async () => {
                                     await setRole(userId, role)
