@@ -6,6 +6,12 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import Select from './select';
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Challenge Your Friends in Quizzes | Sohojboi",
+  description: "Test your knowledge and challenge your friends in quizzes across various topics. Join the fun and see who comes out on top on Sohojboi.",
+}
 
 export default async function page({ searchParams }: { searchParams: any }) {
   const user = auth();
@@ -15,10 +21,10 @@ export default async function page({ searchParams }: { searchParams: any }) {
   try {
     questions = await prisma.challengeQuestion.findMany({
       include: {
-        tags: true, 
-        topic: true, 
+        tags: true,
+        topic: true,
         chapter: true,
-        options: true, 
+        options: true,
       },
       take: 3
     });
