@@ -11,6 +11,7 @@ import { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Challenge Your Friends in Quizzes | Sohojboi",
   description: "Test your knowledge and challenge your friends in quizzes across various topics. Join the fun and see who comes out on top on Sohojboi.",
+  keywords: ["challenge, quiz, knowledge, friends, competition, topics, education, fun"]
 }
 
 export default async function page({ searchParams }: { searchParams: any }) {
