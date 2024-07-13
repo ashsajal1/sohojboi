@@ -12,11 +12,15 @@ import {
 } from "@/components/ui/alert"
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import { ZodFormattedError } from 'zod';
+import { PopoverTrigger, Popover, PopoverContent } from "@/components/ui/popover";
+import { Command, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import { useState } from "react";
+import { Topic } from "@prisma/client";
+import { Label } from "@radix-ui/react-label";
 
 type ErrorState = ZodFormattedError<{ title: string; description: string; }, string> | { error: string } | null
 
-
-export default function CreateForm() {
+export default function CreateForm({ topics }: { topics: Topic[] }) {
     const [errorState, createQuestionAction] = useFormState(createQuestion, null);
 
     const errorMessage: ErrorState = errorState;
@@ -25,7 +29,7 @@ export default function CreateForm() {
         <div>
             <form action={createQuestionAction}>
                 <CardContent>
-                    <InputFields />
+                    <InputFields topics={topics} />
                     {
                         errorState && <Alert className="mt-2" variant="destructive">
                             <ExclamationTriangleIcon />
@@ -54,11 +58,39 @@ const SubmitButton = () => {
     </>
 }
 
-const InputFields = () => {
+const InputFields = ({ topics }: { topics: Topic[] }) => {
     const { pending } = useFormStatus();
+    const [selectedTopic, setSelectedTopic] = useState('')
+    const [open, setOpen] = useState(false)
     return <>
         <Input disabled={pending} name="title" placeholder="Enter title..." />
         <Textarea disabled={pending} name="description" rows={12} placeholder="Enter description..." className="mt-3" />
+        <Popover open={open}>
+            <Label>Select topic : </Label>
+            <PopoverTrigger className="mt-2" asChild>
+                <Button onClick={() => setOpen(true)} variant={'outline'} type={'button'}>
+                    {selectedTopic ? topics.find(t => t.id === selectedTopic).name || '' : 'Select topic'}
+                </Button>
+            </PopoverTrigger>
+            <PopoverContent>
+                <Command>
+                    <CommandList>
+                        <CommandInput placeholder="Search topic..."></CommandInput>
+                    </CommandList>
+                    <CommandGroup>
+
+                        {topics.map(topic => (
+                                <CommandItem key={topic.id} value={topic.id} onSelect={(currentValue) => {
+                                    setSelectedTopic(currentValue);
+                                    setOpen(false);
+                                }}>{topic.name}</CommandItem>
+                        ))}
+
+                    </CommandGroup>
+                </Command>
+            </PopoverContent>
+        </Popover>
+        <input type="hidden" name="topic" value={selectedTopic} />
     </>
 }
 

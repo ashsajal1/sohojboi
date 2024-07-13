@@ -19,6 +19,8 @@ export const createQuestion = async (_: any, formData: FormData) => {
   const user = await currentUser();
   const title = formData.get("title");
   const description = formData.get("description");
+  const topic = formData.get("topic");
+  // console.log(topic);
   let newQuestion;
   const result = questionSchema.safeParse({ title, description });
   if (!result.success) {
@@ -34,10 +36,11 @@ export const createQuestion = async (_: any, formData: FormData) => {
         userFirstName: user?.firstName as string,
         userLastName: user?.lastName as string,
         userFullName: user?.fullName as string,
+        topicId: topic as string,
       },
     });
   } catch (error) {
-    return {error: "An unexpected error occurred. Try again."};
+    return { error: "An unexpected error occurred. Try again." };
   }
 
   redirect(`/question/${newQuestion.id}`);
