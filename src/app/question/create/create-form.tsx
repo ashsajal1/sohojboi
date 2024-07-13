@@ -63,11 +63,9 @@ const InputFields = ({ topics }: { topics: Topic[] }) => {
     const [selectedTopic, setSelectedTopic] = useState('')
     const [open, setOpen] = useState(false)
     return <>
-        <Input disabled={pending} name="title" placeholder="Enter title..." />
-        <Textarea disabled={pending} name="description" rows={12} placeholder="Enter description..." className="mt-3" />
         <Popover open={open}>
             <Label>Select topic : </Label>
-            <PopoverTrigger className="mt-2" asChild>
+            <PopoverTrigger className="mb-2" asChild>
                 <Button onClick={() => setOpen(true)} variant={'outline'} type={'button'}>
                     {selectedTopic ? topics.find(t => t.id === selectedTopic)?.name || '' : 'Select topic'}
                 </Button>
@@ -80,16 +78,19 @@ const InputFields = ({ topics }: { topics: Topic[] }) => {
                     <CommandGroup>
 
                         {topics.map(topic => (
-                                <CommandItem key={topic.id} value={topic.id} onSelect={(currentValue) => {
-                                    setSelectedTopic(currentValue);
-                                    setOpen(false);
-                                }}>{topic.name}</CommandItem>
+                            <CommandItem key={topic.id} value={topic.id} onSelect={(currentValue) => {
+                                setSelectedTopic(currentValue);
+                                setOpen(false);
+                            }}>{topic.name}</CommandItem>
                         ))}
 
                     </CommandGroup>
                 </Command>
             </PopoverContent>
         </Popover>
+        <Input disabled={pending} name="title" placeholder="Enter title..." />
+        <Textarea disabled={pending} name="description" rows={12} placeholder="Enter description..." className="mt-3" />
+
         <input type="hidden" name="topic" value={selectedTopic} />
     </>
 }
