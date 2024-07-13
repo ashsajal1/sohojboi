@@ -65,12 +65,9 @@ export default async function Question({ params }: Params) {
         }
     }
 
-
     let question = null;
-    let answers = null;
     let profileImageSrc;
     let questionUser;
-
 
     if (isValidObjectId(params.id)) {
         try {
@@ -78,13 +75,9 @@ export default async function Question({ params }: Params) {
                 where: {
                     id: params.id,
                 },
-            });
-            answers = await prisma.answer.findMany({
-                where: {
-                    questionId: params.id,
-                },
-                orderBy: {
-                    createdAt: 'desc'
+                include: {
+                    answers: true,
+                    topic: true,
                 }
             });
 
@@ -159,6 +152,7 @@ export default async function Question({ params }: Params) {
                         <Badge variant={'secondary'}>
                             <CaretUpIcon className="mr-2" />{question?.upvoteCount!}
                         </Badge>
+                        <Badge>{question?.topic?.name}</Badge>
                     </div>
                 </CardHeader>
 
@@ -188,10 +182,10 @@ export default async function Question({ params }: Params) {
                 </CardContent>
 
                 <CardFooter className="flex flex-col items-start">
-                    {answers.length === 0 && <h2 className="font-bold text-xl text-center text-muted-foreground">
+                    {question?.answers.length === 0 && <h2 className="font-bold text-xl text-center text-muted-foreground">
                         Answers is empty!
                     </h2>}
-                    <Answers question={question} answers={answers} />
+                    <Answers question={question} answers={question?.answers!} />
                 </CardFooter>
             </Card>
         </div>
