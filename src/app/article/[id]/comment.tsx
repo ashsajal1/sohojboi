@@ -9,7 +9,7 @@ interface CommentProps {
 }
 
 export default async function Comment({ comment }: CommentProps) {
-    const user = await clerkClient.users.getUser(comment.authorId);
+    const user = await clerkClient().users.getUser(comment.authorId);
 
     return (
         <Card key={comment.id}>

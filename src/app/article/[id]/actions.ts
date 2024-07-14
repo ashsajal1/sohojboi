@@ -14,7 +14,8 @@ export const createComment = async (articleId: string, content: string) => {
         authorId: authorId,
       },
     });
+    revalidatePath('/')
   } catch (error) {}
 
-  revalidatePath('/')
+  
 };
