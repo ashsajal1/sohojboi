@@ -8,17 +8,18 @@ import { createComment } from './actions';
 export default function CommentForm({ articleId }: { articleId: string }) {
     const [content, setContent] = useState('');
     const [pending, startTransition] = useTransition()
-    const handleSubmit = async () => {
-        if(content !== ''){
-            await startTransition(async () => {
-                await createComment(articleId, content)
-            })
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (content !== '') {
+            startTransition(async () => {
+                await createComment(articleId, content);
+                setContent(''); 
+            });
         }
-        
-    }
+    };
     return (
         <form onSubmit={handleSubmit}>
-            <Textarea disabled={pending} onChange={(e) => setContent(e.target.value)} placeholder='Enter comment...' />
+            <Textarea disabled={pending} value={content} onChange={(e) => setContent(e.target.value)} placeholder='Enter comment...' />
             <Button disabled={pending} className='mt-2'>
                 {pending ? 'Submitting' : 'Submit'}
             </Button>
