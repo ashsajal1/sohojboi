@@ -5,6 +5,9 @@ export function formatDate(date: Date): string {
   const now = new Date();
   const minutes = differenceInMinutes(now, date);
 
+  if (minutes < 1) {
+    return `just now`;
+  }
   if (minutes < 60) {
     return `${minutes}m ago`;
   }
