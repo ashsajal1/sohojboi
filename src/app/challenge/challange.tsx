@@ -44,7 +44,7 @@ const Challenge: React.FC<ChallengeProps> = ({ challengeeId, challengerId, quizI
     };
 
     return (
-        <div>
+        <div className='w-full'>
             {quizQuestions.length > 0 && (
                 <>
                     {showResults ? (
