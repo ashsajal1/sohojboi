@@ -9,9 +9,11 @@ export const createArticle = async (
   content: string,
   topicId: string
 ) => {
+
+  let newArticle;
   try {
     const authorId = await auth().userId;
-    const newArticle = await prisma.article.create({
+    newArticle = await prisma.article.create({
       data: {
         title: title,
         content: content,
@@ -19,9 +21,9 @@ export const createArticle = async (
         topicId: topicId
       },
     });
-
-    redirect(`/article/${newArticle.id}`)
   } catch (error) {
     throw new Error("Cannot create article!")
   }
+
+  redirect(`/article/${newArticle.id}`)
 };
