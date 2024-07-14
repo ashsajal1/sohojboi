@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button'
 import { Card, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import prisma from '@/lib/prisma'
+import Link from 'next/link'
 import React from 'react'
 
 export default async function Page() {
@@ -16,7 +17,9 @@ export default async function Page() {
                     <CardTitle>{article.title}</CardTitle>
                 </CardHeader>
                 <CardFooter>
-                    <Button>View</Button>
+                    <Link href={`/article/${article.id}`}>
+                        <Button>View</Button>
+                    </Link>
                     <Button>Upvote</Button>
                 </CardFooter>
             </Card>)}
