@@ -2,6 +2,7 @@
 
 import prisma from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
 
 export const createArticle = async (
   title: string,
@@ -19,6 +20,8 @@ export const createArticle = async (
       },
     });
 
-    console.log(newArticle)
-  } catch (error) {}
+    redirect(`/article/${newArticle.id}`)
+  } catch (error) {
+    throw new Error("Cannot create article!")
+  }
 };
