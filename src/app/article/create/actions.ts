@@ -15,6 +15,7 @@ export const createArticle = async (
         title: title,
         content: content,
         authorId: authorId!,
+        topicId: topicId
       },
     });
 
