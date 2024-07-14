@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import prisma from '@/lib/prisma';
 import React from 'react'
 import CommentForm from './comment-form';
+import Comment from './comment'
 
 export default async function Page({ params }: { params: { id: string } }) {
     const articleId = params.id;
@@ -33,13 +34,9 @@ export default async function Page({ params }: { params: { id: string } }) {
                     <CommentForm articleId={article?.id!} />
                 </CardHeader>
                 <CardContent>
-                    {article?.comments.map(comment => (
-                        <Card key={comment.id}>
-                            <CardHeader>
-                                <CardDescription>{comment.content}</CardDescription>
-                            </CardHeader>
-                        </Card>
-                    ))}
+                   {article?.comments.map(comment => (
+                    <Comment key={comment.id} comment={comment} />
+                   ))}
                 </CardContent>
             </Card>
         </div>
