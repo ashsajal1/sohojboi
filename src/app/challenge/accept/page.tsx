@@ -31,7 +31,6 @@ export default async function AcceptChallengePage({ searchParams }: { searchPara
                 }
             },
             include: {
-                tags: true,
                 topic: true,
                 chapter: true,
                 options: true,
