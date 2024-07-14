@@ -29,24 +29,3 @@ export const createChallengeQuestion = async (formData: QuestionFormData) => {
 
   revalidatePath('/')
 };
-
-// const question1 = await prisma.challengeQuestion.create({
-//     data: {
-//       content: "What is 2 + 2?",
-//       topic: { connect: { id: topic.id } },
-//       chapter: { connect: { id: chapter.id } },
-//       options: {
-//         create: [
-//           { content: "3", isCorrect: false },
-//           { content: "4", isCorrect: true },
-//           { content: "5", isCorrect: false },
-//         ],
-//       },
-//       tags: {
-//         create: [
-//           { tag: { connect: { id: tag1.id } } },
-//           { tag: { connect: { id: tag2.id } } },
-//         ],
-//       },
-//     },
-//   });

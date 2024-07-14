@@ -9,10 +9,9 @@ export default async function page() {
     try {
         questions = await prisma.challengeQuestion.findMany({
           include: {
-            tags: true, // Include tags associated with each question
-            topic: true, // Include topic associated with each question
-            chapter: true, // Include chapter associated with each question
-            options: true, // Include options associated with each question
+            topic: true, 
+            chapter: true, 
+            options: true, 
           },
         });
     
