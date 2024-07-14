@@ -5,7 +5,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/componen
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { zodResolver } from '@hookform/resolvers/zod';
-import React, { useState } from 'react';
+import React, { useState, useTransition } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { z } from 'zod';
 import { PopoverTrigger, Popover, PopoverContent } from "@/components/ui/popover";
@@ -14,6 +14,8 @@ import { Label } from '@/components/ui/label';
 import { Topic } from '@prisma/client';
 import { ArrowUpIcon, CheckIcon, PlusCircledIcon, TrashIcon } from "@radix-ui/react-icons"
 import { cn } from '@/lib/utils';
+import { create } from 'domain';
+import { createArticle } from './actions';
 
 // Define validation schema using zod
 const articleSchema = z.object({
@@ -28,13 +30,15 @@ type FormData = z.infer<typeof articleSchema>;
 const CreateArticleForm = ({ topics }: { topics: Topic[] }) => {
     const [open, setOpen] = useState(false);
     const [selectedTopic, setSelectedTopic] = useState('');
+    const [pending, startTransition] = useTransition();
     const { control, register, handleSubmit, formState: { errors } } = useForm<FormData>({
         resolver: zodResolver(articleSchema)
     });
 
-    const onSubmit = (data: FormData) => {
-        // Handle form submission logic here
-        console.log(data); // Replace with actual submission logic
+    const onSubmit = async (data: FormData) => {
+        await startTransition(async () => {
+            await createArticle(data.title, data.content, data.topic)
+        })
     };
 
     return (
