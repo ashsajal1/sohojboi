@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import prisma from '@/lib/prisma';
 import React from 'react'
+import CommentForm from './comment-form';
 
 export default async function Page({ params }: { params: { id: string } }) {
     const articleId = params.id;
@@ -27,6 +28,9 @@ export default async function Page({ params }: { params: { id: string } }) {
                     <div>
                         <Button size={'sm'}>{article?.upvotes.length} Upvote</Button>
                     </div>
+
+                    <h1 className='font-bold mt-3'>Enter comments  :</h1>
+                    <CommentForm articleId={article?.id!} />
                 </CardHeader>
                 <CardContent>
                     {article?.comments.map(comment => (
