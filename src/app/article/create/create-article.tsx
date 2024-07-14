@@ -50,11 +50,13 @@ const CreateArticleForm = ({ topics }: { topics: Topic[] }) => {
                             <CardTitle>Write your article:</CardTitle>
                             <div className='flex flex-col gap-2 mt-4'>
                                 <Input
+                                    disabled={pending}
                                     {...register('title')}
                                     placeholder='Enter title...'
                                 />
                                 {errors.title && <span className="text-red-500">{errors.title.message}</span>}
                                 <Textarea
+                                    disabled={pending}
                                     {...register('content')}
                                     placeholder='Enter content of article...'
                                 />
@@ -65,8 +67,10 @@ const CreateArticleForm = ({ topics }: { topics: Topic[] }) => {
                                     name="topic"
                                     render={({ field }) => (
                                         <Popover open={open} onOpenChange={setOpen}>
+                                            
                                             <PopoverTrigger asChild>
                                                 <Button
+                                                    disabled={pending}
                                                     variant="outline"
                                                     role="combobox"
                                                     aria-expanded={open}
@@ -120,7 +124,9 @@ const CreateArticleForm = ({ topics }: { topics: Topic[] }) => {
                         </CardHeader>
 
                         <CardFooter>
-                            <Button type="submit">Submit</Button>
+                            <Button disabled={pending} type="submit">
+                                {pending ? 'Submiting' : 'Submit'}
+                            </Button>
                         </CardFooter>
                     </CardContent>
                 </form>
