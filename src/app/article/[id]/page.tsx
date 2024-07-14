@@ -1,4 +1,5 @@
-import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import prisma from '@/lib/prisma';
 import React from 'react'
 
@@ -10,7 +11,8 @@ export default async function Page({ params }: { params: { id: string } }) {
             id: articleId
         },
         include: {
-            comments: true
+            comments: true,
+            upvotes: true
         }
     })
     return (
@@ -21,7 +23,20 @@ export default async function Page({ params }: { params: { id: string } }) {
                     <CardDescription>
                         {article?.content}
                     </CardDescription>
+
+                    <div>
+                        <Button size={'sm'}>{article?.upvotes.length} Upvote</Button>
+                    </div>
                 </CardHeader>
+                <CardContent>
+                    {article?.comments.map(comment => (
+                        <Card key={comment.id}>
+                            <CardHeader>
+                                <CardDescription>{comment.content}</CardDescription>
+                            </CardHeader>
+                        </Card>
+                    ))}
+                </CardContent>
             </Card>
         </div>
     )
