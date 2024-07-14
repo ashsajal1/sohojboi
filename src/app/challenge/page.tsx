@@ -22,7 +22,6 @@ export default async function page({ searchParams }: { searchParams: any }) {
   try {
     questions = await prisma.challengeQuestion.findMany({
       include: {
-        tags: true,
         topic: true,
         chapter: true,
         options: true,

@@ -62,7 +62,6 @@ model ChallengeQuestion {
   topicId    String?                  @db.ObjectId
   chapter    Chapter?                 @relation(fields: [chapterId], references: [id])
   chapterId  String?                  @db.ObjectId
-  tags       QuestionTag[]
   createdAt  DateTime                 @default(now())
   updatedAt  DateTime                 @updatedAt
 }
@@ -85,6 +84,7 @@ model Topic {
   updatedAt DateTime            @updatedAt
   Question  Question[]
   Answer    Answer[]
+  Article   Article[]
 }
 
 model Chapter {
@@ -96,23 +96,12 @@ model Chapter {
 }
 
 model Tag {
-  id        String        @id @default(auto()) @map("_id") @db.ObjectId
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
   name      String
-  questions QuestionTag[]
-  createdAt DateTime      @default(now())
-  updatedAt DateTime      @updatedAt
-}
-
-model QuestionTag {
-  id                  String            @id @default(auto()) @map("_id") @db.ObjectId
-  challengeQuestionId String            @db.ObjectId
-  tagId               String            @db.ObjectId
-  challengeQuestion   ChallengeQuestion @relation(fields: [challengeQuestionId], references: [id])
-  tag                 Tag               @relation(fields: [tagId], references: [id])
-  createdAt           DateTime          @default(now())
-  updatedAt           DateTime          @updatedAt
-
-  @@unique([challengeQuestionId, tagId])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Article   Article? @relation("ArticleTags", fields: [articleId], references: [id])
+  articleId String?  @db.ObjectId
 }
 
 model Competition {
@@ -158,9 +147,12 @@ model Upvote {
   questionId String?  @db.ObjectId
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+  articleId  String?  @db.ObjectId
+  Article    Article? @relation("ArticleUpvotes", fields: [articleId], references: [id])
 
   @@unique([userId, answerId])
   @@unique([userId, questionId])
+  @@unique([userId, articleId])
 }
 
 model View {
@@ -172,9 +164,40 @@ model View {
   count      Int      @default(1)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+  articleId  String?  @db.ObjectId
 
   @@unique([userId, answerId], name: "user_answer_unique")
   @@unique([userId, questionId], name: "user_question_unique")
   @@unique([ipAddress, answerId], name: "ip_answer_unique")
   @@unique([ipAddress, questionId], name: "ip_question_unique")
+  @@unique([userId, articleId], name: "user_article_unique")
+}
+
+model Article {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  title     String
+  content   String
+  authorId  String
+  comments  Comment[] @relation("ArticleComments")
+  upvotes   Upvote[]  @relation("ArticleUpvotes")
+  tags      Tag[]     @relation("ArticleTags")
+  topicId   String    @db.ObjectId
+  topic     Topic     @relation(fields: [topicId], references: [id])
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Comment {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  content   String
+  authorId  String
+  articleId String    @db.ObjectId
+  article   Article   @relation("ArticleComments", fields: [articleId], references: [id])
+  parentId  String?   @db.ObjectId
+  parent    Comment?  @relation("NestedComments", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  replies   Comment[] @relation("NestedComments")
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([parentId], name: "parentIdIndex")
 }
