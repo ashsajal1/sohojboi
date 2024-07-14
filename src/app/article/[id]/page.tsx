@@ -14,7 +14,11 @@ export default async function Page({ params }: { params: { id: string } }) {
             id: articleId
         },
         include: {
-            comments: true,
+            comments: {
+                orderBy: {
+                    createdAt: 'desc'
+                }
+            },
             upvotes: true
         }
     })
