@@ -4,6 +4,7 @@ import prisma from '@/lib/prisma';
 import React from 'react'
 import CommentForm from './comment-form';
 import Comment from './comment'
+import ReactMarkdown from 'react-markdown';
 
 export default async function Page({ params }: { params: { id: string } }) {
     const articleId = params.id;
@@ -23,7 +24,9 @@ export default async function Page({ params }: { params: { id: string } }) {
                 <CardHeader>
                     <CardTitle>{article?.title}</CardTitle>
                     <CardDescription>
-                        {article?.content}
+                        <ReactMarkdown>
+                            {article?.content}
+                        </ReactMarkdown>
                     </CardDescription>
 
                     <div>
@@ -34,9 +37,9 @@ export default async function Page({ params }: { params: { id: string } }) {
                     <CommentForm articleId={article?.id!} />
                 </CardHeader>
                 <CardContent>
-                   {article?.comments.map(comment => (
-                    <Comment key={comment.id} comment={comment} />
-                   ))}
+                    {article?.comments.map(comment => (
+                        <Comment key={comment.id} comment={comment} />
+                    ))}
                 </CardContent>
             </Card>
         </div>
