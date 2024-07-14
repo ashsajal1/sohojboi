@@ -12,7 +12,7 @@ export default async function Comment({ comment }: CommentProps) {
     const user = await clerkClient().users.getUser(comment.authorId);
 
     return (
-        <Card key={comment.id}>
+        <Card className='mt-2' key={comment.id}>
             <CardHeader>
                 <CardDescription>{comment.content}</CardDescription>
                 <ProfileImgCard
