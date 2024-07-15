@@ -18,14 +18,14 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
             comments: {
                 orderBy: {
                     createdAt: 'desc'
-                }
+                },
             },
             upvotes: true
         }
     })
     return {
         title: article?.title,
-        description: article?.content.slice(1,150)
+        description: article?.content.slice(1, 150)
     }
 }
 
@@ -40,6 +40,9 @@ export default async function Page({ params }: { params: { id: string } }) {
             comments: {
                 orderBy: {
                     createdAt: 'desc'
+                },
+                include: {
+                    replies: true
                 }
             },
             upvotes: true
@@ -65,7 +68,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                 </CardHeader>
                 <CardContent>
                     {article?.comments.map(comment => (
-                        <Comment key={comment.id} comment={comment} />
+                        <Comment key={comment.id} comment={comment} replies={comment.replies} />
                     ))}
                 </CardContent>
             </Card>

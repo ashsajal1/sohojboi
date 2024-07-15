@@ -3,12 +3,22 @@ import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader } from '@/components/ui/card';
 import { clerkClient } from '@clerk/nextjs/server';
 import ProfileImgCard from '@/components/profile-img-card';
+import { Button } from '@/components/ui/button';
+
+import {
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
+} from "@/components/ui/accordion"
+import CommentForm from './comment-form';
 
 interface CommentProps {
     comment: Comment;
+    replies?: Comment[];
 }
 
-export default async function Comment({ comment }: CommentProps) {
+export default async function Comment({ comment, replies }: CommentProps) {
     const user = await clerkClient().users.getUser(comment.authorId);
 
     return (
@@ -20,7 +30,25 @@ export default async function Comment({ comment }: CommentProps) {
                     userId={user.id}
                     createdAt={comment.createdAt}
                 />
+                <div>
+                    <Accordion type="single" collapsible className="w-full">
+                        <AccordionItem value="item-1">
+                            <AccordionTrigger>
+                                <Button>Reply</Button>
+                            </AccordionTrigger>
+                            <AccordionContent>
+                                <CommentForm parentId={comment.id} />
+                            </AccordionContent>
+                        </AccordionItem>
+                    </Accordion>
+
+                </div>
             </CardHeader>
+            {replies!.length > 0 && (
+                replies?.map(reply => (
+                    <Comment key={reply.id} comment={reply} />
+                ))
+            )}
         </Card>
     );
 }

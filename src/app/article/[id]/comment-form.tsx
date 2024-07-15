@@ -5,15 +5,20 @@ import { Textarea } from '@/components/ui/textarea';
 import React, { useState, useTransition } from 'react'
 import { createComment } from './actions';
 
-export default function CommentForm({ articleId }: { articleId: string }) {
+export default function CommentForm({ articleId, parentId }: { articleId?: string, parentId?: string }) {
     const [content, setContent] = useState('');
     const [pending, startTransition] = useTransition()
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (content !== '') {
             startTransition(async () => {
-                await createComment(articleId, content);
-                setContent(''); 
+                if (parentId) {
+                    await createComment(parentId, content);
+                    setContent('');
+                    return;
+                }
+                await createComment(articleId!, content);
+                setContent('');
             });
         }
     };
