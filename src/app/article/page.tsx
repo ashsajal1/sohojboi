@@ -22,18 +22,19 @@ export default async function Page({ searchParams }: { searchParams: { page: str
 
     return (
         <div>
-            {articles.map(article => <Card key={article.id}>
-                <CardHeader>
-                    <CardTitle>{article.title}</CardTitle>
-                </CardHeader>
-                <CardFooter>
-                    <Link href={`/article/${article.id}`}>
-                        <Button>View</Button>
-                    </Link>
-                    <Button>Upvote</Button>
-                </CardFooter>
-            </Card>)}
-
+            <div className='grid md:grid-cols-2 gap-2'>
+                {articles.map(article => <Card key={article.id}>
+                    <CardHeader>
+                        <CardTitle>{article.title}</CardTitle>
+                    </CardHeader>
+                    <CardFooter>
+                        <Link href={`/article/${article.id}`}>
+                            <Button>View</Button>
+                        </Link>
+                        <Button>Upvote</Button>
+                    </CardFooter>
+                </Card>)}
+            </div>
             {articles.length === 0 && <h1 className='font-bold text-xl text-center p-12'>No articles Found!</h1>}
             <div className='mt-2 flex items-center gap-2'>
                 {page > 1 && <Link href={`/article?page=${page - 1}`}>
