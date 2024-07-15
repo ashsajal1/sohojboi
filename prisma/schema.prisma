@@ -52,18 +52,20 @@ enum ChallengeQuestionStatus {
 }
 
 model ChallengeQuestion {
-  id         String                   @id @default(auto()) @map("_id") @db.ObjectId
-  content    String
-  creatorId  String?
-  approvedBy String?
-  status     ChallengeQuestionStatus? @default(PENDING)
-  options    AnswerOption[]
-  topic      Topic?                   @relation(fields: [topicId], references: [id])
-  topicId    String?                  @db.ObjectId
-  chapter    Chapter?                 @relation(fields: [chapterId], references: [id])
-  chapterId  String?                  @db.ObjectId
-  createdAt  DateTime                 @default(now())
-  updatedAt  DateTime                 @updatedAt
+  id          String                   @id @default(auto()) @map("_id") @db.ObjectId
+  content     String
+  creatorId   String?
+  approvedBy  String?
+  status      ChallengeQuestionStatus? @default(PENDING)
+  options     AnswerOption[]
+  topic       Topic?                   @relation(fields: [topicId], references: [id])
+  topicId     String?                  @db.ObjectId
+  chapter     Chapter?                 @relation(fields: [chapterId], references: [id])
+  chapterId   String?                  @db.ObjectId
+  hint        String?
+  explanation String?
+  createdAt   DateTime                 @default(now())
+  updatedAt   DateTime                 @updatedAt
 }
 
 model AnswerOption {
