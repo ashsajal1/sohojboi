@@ -16,12 +16,10 @@ import prisma from '@/lib/prisma';
 
 interface CommentProps {
     comment: PrismaComment;
-    replies?: PrismaComment[];
 }
 
-export default async function Comment({ comment, replies }: CommentProps) {
+export default async function Comment({ comment }: CommentProps) {
     const user = await clerkClient().users.getUser(comment.authorId);
-    console.log(replies)
     const commentReplies = await prisma.comment.findMany({
         where: {
             parentId: comment.id
