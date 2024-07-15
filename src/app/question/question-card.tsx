@@ -54,7 +54,7 @@ export default async function QuestionCard({ question }: QuestionProps) {
 
             <CardFooter className="flex items-center justify-between">
 
-                <ProfileImgCard fullName={question.userFullName} type="question" createdAt={question.createdAt} profileImageSrc={profileImageSrc || ''} userId={question.userId} />
+                <ProfileImgCard type="question" createdAt={question.createdAt} userId={question.userId} />
 
                 <div className="flex items-center gap-2">
                     <Link href={`/question/${question.id}`}>
