@@ -47,7 +47,7 @@ export default async function Comment({ comment, replies, depth }: CommentProps)
             </CardHeader>
             {replies && (
                 replies?.map(reply => (
-                    <Comment key={reply.id} comment={reply} depth={depth + 1} />
+                    <Comment key={reply.id} comment={reply} depth={depth! + 1} />
                 ))
             )}
         </Card>
