@@ -13,6 +13,9 @@ export default async function Page({ searchParams }: { searchParams: { page: str
         take: pageSize,
         include: {
             comments: true
+        },
+        orderBy: {
+            createdAt: 'desc'
         }
     })
     return (
@@ -30,6 +33,13 @@ export default async function Page({ searchParams }: { searchParams: { page: str
             </Card>)}
 
             {articles.length === 0 && <h1 className='font-bold text-xl text-center p-12'>No articles Found!</h1>}
+            <div>
+                <Link href={`/article?page=${page + 1}`}>
+                    <Button>
+                        Next Page
+                    </Button>
+                </Link>
+            </div>
         </div>
     )
 }
