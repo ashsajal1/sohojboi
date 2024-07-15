@@ -4,8 +4,13 @@ import prisma from '@/lib/prisma'
 import Link from 'next/link'
 import React from 'react'
 
-export default async function Page() {
+export default async function Page({ searchParams }: { searchParams: { page: string } }) {
+    const page = parseInt(searchParams.page) || 1;
+    const pageSize = page * 10 || 10;
+
     const articles = await prisma.article.findMany({
+        skip: (page - 1) * pageSize,
+        take: pageSize,
         include: {
             comments: true
         }
