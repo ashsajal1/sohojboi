@@ -11,22 +11,16 @@ export default function CommentForm({ articleId, parentId }: { articleId?: strin
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        console.log("Submitting comment:", content);
-        console.log("articleId:", articleId);
-        console.log("parentId:", parentId);
 
         if (!articleId) {
-            console.error("articleId is required");
             return;
         }
 
         if (content !== '') {
             startTransition(async () => {
                 if (parentId) {
-                    console.log("Creating nested comment");
                     await createComment(articleId, content, { type: 'nestedComment' }, parentId);
                 } else {
-                    console.log("Creating top-level comment");
                     await createComment(articleId, content, { type: 'comment' });
                 }
                 setContent('');

@@ -15,16 +15,12 @@ export const createComment = async (
   parentId?: string
 ) => {
   if (!articleId) {
-    console.error("articleId is required");
     throw new Error("articleId is required");
   }
 
   let comment;
   try {
     const authorId = (await auth().userId) as string;
-    console.log("authorId:", authorId);
-    console.log("commentType:", commentType);
-    console.log("parentId:", parentId);
 
     if (commentType.type === "comment") {
       comment = await prisma.comment.create({
@@ -37,7 +33,6 @@ export const createComment = async (
       });
     } else if (commentType.type === "nestedComment") {
       if (!parentId) {
-        console.error("parentId is required for nested comments");
         throw new Error("parentId is required for nested comments");
       }
       comment = await prisma.comment.create({
@@ -50,10 +45,8 @@ export const createComment = async (
       });
     }
 
-    console.log("Comment created:", comment);
     revalidatePath("/");
   } catch (error) {
-    console.error("Error creating comment:", error);
     throw error;
   }
 };
