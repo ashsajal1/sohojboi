@@ -1,4 +1,4 @@
-import { type Comment } from '@prisma/client';
+import { type Comment as PrismaComment } from '@prisma/client';
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader } from '@/components/ui/card';
 import { clerkClient } from '@clerk/nextjs/server';
@@ -14,16 +14,15 @@ import {
 import CommentForm from './comment-form';
 
 interface CommentProps {
-    comment: Comment;
-    replies?: Comment[];
-    depth?: number; // Added depth prop
+    comment: PrismaComment;
+    replies?: PrismaComment[];
 }
 
-export default async function Comment({ comment, replies, depth }: CommentProps) {
+export default async function Comment({ comment, replies }: CommentProps) {
     const user = await clerkClient().users.getUser(comment.authorId);
     console.log(replies)
     return (
-        <Card className={`mt-2 ${depth! > 0 ? 'ml-4':''}`} key={comment.id}>
+        <Card className={`mt-2`} key={comment.id}>
             <CardHeader>
                 <CardDescription>{comment.content}</CardDescription>
                 <ProfileImgCard
@@ -47,9 +46,37 @@ export default async function Comment({ comment, replies, depth }: CommentProps)
             </CardHeader>
             {replies && (
                 replies?.map(reply => (
-                    <Comment key={reply.id} comment={reply} depth={depth! + 1} />
+                    <Reply key={reply.id} reply={reply} userId={user.id} />
                 ))
             )}
         </Card>
     );
+}
+
+
+const Reply = ({ reply, userId }: { reply: PrismaComment, userId: string }) => {
+    return <Card className={`ml-4 mt-2`} key={reply.id}>
+        <CardHeader>
+            <CardDescription>{reply.content}</CardDescription>
+            <ProfileImgCard
+                type={'comment'}
+                userId={userId}
+                createdAt={reply.createdAt}
+            />
+            <div>
+                <Accordion type="single" collapsible className="w-full">
+                    <AccordionItem value="item-1">
+                        <AccordionTrigger>
+                            <Button>Reply</Button>
+                        </AccordionTrigger>
+                        <AccordionContent>
+                            <CommentForm articleId={reply.articleId} parentId={reply.id} />
+                        </AccordionContent>
+                    </AccordionItem>
+                </Accordion>
+
+            </div>
+        </CardHeader>
+
+    </Card>
 }
