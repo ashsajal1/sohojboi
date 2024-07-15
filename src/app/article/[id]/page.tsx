@@ -30,6 +30,9 @@ export default async function Page({ params }: { params: { id: string } }) {
         },
         include: {
             comments: {
+                where: {
+                    parentId: null
+                },
                 orderBy: {
                     createdAt: 'desc'
                 },

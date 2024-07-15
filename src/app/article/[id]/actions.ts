@@ -29,6 +29,7 @@ export const createComment = async (
     if (commentType.type === "comment") {
       comment = await prisma.comment.create({
         data: {
+          parentId: null,
           articleId: articleId,
           content: content,
           authorId: authorId,
