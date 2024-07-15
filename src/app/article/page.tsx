@@ -5,8 +5,8 @@ import Link from 'next/link'
 import React from 'react'
 
 export default async function Page({ searchParams }: { searchParams: { page: string } }) {
-    const page = parseInt(searchParams.page) || 0;
-    const skipSize = page * 10;
+    const page = parseInt(searchParams.page) || 1;
+    const skipSize = (page - 1) * 10;
 
     const articles = await prisma.article.findMany({
         skip: skipSize,
