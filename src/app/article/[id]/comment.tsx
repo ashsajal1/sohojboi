@@ -16,13 +16,14 @@ import CommentForm from './comment-form';
 interface CommentProps {
     comment: Comment;
     replies?: Comment[];
+    depth?: number; // Added depth prop
 }
 
-export default async function Comment({ comment, replies }: CommentProps) {
+export default async function Comment({ comment, replies, depth }: CommentProps) {
     const user = await clerkClient().users.getUser(comment.authorId);
     console.log(replies)
     return (
-        <Card className='mt-2' key={comment.id}>
+        <Card className={`mt-2 ${depth! > 0 ? 'ml-4':''}`} key={comment.id}>
             <CardHeader>
                 <CardDescription>{comment.content}</CardDescription>
                 <ProfileImgCard
@@ -46,7 +47,7 @@ export default async function Comment({ comment, replies }: CommentProps) {
             </CardHeader>
             {replies && (
                 replies?.map(reply => (
-                    <Comment key={reply.id} comment={reply} />
+                    <Comment key={reply.id} comment={reply} depth={depth + 1} />
                 ))
             )}
         </Card>
