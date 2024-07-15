@@ -36,7 +36,7 @@ export default async function Page({ searchParams }: { searchParams: { page: str
                 </Card>)}
             </div>
             {articles.length === 0 && <h1 className='font-bold text-xl text-center p-12'>No articles Found!</h1>}
-            <div className='mt-2 flex items-center gap-2'>
+            <div className='mt-2 flex items-center justify-between gap-2'>
                 {page > 1 && <Link href={`/article?page=${page - 1}`}>
                     <Button>
                         <ArrowLeft className='h-4 w-4 mr-2' />
