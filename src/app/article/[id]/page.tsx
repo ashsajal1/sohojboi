@@ -42,7 +42,11 @@ export default async function Page({ params }: { params: { id: string } }) {
                     createdAt: 'desc'
                 },
                 include: {
-                    replies: true
+                    replies: {
+                        orderBy :{
+                            createdAt: 'asc'
+                        }
+                    }
                 }
             },
             upvotes: true
