@@ -33,17 +33,11 @@ export default async function Page({ params }: { params: { id: string } }) {
                 orderBy: {
                     createdAt: 'desc'
                 },
-                include: {
-                    replies: {
-                        orderBy: {
-                            createdAt: 'asc'
-                        }
-                    }
-                }
             },
             upvotes: true
         }
     })
+
     return (
         <div>
             <Card>
@@ -64,7 +58,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                 </CardHeader>
                 <CardContent>
                     {article?.comments.map(comment => (
-                        <Comment key={comment.id} comment={comment} replies={comment.replies} />
+                        <Comment key={comment.id} comment={comment} />
                     ))}
                 </CardContent>
             </Card>

@@ -12,6 +12,7 @@ import {
     AccordionTrigger,
 } from "@/components/ui/accordion"
 import CommentForm from './comment-form';
+import prisma from '@/lib/prisma';
 
 interface CommentProps {
     comment: PrismaComment;
@@ -21,6 +22,11 @@ interface CommentProps {
 export default async function Comment({ comment, replies }: CommentProps) {
     const user = await clerkClient().users.getUser(comment.authorId);
     console.log(replies)
+    const commentReplies = await prisma.comment.findMany({
+        where: {
+            parentId: comment.id
+        }
+    })
     return (
         <Card className={`mt-2`} key={comment.id}>
             <CardHeader>
@@ -44,9 +50,9 @@ export default async function Comment({ comment, replies }: CommentProps) {
 
                 </div>
             </CardHeader>
-            {replies && (
-                replies?.map(reply => (
-                    <Reply key={reply.id} reply={reply} userId={user.id} />
+            {commentReplies && (
+                commentReplies?.map(reply => (
+                    <Reply key={reply.id} reply={reply} userId={user.id} parentId={reply.id} />
                 ))
             )}
         </Card>
@@ -54,7 +60,7 @@ export default async function Comment({ comment, replies }: CommentProps) {
 }
 
 
-const Reply = ({ reply, userId }: { reply: PrismaComment, userId: string }) => {
+const Reply = ({ reply, userId, parentId }: { reply: PrismaComment, userId: string, parentId: string }) => {
     return <Card className={`ml-4 mt-2`} key={reply.id}>
         <CardHeader>
             <CardDescription>{reply.content}</CardDescription>
@@ -70,7 +76,7 @@ const Reply = ({ reply, userId }: { reply: PrismaComment, userId: string }) => {
                             <Button>Reply</Button>
                         </AccordionTrigger>
                         <AccordionContent>
-                            <CommentForm articleId={reply.articleId} parentId={reply.id} />
+                            <CommentForm articleId={reply.articleId} parentId={parentId} />
                         </AccordionContent>
                     </AccordionItem>
                 </Accordion>
