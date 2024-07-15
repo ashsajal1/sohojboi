@@ -16,7 +16,7 @@ export default async function Comment({ comment }: CommentProps) {
             <CardHeader>
                 <CardDescription>{comment.content}</CardDescription>
                 <ProfileImgCard
-                    type={'answer'}
+                    type={'comment'}
                     userId={user.id}
                     createdAt={comment.createdAt}
                 />
