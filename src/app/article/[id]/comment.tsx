@@ -20,7 +20,7 @@ interface CommentProps {
 
 export default async function Comment({ comment, replies }: CommentProps) {
     const user = await clerkClient().users.getUser(comment.authorId);
-
+    console.log(replies)
     return (
         <Card className='mt-2' key={comment.id}>
             <CardHeader>
@@ -37,14 +37,14 @@ export default async function Comment({ comment, replies }: CommentProps) {
                                 <Button>Reply</Button>
                             </AccordionTrigger>
                             <AccordionContent>
-                                <CommentForm parentId={comment.id} />
+                                <CommentForm articleId={comment.articleId} parentId={comment.id} />
                             </AccordionContent>
                         </AccordionItem>
                     </Accordion>
 
                 </div>
             </CardHeader>
-            {replies!.length > 0 && (
+            {replies && (
                 replies?.map(reply => (
                     <Comment key={reply.id} comment={reply} />
                 ))
