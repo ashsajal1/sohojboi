@@ -5,6 +5,29 @@ import React from 'react'
 import CommentForm from './comment-form';
 import Comment from './comment'
 import ReactMarkdown from 'react-markdown';
+import { Metadata } from 'next';
+
+export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+    const articleId = params.id;
+
+    const article = await prisma.article.findUnique({
+        where: {
+            id: articleId
+        },
+        include: {
+            comments: {
+                orderBy: {
+                    createdAt: 'desc'
+                }
+            },
+            upvotes: true
+        }
+    })
+    return {
+        title: article?.title,
+        description: article?.content.slice(1,150)
+    }
+}
 
 export default async function Page({ params }: { params: { id: string } }) {
     const articleId = params.id;
