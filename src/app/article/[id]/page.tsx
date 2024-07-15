@@ -13,14 +13,6 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
     const article = await prisma.article.findUnique({
         where: {
             id: articleId
-        },
-        include: {
-            comments: {
-                orderBy: {
-                    createdAt: 'desc'
-                },
-            },
-            upvotes: true
         }
     })
     return {
@@ -43,7 +35,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                 },
                 include: {
                     replies: {
-                        orderBy :{
+                        orderBy: {
                             createdAt: 'asc'
                         }
                     }
