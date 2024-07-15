@@ -189,7 +189,7 @@ export default async function Question({ params }: Params) {
 
                 <CardContent>
                     <div className="flex items-center justify-between mb-4 mt-2 border-b pb-4">
-                        <ProfileImgCard fullName={question?.userFullName || ''} type="question" createdAt={question?.createdAt || new Date()} profileImageSrc={profileImageSrc || ''} userId={question?.userId || ''} />
+                        <ProfileImgCard type="question" createdAt={question?.createdAt || new Date()} userId={question?.userId || ''} />
 
                         <div className="flex items-center gap-2">
                             {user?.id === question?.userId &&
