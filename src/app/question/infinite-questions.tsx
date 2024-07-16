@@ -57,9 +57,9 @@ export default function InfiniteQuestions() {
         <div className="p-4 grid md:grid-cols-2 gap-2">
 
             {questions.map((question, _) => (
-                // <div className='p-24 border mb-2' key={question.id}>{question.questionTitle}</div>
+                <div className='p-24 border mb-2' key={question.id}>{question.questionTitle}</div>
 
-                <QuestionCard key={question.id} question={question} />
+                // <QuestionCard key={question.id} question={question} />
 
             ))}
 
