@@ -87,3 +87,18 @@ export const handleQuestionUpvote = async (
 
   revalidatePath("");
 };
+
+export const getQuestions = async (page: number): Promise<Question[]> => {
+  const skipSize = (page - 1) * 5;
+
+  try {
+    const newQuestions = await prisma.question.findMany({
+      skip: skipSize,
+      take: 5,
+    });
+
+    return newQuestions;
+  } catch (error) {
+    throw error;
+  }
+};
