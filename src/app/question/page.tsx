@@ -7,7 +7,7 @@ import InfiniteQuestions from "./infinite-questions";
 
 export const metadata: Metadata = {
     title: "Explore Questions on Various Topics | Sohojboi",
-    description: "Discover and engage with a wide range of questions on diverse topics. Join the Sohojboi community to ask, answer, and learn interactively.",  
+    description: "Discover and engage with a wide range of questions on diverse topics. Join the Sohojboi community to ask, answer, and learn interactively.",
 }
 
 export default async function Question() {
@@ -17,8 +17,8 @@ export default async function Question() {
         },
         take: 10
     });
- 
-    if(questions.length === 0) {
+
+    if (questions.length === 0) {
         return <Card className="p-4 m-12">
             <CardTitle>Question is empty!</CardTitle>
         </Card>

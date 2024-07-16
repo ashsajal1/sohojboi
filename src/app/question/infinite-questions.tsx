@@ -5,7 +5,6 @@ import QuestionCard from "./question-card";
 import { Card, CardTitle } from "@/components/ui/card";
 import { Question } from '@prisma/client';
 import { getQuestions } from './actions';
-import ServerWrapper from './server-wrapper';
 
 export default function InfiniteQuestions() {
     const [questions, setQuestions] = useState<Question[]>([]);
@@ -56,12 +55,14 @@ export default function InfiniteQuestions() {
 
     return (
         <div className="p-4 grid md:grid-cols-2 gap-2">
-            <ServerWrapper questions={questions}>
-                {questions.map((question, _) => (
-                    <div className='p-24 border mb-2' key={question.id}>{question.questionTitle}</div>
-                    // <QuestionCard key={question.id} question={question} />
-                ))}
-            </ServerWrapper>
+
+            {questions.map((question, _) => (
+                // <div className='p-24 border mb-2' key={question.id}>{question.questionTitle}</div>
+
+                <QuestionCard key={question.id} question={question} />
+
+            ))}
+
             <div ref={ref}></div>
             {isLoading && <div>Loading...</div>}
             {!hasMoreQuestions && <div>No more questions to load</div>}
