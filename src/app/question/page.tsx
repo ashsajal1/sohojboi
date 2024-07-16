@@ -3,6 +3,7 @@ import QuestionCard from "./question-card";
 import { Card, CardTitle } from "@/components/ui/card";
 
 import { Metadata } from "next";
+import InfiniteQuestions from "./infinite-questions";
 
 export const metadata: Metadata = {
     title: "Explore Questions on Various Topics | Sohojboi",
@@ -23,10 +24,11 @@ export default async function Question() {
         </Card>
     }
     return (
-        <div className="p-4 grid md:grid-cols-2 gap-2">
-            {questions.map(question => (
-                <QuestionCard key={question.id} question={question} />
-            ))}
-        </div>
+        // <div className="p-4 grid md:grid-cols-2 gap-2">
+        //     {questions.map(question => (
+        //         <QuestionCard key={question.id} question={question} />
+        //     ))}
+        // </div>
+        <InfiniteQuestions />
     )
 }

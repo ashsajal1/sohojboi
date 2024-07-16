@@ -5,11 +5,13 @@ import QuestionCard from "./question-card";
 import { Card, CardTitle } from "@/components/ui/card";
 import { Question } from '@prisma/client';
 import { getQuestions } from './actions';
+import ServerWrapper from './server-wrapper';
 
 export default function InfiniteQuestions() {
     const [questions, setQuestions] = useState<Question[]>([]);
     const [page, setPage] = useState(1);
     const [isLoading, setIsLoading] = useState(false);
+    const [hasMoreQuestions, setHasMoreQuestions] = useState(true);
     const [ref, inView] = useInView({
         triggerOnce: false,
         threshold: 1,
@@ -19,7 +21,11 @@ export default function InfiniteQuestions() {
         setIsLoading(true);
         try {
             const newQuestions = await getQuestions(page);
-            setQuestions((prevQuestions) => [...prevQuestions, ...newQuestions]);
+            if (newQuestions.length === 0) {
+                setHasMoreQuestions(false);
+            } else {
+                setQuestions((prevQuestions) => [...prevQuestions, ...newQuestions]);
+            }
         } catch (error) {
             console.error("Failed to load questions", error);
         } finally {
@@ -28,30 +34,37 @@ export default function InfiniteQuestions() {
     };
 
     useEffect(() => {
-        fetchQuestions(page);
-    }, [page]);
+        if (hasMoreQuestions) {
+            fetchQuestions(page);
+        }
+    }, [page, hasMoreQuestions]);
 
     useEffect(() => {
-        if (inView && !isLoading) {
+        if (inView && !isLoading && hasMoreQuestions) {
             setPage((prevPage) => prevPage + 1);
         }
-    }, [inView, isLoading]);
+    }, [inView, isLoading, hasMoreQuestions]);
+
 
     if (questions.length === 0 && !isLoading) {
         return (
             <Card className="p-4 m-12">
-                <CardTitle>Question is empty!</CardTitle>
+                <CardTitle>Loading...!</CardTitle>
             </Card>
         );
     }
 
     return (
         <div className="p-4 grid md:grid-cols-2 gap-2">
-            {questions.map((question, _) => (
-                <QuestionCard key={question.id} question={question} />
-            ))}
+            <ServerWrapper questions={questions}>
+                {questions.map((question, _) => (
+                    <div className='p-24 border mb-2' key={question.id}>{question.questionTitle}</div>
+                    // <QuestionCard key={question.id} question={question} />
+                ))}
+            </ServerWrapper>
             <div ref={ref}></div>
             {isLoading && <div>Loading...</div>}
+            {!hasMoreQuestions && <div>No more questions to load</div>}
         </div>
     );
 }
