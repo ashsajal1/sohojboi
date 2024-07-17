@@ -36,14 +36,13 @@ export default async function Page({ searchParams }: { searchParams: { page: str
                     </CardHeader>
                     <CardFooter>
                         <div className='flex items-center justify-between w-full'>
+                            <ProfileImgCard type={'article'} userId={article.authorId} createdAt={article.createdAt} />
                             <div className='flex justify-end items-center gap-2'>
+                                <Views articleId={article.id} />
                                 <Link href={`/article/${article.id}`}>
                                     <Button variant={'ghost'}>Read more</Button>
                                 </Link>
-                                <Views articleId={article.id} />
                             </div>
-
-                            <ProfileImgCard type={'article'} userId={article.authorId} createdAt={article.createdAt} />
                         </div>
                     </CardFooter>
                 </Card>)}
