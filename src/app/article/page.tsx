@@ -28,13 +28,15 @@ export default async function Page({ searchParams }: { searchParams: { page: str
                     <CardHeader>
                         <CardTitle>{article.title}</CardTitle>
                         <Markdown className={'text-sm text-muted-foreground'}>
-                            {article.content.replace(/\n/g, ' ').slice(0,260)}
+                            {article.content.replace(/\n/g, ' ').slice(0, 260)}
                         </Markdown>
                     </CardHeader>
                     <CardFooter>
-                        <Link href={`/article/${article.id}`}>
-                            <Button>View</Button>
-                        </Link>
+                        <div className='flex justify-end'>
+                            <Link href={`/article/${article.id}`}>
+                                <Button variant={'ghost'}>Read more</Button>
+                            </Link>
+                        </div>
                     </CardFooter>
                 </Card>)}
             </div>
