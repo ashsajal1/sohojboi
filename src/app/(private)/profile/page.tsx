@@ -18,7 +18,7 @@ import { formatDate } from "@/lib/date-format";
 import { Winner } from "./winner";
 import { Names } from "./names";
 import ProfileImgCard from "@/components/profile-img-card";
-import { getWinnerLoser } from "./lib/winner";
+import { calculateWinPercentage, getWinnerLoser } from "./lib/utils";
 
 export async function generateMetadata({ searchParams }: { searchParams: { id: string } }) {
     let user: User | null;
@@ -164,8 +164,3 @@ const ProfileData = ({ challenge }: { challenge: Competition }) => {
     </CardContent>
 }
 
-function calculateWinPercentage(wins: number, losses: number): number {
-    const totalGames = wins + losses;
-    if (totalGames === 0) return 0; // Avoid division by zero
-    return parseFloat(((wins / totalGames) * 100).toFixed(2));
-}

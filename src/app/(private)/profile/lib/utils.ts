@@ -34,3 +34,10 @@ export const getWinnerLoser = (competition: Competition) => {
     loserId
   };
 };
+
+
+export function calculateWinPercentage(wins: number, losses: number): number {
+  const totalGames = wins + losses;
+  if (totalGames === 0) return 0; // Avoid division by zero
+  return parseFloat(((wins / totalGames) * 100).toFixed(2));
+}
