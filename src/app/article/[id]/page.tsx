@@ -5,6 +5,7 @@ import React from 'react'
 import CommentForm from './comment-form';
 import Comment from './comment'
 import ReactMarkdown from 'react-markdown';
+import remarkGfm from "remark-gfm";
 import { Metadata } from 'next';
 
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
@@ -47,7 +48,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                 <CardHeader>
                     <CardTitle>{article?.title}</CardTitle>
                     <CardDescription>
-                        <ReactMarkdown>
+                        <ReactMarkdown remarkPlugins={[remarkGfm]}>
                             {article?.content}
                         </ReactMarkdown>
                     </CardDescription>
