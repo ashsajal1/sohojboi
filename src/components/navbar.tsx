@@ -28,6 +28,11 @@ export default async function Navbar() {
         <nav className="flex items-center justify-between p-4 border-b">
             <Logo />
             <div className="flex items-center gap-2">
+                <Link href={'/article'}>
+                    <Button variant={'ghost'}>
+                        Blog
+                    </Button>
+                </Link>
                 <ModeToggle />
                 <SignedIn>
                     <Link href={'/notifications'}>
