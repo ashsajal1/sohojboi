@@ -3,11 +3,11 @@ import Image from "next/image";
 import { formatDate } from "@/lib/date-format";
 import { clerkClient } from "@clerk/nextjs/server";
 
-type Type = "answer" | "question" | "comment" | "article";
+type Type = "answer" | "question" | "comment" | "article" | "challengeResult";
 interface ProfileImgCardProps {
-    type: Type, userId: string, createdAt: Date
+    type: Type, userId: string, createdAt?: Date, challengeStatus?: string
 }
-export default async function ProfileImgCard({ type, userId, createdAt }: ProfileImgCardProps) {
+export default async function ProfileImgCard({ type, userId, createdAt, challengeStatus }: ProfileImgCardProps) {
     const user = await clerkClient().users.getUser(userId);
     const profileImg = user.imageUrl;
     const fullName = user.fullName;
@@ -17,7 +17,7 @@ export default async function ProfileImgCard({ type, userId, createdAt }: Profil
             <p className="flex flex-col text-sm">
                 {fullName}
                 <span className="text-[12px] text-muted-foreground">
-                    {textFormat(type)} {formatDate(createdAt)}</span>
+                    {textFormat(type)} {createdAt && formatDate(createdAt)} {challengeStatus && challengeStatus}</span>
             </p>
         </Link>
 
@@ -34,6 +34,8 @@ function textFormat(type: Type): string {
             return "commented"
         case "article":
             return "wrote"
+        case "challengeResult":
+            return ""
         default:
             return "asked"
     }
