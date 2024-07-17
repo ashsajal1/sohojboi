@@ -15,7 +15,8 @@ import { clerkClient, currentUser, User } from '@clerk/nextjs/server';
 import { Competition } from "@prisma/client";
 import { getUserWinLoseStats } from "@/lib/db-query";
 import { formatDate } from "@/lib/date-format";
-
+import { Winner } from "./winner";
+import { Names } from "./names";
 export async function generateMetadata({ searchParams }: { searchParams: { id: string } }) {
     let user: User | null;
 
@@ -135,48 +136,6 @@ export default async function Page({ searchParams }: { searchParams: { id: strin
             </Tabs>
         </>
     )
-}
-
-const Winner = async ({ challengerId, challengeeId, userId, challengerScore, challengeeScore }: { challengerId: string, challengeeId: string, userId: string, challengerScore: number, challengeeScore: number }) => {
-
-    let resultText = '';
-    let badgeVariant: 'secondary' | 'destructive' = 'secondary';
-
-    const challenger = await clerkClient().users.getUser(challengerId);
-    const challengee = await clerkClient().users.getUser(challengeeId);
-
-    if (challengerScore === challengeeScore) {
-        resultText = 'It\'s a draw';
-    } else {
-        const winnerId = challengerScore > challengeeScore ? challengerId : challengeeId;
-        const winnerName = winnerId === challengerId ? challenger.fullName : challengee.fullName;
-        const loserName = winnerId === challengerId ? challengee.fullName : challenger.fullName;
-        const userWon = winnerId === userId;
-
-        if (userWon) {
-            resultText = `${winnerName} won against ${loserName}`;
-            badgeVariant = 'secondary';
-        } else {
-            resultText = `${loserName} lost against ${winnerName}`;
-            badgeVariant = 'destructive';
-        }
-    }
-
-    return (
-        <Badge variant={badgeVariant}>
-            {resultText}
-        </Badge>
-    );
-}
-
-
-const Names = async ({ challenge }: { challenge: Competition }) => {
-    const challenger = (await clerkClient().users.getUser(challenge.challengerId)).lastName;
-    const challengee = (await clerkClient().users.getUser(challenge.challengeeId)).lastName;
-    return <>
-        <p><strong>{challenger}&apos;s Score:</strong> {challenge.challengerScore}</p>
-        <p><strong>{challengee}&apos;s Score:</strong> {challenge.challengeeScore}</p>
-    </>
 }
 
 function calculateWinPercentage(wins: number, losses: number): number {
