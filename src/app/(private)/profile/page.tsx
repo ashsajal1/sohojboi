@@ -36,7 +36,7 @@ export async function generateMetadata({ searchParams }: { searchParams: { id: s
 }
 
 export default async function Page({ searchParams }: { searchParams: { id: string } }) {
-    
+
     let user: User | null;
 
     if (!searchParams.id) {
@@ -131,7 +131,7 @@ export default async function Page({ searchParams }: { searchParams: { id: strin
                                 </CardTitle>
                                 <CardDescription>{formatDate(challenge.createdAt)}</CardDescription>
                             </CardHeader>
-                            
+
                             <ProfileData challenge={challenge} />
                         </Card>
                     ))}
@@ -141,18 +141,27 @@ export default async function Page({ searchParams }: { searchParams: { id: strin
     )
 }
 
-const ProfileData = ({challenge}:{challenge: Competition}) => {
-    const {winnerId, loserId} = getWinnerLoser(challenge)
+const ProfileData = ({ challenge }: { challenge: Competition }) => {
+    const { winnerId, loserId } = getWinnerLoser(challenge)
+    const isDraw = challenge.challengerScore === challenge.challengeeScore;
+
     return <CardContent>
-                                
-    <Names challenge={challenge} />
-    <div className="flex items-center justify-between">
-        <ProfileImgCard type={"challengeResult"} userId={challenge.challengerId} challengeStatus={challenge.challengerId === winnerId ? 'winner':'loser'} />
 
-        <ProfileImgCard type={"challengeResult"} userId={challenge.challengeeId} challengeStatus={challenge.challengeeId === winnerId ? 'winner':'loser'} />
-    </div>
+        <Names challenge={challenge} />
+        <div className="flex items-center justify-between">
+            <ProfileImgCard
+                type={"challengeResult"}
+                userId={challenge.challengerId}
+                challengeStatus={isDraw ? 'draw' : (challenge.challengerId === winnerId ? 'winner' : 'loser')}
+            />
+            <ProfileImgCard
+                type={"challengeResult"}
+                userId={challenge.challengeeId}
+                challengeStatus={isDraw ? 'draw' : (challenge.challengeeId === winnerId ? 'winner' : 'loser')}
+            />
+        </div>
 
-</CardContent>
+    </CardContent>
 }
 
 function calculateWinPercentage(wins: number, losses: number): number {
