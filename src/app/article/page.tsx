@@ -6,7 +6,7 @@ import { ArrowLeft, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 import Markdown from 'react-markdown'
-import Views from './views'
+import Views from './[id]/views'
 import ProfileImgCard from '@/components/profile-img-card'
 
 export default async function Page({ searchParams }: { searchParams: { page: string } }) {
