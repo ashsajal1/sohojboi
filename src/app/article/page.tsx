@@ -7,6 +7,7 @@ import Link from 'next/link'
 import React from 'react'
 import Markdown from 'react-markdown'
 import Views from './views'
+import ProfileImgCard from '@/components/profile-img-card'
 
 export default async function Page({ searchParams }: { searchParams: { page: string } }) {
     const page = parseInt(searchParams.page) || 1;
@@ -34,11 +35,15 @@ export default async function Page({ searchParams }: { searchParams: { page: str
                         </Markdown>
                     </CardHeader>
                     <CardFooter>
-                        <div className='flex justify-end items-center gap-2'>
-                            <Link href={`/article/${article.id}`}>
-                                <Button variant={'ghost'}>Read more</Button>
-                            </Link>
+                        <div className='flex items-center justify-between w-full'>
+                            <div className='flex justify-end items-center gap-2'>
+                                <Link href={`/article/${article.id}`}>
+                                    <Button variant={'ghost'}>Read more</Button>
+                                </Link>
                                 <Views articleId={article.id} />
+                            </div>
+
+                            <ProfileImgCard type={'article'} userId={article.authorId} createdAt={article.createdAt} />
                         </div>
                     </CardFooter>
                 </Card>)}

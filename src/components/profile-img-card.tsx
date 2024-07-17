@@ -3,7 +3,7 @@ import Image from "next/image";
 import { formatDate } from "@/lib/date-format";
 import { clerkClient } from "@clerk/nextjs/server";
 
-type Type = "answer" | "question" | "comment";
+type Type = "answer" | "question" | "comment" | "article";
 interface ProfileImgCardProps {
     type: Type, userId: string, createdAt: Date
 }
@@ -32,6 +32,8 @@ function textFormat(type: Type): string {
             return "answered"
         case "comment":
             return "commented"
+        case "article":
+            return "wrote"
         default:
             return "asked"
     }
