@@ -1,3 +1,4 @@
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import prisma from '@/lib/prisma'
@@ -5,6 +6,7 @@ import { ArrowLeft, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 import Markdown from 'react-markdown'
+import Views from './views'
 
 export default async function Page({ searchParams }: { searchParams: { page: string } }) {
     const page = parseInt(searchParams.page) || 1;
@@ -32,10 +34,11 @@ export default async function Page({ searchParams }: { searchParams: { page: str
                         </Markdown>
                     </CardHeader>
                     <CardFooter>
-                        <div className='flex justify-end'>
+                        <div className='flex justify-end items-center gap-2'>
                             <Link href={`/article/${article.id}`}>
                                 <Button variant={'ghost'}>Read more</Button>
                             </Link>
+                                <Views articleId={article.id} />
                         </div>
                     </CardFooter>
                 </Card>)}
