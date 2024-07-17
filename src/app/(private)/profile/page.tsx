@@ -19,6 +19,7 @@ import { Winner } from "./winner";
 import { Names } from "./names";
 import ProfileImgCard from "@/components/profile-img-card";
 import { calculateWinPercentage, getWinnerLoser } from "./lib/utils";
+import ProfileData from "./profile-data";
 
 export async function generateMetadata({ searchParams }: { searchParams: { id: string } }) {
     let user: User | null;
@@ -140,27 +141,3 @@ export default async function Page({ searchParams }: { searchParams: { id: strin
         </>
     )
 }
-
-const ProfileData = ({ challenge }: { challenge: Competition }) => {
-    const { winnerId, loserId } = getWinnerLoser(challenge)
-    const isDraw = challenge.challengerScore === challenge.challengeeScore;
-
-    return <CardContent>
-
-        <Names challenge={challenge} />
-        <div className="flex items-center justify-between">
-            <ProfileImgCard
-                type={"challengeResult"}
-                userId={challenge.challengerId}
-                challengeStatus={isDraw ? 'draw' : (challenge.challengerId === winnerId ? 'winner' : 'loser')}
-            />
-            <ProfileImgCard
-                type={"challengeResult"}
-                userId={challenge.challengeeId}
-                challengeStatus={isDraw ? 'draw' : (challenge.challengeeId === winnerId ? 'winner' : 'loser')}
-            />
-        </div>
-
-    </CardContent>
-}
-
