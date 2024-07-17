@@ -1,9 +1,10 @@
 import { Button } from '@/components/ui/button'
-import { Card, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import prisma from '@/lib/prisma'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
+import Markdown from 'react-markdown'
 
 export default async function Page({ searchParams }: { searchParams: { page: string } }) {
     const page = parseInt(searchParams.page) || 1;
@@ -26,12 +27,14 @@ export default async function Page({ searchParams }: { searchParams: { page: str
                 {articles.map(article => <Card key={article.id}>
                     <CardHeader>
                         <CardTitle>{article.title}</CardTitle>
+                        <Markdown className={'text-sm text-muted-foreground'}>
+                            {article.content.replace(/\n/g, ' ').slice(0,260)}
+                        </Markdown>
                     </CardHeader>
                     <CardFooter>
                         <Link href={`/article/${article.id}`}>
                             <Button>View</Button>
                         </Link>
-                        <Button>Upvote</Button>
                     </CardFooter>
                 </Card>)}
             </div>
