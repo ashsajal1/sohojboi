@@ -17,6 +17,7 @@ import { getUserWinLoseStats } from "@/lib/db-query";
 import { formatDate } from "@/lib/date-format";
 import { Winner } from "./winner";
 import { Names } from "./names";
+import ProfileImgCard from "@/components/profile-img-card";
 export async function generateMetadata({ searchParams }: { searchParams: { id: string } }) {
     let user: User | null;
 
@@ -129,6 +130,12 @@ export default async function Page({ searchParams }: { searchParams: { id: strin
                             </CardHeader>
                             <CardContent>
                                 <Names challenge={challenge} />
+                                <div className="flex items-center justify-between">
+                                    <ProfileImgCard type={"question"} userId={challenge.challengerId} createdAt={new Date()} />
+
+                                    <ProfileImgCard type={"question"} userId={challenge.challengeeId} createdAt={new Date()} />
+                                </div>
+
                             </CardContent>
                         </Card>
                     ))}
