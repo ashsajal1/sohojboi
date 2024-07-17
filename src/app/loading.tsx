@@ -14,6 +14,10 @@ export default function loading() {
 
             <Skeleton className='w-full h-[100px]' />
             <Skeleton className='w-full h-[100px]' />
+            <div className='flex items-center gap-2 mt-1'>
+                <Skeleton className='w-full h-[100px]' />
+                <Skeleton className='w-full h-[100px]' />
+            </div>
         </div>
     )
 }
