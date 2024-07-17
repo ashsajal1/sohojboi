@@ -8,7 +8,7 @@ export default async function Views({ articleId }: { articleId: string }) {
             count: true,
         },
         where: {
-            questionId: {
+            articleId: {
                 in: [articleId]
             }
         }

@@ -7,6 +7,8 @@ import Comment from './comment'
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from "remark-gfm";
 import { Metadata } from 'next';
+import { auth } from '@clerk/nextjs/server';
+import { increaseView } from '@/app/_actions/increase-view';
 
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
     const articleId = params.id;
@@ -24,6 +26,7 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
 
 export default async function Page({ params }: { params: { id: string } }) {
     const articleId = params.id;
+    const userId = await auth().userId;
 
     const article = await prisma.article.findUnique({
         where: {
@@ -41,6 +44,10 @@ export default async function Page({ params }: { params: { id: string } }) {
             upvotes: true
         }
     })
+
+    if(userId) {
+        await increaseView(userId, article?.id!, "article")
+    }
 
     return (
         <div>
