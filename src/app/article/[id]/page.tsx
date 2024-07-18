@@ -10,6 +10,7 @@ import { Metadata } from 'next';
 import { auth } from '@clerk/nextjs/server';
 import { increaseView } from '@/app/_actions/increase-view';
 import ProfileImgCard from '@/components/profile-img-card';
+import UpvoteArticle from './upvote';
 
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
     const articleId = params.id;
@@ -63,7 +64,8 @@ export default async function Page({ params }: { params: { id: string } }) {
 
                     <div className='flex items-center justify-between py-3'>
                         <ProfileImgCard createdAt={article?.createdAt} type={'article'} userId={article?.authorId!} />
-                        <Button size={'sm'}>{article?.upvotes.length} Upvote</Button>
+
+                        <UpvoteArticle upvoteCount={article?.upvotes.length!} article={article!} isUpvotedAnswer={false} />
                     </div>
 
                     <h1 className='font-bold mt-3'>Enter comments  :</h1>
