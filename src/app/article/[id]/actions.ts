@@ -80,12 +80,10 @@ export const handleUpvote = async (article: Article) => {
 
     await prisma.notification.deleteMany({
       where: {
-        answerId: article.id,
-        type: NotificationType.UPVOTE_ANSWER,
+        articleId: article.id,
+        type: NotificationType.UPVOTE_ARTICLE,
       },
     });
-
-
   } else {
     await prisma.upvote.create({
       data: {
@@ -94,14 +92,15 @@ export const handleUpvote = async (article: Article) => {
       },
     });
 
-    const message = `${actorName} upvoted your article`;
+    const message = `${actorName} upvoted your article of ${article.title}`;
 
     if (actorId !== article.authorId) {
       const notif = await prisma.notification.create({
         data: {
           userId: article.authorId,
-          type: NotificationType.UPVOTE_ANSWER,
+          type: NotificationType.UPVOTE_ARTICLE,
           message: message,
+          articleId: article.id
         },
       });
     }

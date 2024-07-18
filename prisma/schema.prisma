@@ -139,6 +139,7 @@ model Notification {
   postId        String?          @db.ObjectId
   answerId      String?          @db.ObjectId
   questionId    String?          @db.ObjectId
+  articleId     String?          @db.ObjectId
   createdAt     DateTime         @default(now())
   updatedAt     DateTime         @updatedAt
 }
