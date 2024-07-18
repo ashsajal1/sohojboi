@@ -11,6 +11,8 @@ import { auth } from '@clerk/nextjs/server';
 import { increaseView } from '@/app/_actions/increase-view';
 import ProfileImgCard from '@/components/profile-img-card';
 import UpvoteArticle from './upvote';
+import Views from './views';
+import { Badge } from '@/components/ui/badge';
 
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
     const articleId = params.id;
@@ -43,7 +45,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                     createdAt: 'desc'
                 },
             },
-            upvotes: true
+            upvotes: true,
         }
     })
 
@@ -56,7 +58,18 @@ export default async function Page({ params }: { params: { id: string } }) {
         }
     })
 
-    if(userId) {
+    const viewCount = await prisma.view.aggregate({
+        _sum: {
+            count: true,
+        },
+        where: {
+            articleId: {
+                in: [articleId]
+            }
+        }
+    })
+
+    if (userId) {
         await increaseView(userId, article?.id!, "article")
     }
 
@@ -69,6 +82,9 @@ export default async function Page({ params }: { params: { id: string } }) {
                         <ReactMarkdown remarkPlugins={[remarkGfm]}>
                             {article?.content}
                         </ReactMarkdown>
+                        <Badge className='mt-3' variant={'outline'}>
+                            <Views articleId={articleId} />
+                        </Badge>
                     </CardDescription>
 
                     <div className='flex items-center justify-between py-3'>
