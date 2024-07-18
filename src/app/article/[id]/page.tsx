@@ -9,6 +9,7 @@ import remarkGfm from "remark-gfm";
 import { Metadata } from 'next';
 import { auth } from '@clerk/nextjs/server';
 import { increaseView } from '@/app/_actions/increase-view';
+import ProfileImgCard from '@/components/profile-img-card';
 
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
     const articleId = params.id;
@@ -60,7 +61,8 @@ export default async function Page({ params }: { params: { id: string } }) {
                         </ReactMarkdown>
                     </CardDescription>
 
-                    <div>
+                    <div className='flex items-center justify-between py-3'>
+                        <ProfileImgCard createdAt={article?.createdAt} type={'article'} userId={article?.authorId!} />
                         <Button size={'sm'}>{article?.upvotes.length} Upvote</Button>
                     </div>
 
