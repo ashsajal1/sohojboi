@@ -47,6 +47,15 @@ export default async function Page({ params }: { params: { id: string } }) {
         }
     })
 
+    const isUpvoted = await prisma.upvote.findUnique({
+        where: {
+            userId_articleId: {
+                userId: userId!,
+                articleId: articleId
+            }
+        }
+    })
+
     if(userId) {
         await increaseView(userId, article?.id!, "article")
     }
@@ -65,7 +74,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                     <div className='flex items-center justify-between py-3'>
                         <ProfileImgCard createdAt={article?.createdAt} type={'article'} userId={article?.authorId!} />
 
-                        <UpvoteArticle upvoteCount={article?.upvotes.length!} article={article!} isUpvotedAnswer={false} />
+                        <UpvoteArticle upvoteCount={article?.upvotes.length!} article={article!} isUpvoted={!!isUpvoted} />
                     </div>
 
                     <h1 className='font-bold mt-3'>Enter comments  :</h1>

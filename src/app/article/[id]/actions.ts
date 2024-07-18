@@ -106,7 +106,7 @@ export const handleUpvote = async (article: Article) => {
     }
   }
 
-  revalidatePath("");
+  revalidatePath("/");
 };
 
 // export const getUpvoteCount = async () => {

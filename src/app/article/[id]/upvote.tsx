@@ -8,11 +8,11 @@ import { getStatusText } from "@/lib/utils";
 
 interface AnswersParams {
     article: Article;
-    isUpvotedAnswer: boolean;
+    isUpvoted: boolean;
     upvoteCount: number
 }
 
-export default function UpvoteArticle({ article, isUpvotedAnswer, upvoteCount }: AnswersParams) {
+export default function UpvoteArticle({ article, isUpvoted, upvoteCount }: AnswersParams) {
 
     const [optimisticUpvotes, addOptimisticUpvote] = useOptimistic(
         { upvoteCount, upvoting: false },
@@ -24,7 +24,7 @@ export default function UpvoteArticle({ article, isUpvotedAnswer, upvoteCount }:
 
     )
 
-    const statusText = getStatusText(isUpvotedAnswer)
+    const statusText = getStatusText(isUpvoted)
 
     let [_, startTransition] = useTransition();
     return (
@@ -33,6 +33,6 @@ export default function UpvoteArticle({ article, isUpvotedAnswer, upvoteCount }:
                 addOptimisticUpvote(optimisticUpvotes.upvoteCount + 1);
                 await handleUpvote(article)
             })
-        }} variant="outline">{upvoteCount} {optimisticUpvotes.upvoting ? 'Progressing' : [statusText]}</Button>
+        }} variant={isUpvoted? 'secondary':'outline'}>{upvoteCount} {optimisticUpvotes.upvoting ? 'Progressing' : [statusText]}</Button>
     )
 }
