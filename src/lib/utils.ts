@@ -19,6 +19,8 @@ export const getPathnameByNotificationType = (
       return `/question/${notification.questionId}`;
     case NotificationType.UPVOTE_QUESTION:
       return `/question/${notification.questionId}`;
+    case NotificationType.UPVOTE_ARTICLE:
+      return `/article/${notification.articleId}`;
     default:
       return undefined;
   }
