@@ -126,6 +126,7 @@ enum NotificationType {
   QUESTION
   UPVOTE_QUESTION
   UPVOTE_ANSWER
+  UPVOTE_ARTICLE
 }
 
 model Notification {
