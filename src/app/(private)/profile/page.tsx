@@ -20,6 +20,8 @@ import { Names } from "./names";
 import ProfileImgCard from "@/components/profile-img-card";
 import { calculateWinPercentage, getWinnerLoser } from "./lib/utils";
 import ProfileData from "./profile-data";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export async function generateMetadata({ searchParams }: { searchParams: { id: string } }) {
     let user: User | null;
@@ -37,11 +39,11 @@ export async function generateMetadata({ searchParams }: { searchParams: { id: s
 }
 
 export default async function Page({ searchParams }: { searchParams: { id: string } }) {
-
+    const currentActiveUser = await currentUser();
     let user: User | null;
 
     if (!searchParams.id) {
-        user = await currentUser();
+        user = currentActiveUser;
     } else {
         user = await clerkClient().users.getUser(searchParams.id)
     }
@@ -76,13 +78,28 @@ export default async function Page({ searchParams }: { searchParams: { id: strin
             createdAt: 'desc'
         },
         take: 10
+    });
+
+    const profile = await prisma.profile.findFirst({
+        where: {
+            clerkUserId: searchParams.id as string,
+        }
     })
 
     return (
         <>
             <Card className="mt-2">
                 <CardHeader>
-                    <CardTitle>Profile details of {user?.fullName}</CardTitle>
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <CardTitle>Profile details of {user?.fullName}</CardTitle>
+
+                            {profile?.bio && <CardDescription>{profile.bio}</CardDescription>}
+                        </div>
+
+                        {user?.id === currentActiveUser?.id && <Link href={'/profile/edit'}>
+                            <Button size={'sm'} variant={'outline'}>Edit profile</Button></Link>}
+                    </div>
                 </CardHeader>
                 <CardContent className="flex items-center justify-between">
                     <div>

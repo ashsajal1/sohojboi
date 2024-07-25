@@ -205,3 +205,31 @@ model Comment {
 
   @@index([parentId], name: "parentIdIndex")
 }
+
+enum Badge {
+  HARDWORKER
+  CURIOUS
+  HELPER
+  EXPERT
+  LEARNER
+  INNOVATOR
+  COLLABORATOR
+  ENTHUSIAST
+  PIONEER
+  MENTOR
+}
+
+model Profile {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  fullName      String?
+  clerkUserId   String?  @unique
+  bio           String?
+  referralCount Int      @default(0)
+  level         Int      @default(0)
+  rewardCount   Int      @default(5)
+  badge         Badge[]
+  address       String?
+  grade         Int?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
