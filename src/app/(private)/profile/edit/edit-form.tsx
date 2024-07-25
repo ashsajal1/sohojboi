@@ -6,6 +6,8 @@ import React, { useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { createOrUpdateProfile } from './actions';
+import { DataTable } from '@/app/(admin)/admin/panel/@questions/data-table';
 
 const editFormSchema = z.object({
     bio: z.string().min(1, { message: 'Bio is required' }),
@@ -13,7 +15,7 @@ const editFormSchema = z.object({
     grade: z.string().min(1, { message: 'Grade is required' }),
 });
 
-type EditFormSchema = z.infer<typeof editFormSchema>;
+export type EditFormSchema = z.infer<typeof editFormSchema>;
 
 export default function EditForm() {
     const {
@@ -28,7 +30,7 @@ export default function EditForm() {
 
     const onSubmit = (data: EditFormSchema) => {
         startTransition(async () => {
-            await console.log(data);
+            await createOrUpdateProfile(data)
         })
     }
 
