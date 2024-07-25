@@ -23,7 +23,6 @@ export const createOrUpdateProfile = async (data: EditFormSchema) => {
       },
     });
 
-    console.log(updatedProfile);
     redirect("/profile");
   } catch (error) {
     throw error;
