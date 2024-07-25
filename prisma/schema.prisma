@@ -222,7 +222,7 @@ enum Badge {
 model Profile {
   id            String   @id @default(auto()) @map("_id") @db.ObjectId
   fullName      String?
-  clerkUserId   String   @unique
+  clerkUserId   String?  @unique
   bio           String?
   referralCount Int      @default(0)
   level         Int      @default(0)

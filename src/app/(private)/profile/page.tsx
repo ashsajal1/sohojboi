@@ -78,7 +78,7 @@ export default async function Page({ searchParams }: { searchParams: { id: strin
         take: 10
     });
 
-    const profile = await prisma.profile.findUnique({
+    const profile = await prisma.profile.findFirst({
         where: {
             clerkUserId: searchParams.id as string,
         }
