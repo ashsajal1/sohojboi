@@ -94,7 +94,7 @@ export default async function Page({ searchParams }: { searchParams: { id: strin
                         <div>
                             <CardTitle>Profile details of {user?.fullName}</CardTitle>
 
-                            {profile?.bio && <CardDescription>This is bio</CardDescription>}
+                            {profile?.bio && <CardDescription>{profile.bio}</CardDescription>}
                         </div>
 
                         {user?.id === currentActiveUser?.id && <Link href={'/profile/edit'}>
