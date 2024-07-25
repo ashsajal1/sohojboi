@@ -90,7 +90,7 @@ export default async function Page({ searchParams }: { searchParams: { id: strin
                 <CardHeader>
                     <CardTitle>Profile details of {user?.fullName}</CardTitle>
 
-                    <CardDescription>This is bio</CardDescription>
+                    {profile?.bio && <CardDescription>This is bio</CardDescription>}
                 </CardHeader>
                 <CardContent className="flex items-center justify-between">
                     <div>
