@@ -76,6 +76,12 @@ export default async function Page({ searchParams }: { searchParams: { id: strin
             createdAt: 'desc'
         },
         take: 10
+    });
+
+    const profile = await prisma.profile.findUnique({
+        where: {
+            clerkUserId: searchParams.id as string,
+        }
     })
 
     return (
@@ -83,6 +89,8 @@ export default async function Page({ searchParams }: { searchParams: { id: strin
             <Card className="mt-2">
                 <CardHeader>
                     <CardTitle>Profile details of {user?.fullName}</CardTitle>
+
+                    <CardDescription>This is bio</CardDescription>
                 </CardHeader>
                 <CardContent className="flex items-center justify-between">
                     <div>
