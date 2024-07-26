@@ -5,7 +5,13 @@ const rehypePlugins = [rehypeSanitize];
 
 export default function Content({ content }: { content: string }) {
     return (
-        <MarkdownPreview className='p-4' rehypePlugins={rehypePlugins} source={content}>
+        <MarkdownPreview
+            wrapperElement={{
+                "data-color-mode": "light"
+            }}
+            className='p-4'
+            rehypePlugins={rehypePlugins}
+            source={content}>
 
         </MarkdownPreview>
     )
