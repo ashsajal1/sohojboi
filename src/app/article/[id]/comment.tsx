@@ -50,7 +50,7 @@ export default async function Comment({ comment }: CommentProps) {
             </CardHeader>
             {commentReplies && (
                 commentReplies?.map(reply => (
-                    <Reply key={reply.id} reply={reply} userId={user.id} parentId={comment.id} />
+                    <Reply key={reply.id} reply={reply} userId={reply.authorId} parentId={comment.id} />
                 ))
             )}
         </Card>
