@@ -4,7 +4,7 @@ import prisma from '@/lib/prisma';
 import React from 'react'
 import CommentForm from './comment-form';
 import Comment from './comment'
-import ReactMarkdown from 'react-markdown';
+// import ReactMarkdown from 'react-markdown';
 import remarkGfm from "remark-gfm";
 import { Metadata } from 'next';
 import { auth } from '@clerk/nextjs/server';
@@ -13,6 +13,7 @@ import ProfileImgCard from '@/components/profile-img-card';
 import UpvoteArticle from './upvote';
 import Views from './views';
 import { Badge } from '@/components/ui/badge';
+import Content from './content';
 
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
     const articleId = params.id;
@@ -79,9 +80,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                 <CardHeader>
                     <CardTitle>{article?.title}</CardTitle>
                     <CardDescription>
-                        <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                            {article?.content}
-                        </ReactMarkdown>
+                        <Content content={article?.content!} />
                         <Badge className='mt-3' variant={'outline'}>
                             <Views articleId={articleId} />
                         </Badge>
