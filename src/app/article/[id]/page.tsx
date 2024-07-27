@@ -14,6 +14,7 @@ import UpvoteArticle from './upvote';
 import Views from './views';
 import { Badge } from '@/components/ui/badge';
 import Content from '../../../components/content';
+import Link from 'next/link';
 
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
     const articleId = params.id;
@@ -89,7 +90,12 @@ export default async function Page({ params }: { params: { id: string } }) {
                     <div className='flex items-center justify-between py-3'>
                         <ProfileImgCard createdAt={article?.createdAt} type={'article'} userId={article?.authorId!} />
 
-                        <UpvoteArticle upvoteCount={article?.upvotes.length!} article={article!} isUpvoted={!!isUpvoted} />
+                        <div className='flex items-center gap-2'>
+                            {userId === article?.authorId && <Link href={`/article/edit/${article?.id}`}>
+                                <Button variant={'outline'}>Edit</Button>
+                            </Link>}
+                            <UpvoteArticle upvoteCount={article?.upvotes.length!} article={article!} isUpvoted={!!isUpvoted} />
+                        </div>
                     </div>
 
                     <h1 className='font-bold mt-3'>Enter comments  :</h1>
