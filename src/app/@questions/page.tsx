@@ -17,7 +17,7 @@ export default async function QuestionsSlot() {
     }
     return (
         <>
-            <div className="p-4 grid md:grid-cols-2 gap-2">
+            <div className="grid md:grid-cols-2 gap-2">
                 {questions.map(question => (
                     <QuestionCard key={question.id} question={question} />
                 ))}
