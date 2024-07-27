@@ -13,7 +13,7 @@ import ProfileImgCard from '@/components/profile-img-card';
 import UpvoteArticle from './upvote';
 import Views from './views';
 import { Badge } from '@/components/ui/badge';
-import Content from './content';
+import Content from '../../../components/content';
 
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
     const articleId = params.id;

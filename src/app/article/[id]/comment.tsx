@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/accordion"
 import CommentForm from './comment-form';
 import prisma from '@/lib/prisma';
-import Content from './content';
+import Content from '../../../components/content';
 
 interface CommentProps {
     comment: PrismaComment;
