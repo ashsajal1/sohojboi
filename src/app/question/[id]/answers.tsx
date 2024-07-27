@@ -16,6 +16,7 @@ import Link from "next/link";
 import DeleteAnswer from "./delete-answer";
 import EditAnswer from "./edit-answer";
 import ReactMarkdown from 'react-markdown';
+import Content from "@/components/content";
 
 interface AnswersProps {
     answers: Answer[];
@@ -55,10 +56,7 @@ const Answer = async ({ answer, question }: { answer: Answer, question: Question
         <CardHeader>
             <div className="flex justify-between items-start">
                 <CardDescription>
-                    <ReactMarkdown>
-                        {answer.answer}
-                    </ReactMarkdown>
-
+                    <Content content={answer.answer} />
                 </CardDescription>
                 {user.userId === answer?.userId && <HoverCard>
                     <HoverCardTrigger>
