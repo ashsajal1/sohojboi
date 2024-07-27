@@ -2,13 +2,16 @@
 'use client';
 
 import { AppProgressBar as ProgressBar } from 'next-nprogress-bar';
+import { useTheme } from "next-themes"
 
 const Nprogress = () => {
+  const { theme } = useTheme();
+  // console.log(theme)
   return (
     <>
       <ProgressBar
-        height="2px"
-        color="#fffd00"
+        height="3px"
+        color={theme === 'dark'? '#fff':'#000'}
         options={{ showSpinner: false }}
         shallowRouting
       />
