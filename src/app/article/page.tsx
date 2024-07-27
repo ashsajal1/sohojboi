@@ -2,7 +2,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import prisma from '@/lib/prisma'
-import { ArrowLeft, ArrowRight } from 'lucide-react'
+import { ArrowLeft, ArrowRight, PlusIcon } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 import Markdown from 'react-markdown'
@@ -26,6 +26,13 @@ export default async function Page({ searchParams }: { searchParams: { page: str
 
     return (
         <div>
+            <div className='fixed bottom-12 right-12'>
+                <Link href='/article/create'>
+                    <Button size={'icon'} variant={'destructive'}>
+                        <PlusIcon />
+                    </Button>
+                </Link>
+            </div>
             <div className='grid md:grid-cols-2 gap-2'>
                 {articles.map(article => <Card key={article.id}>
                     <CardHeader>
