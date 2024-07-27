@@ -5,7 +5,7 @@ import { Card, CardTitle } from "@/components/ui/card";
 import { Metadata } from "next";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight, PlusIcon } from "lucide-react";
 
 export const metadata: Metadata = {
     title: "Explore Questions on Various Topics | Sohojboi",
@@ -23,10 +23,17 @@ export default async function Page({ searchParams }: { searchParams: { page: str
             createdAt: 'desc'
         }
     });
-    
+
     return (
         <>
             <div className="grid md:grid-cols-2 gap-2">
+                <div className='fixed bottom-12 right-12'>
+                    <Link href='/question/create'>
+                        <Button size={'icon'} variant={'destructive'}>
+                            <PlusIcon />
+                        </Button>
+                    </Link>
+                </div>
                 {questions.map(question => (
                     <QuestionCard key={question.id} question={question} />
                 ))}
