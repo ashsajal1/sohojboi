@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/accordion"
 import CommentForm from './comment-form';
 import prisma from '@/lib/prisma';
+import Content from './content';
 
 interface CommentProps {
     comment: PrismaComment;
@@ -28,7 +29,9 @@ export default async function Comment({ comment }: CommentProps) {
     return (
         <Card className={`mt-2`} key={comment.id}>
             <CardHeader>
-                <CardDescription>{comment.content}</CardDescription>
+                <CardDescription>
+                    <Content content={comment.content} />
+                </CardDescription>
                 <ProfileImgCard
                     type={'comment'}
                     userId={user.id}
@@ -61,7 +64,9 @@ export default async function Comment({ comment }: CommentProps) {
 const Reply = ({ reply, userId, parentId }: { reply: PrismaComment, userId: string, parentId: string }) => {
     return <Card className={`ml-4 mt-2`} key={reply.id}>
         <CardHeader>
-            <CardDescription>{reply.content}</CardDescription>
+            <CardDescription>
+                <Content content={reply.content} />
+            </CardDescription>
             <ProfileImgCard
                 type={'comment'}
                 userId={userId}
