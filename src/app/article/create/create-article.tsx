@@ -59,6 +59,7 @@ const CreateArticleForm = ({ topics }: { topics: Topic[] }) => {
                                     disabled={pending}
                                     {...register('content')}
                                     placeholder='Enter content of article...'
+                                    rows={10}
                                 />
                                 {errors.content && <span className="text-red-500">{errors.content.message}</span>}
 

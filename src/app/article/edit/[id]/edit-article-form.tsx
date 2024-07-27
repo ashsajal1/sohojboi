@@ -61,6 +61,7 @@ const EditArticleForm = ({ topics, article }: { topics: Topic[], article: Articl
                                     {...register('content')}
                                     placeholder='Enter content of article...'
                                     defaultValue={article.content}
+                                    rows={10}
                                 />
                                 {errors.content && <span className="text-red-500">{errors.content.message}</span>}
 
