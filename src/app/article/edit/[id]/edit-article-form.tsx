@@ -11,7 +11,7 @@ import { z } from 'zod';
 import { PopoverTrigger, Popover, PopoverContent } from "@/components/ui/popover";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Article, Topic } from '@prisma/client';
-import { ArrowUpIcon, CheckIcon } from "@radix-ui/react-icons"
+import { ArrowUpIcon, CheckIcon, TrashIcon } from "@radix-ui/react-icons"
 import { cn } from '@/lib/utils';
 import { editArticle } from './actions';
 
@@ -44,7 +44,13 @@ const EditArticleForm = ({ topics, article }: { topics: Topic[], article: Articl
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <CardContent>
                         <CardHeader>
-                            <CardTitle>Write your article:</CardTitle>
+                            <div className='flex items-center justify-between'>
+                                <CardTitle>Write your article:</CardTitle>
+                                <Button type='button' variant='destructive'>
+                                    <TrashIcon className='mr-1' />
+                                    Delete Article
+                                </Button>
+                            </div>
                             <div className='flex flex-col gap-2 mt-4'>
                                 <Input
                                     disabled={pending}
@@ -68,7 +74,7 @@ const EditArticleForm = ({ topics, article }: { topics: Topic[], article: Articl
                                     defaultValue={article.topicId}
                                     render={({ field }) => (
                                         <Popover open={open} onOpenChange={setOpen}>
-                                            
+
                                             <PopoverTrigger asChild>
                                                 <Button
                                                     disabled={pending}
