@@ -34,6 +34,6 @@ export default function Upvote({ answer, userId, question, isUpvotedAnswer }: An
                 addOptimisticUpvote(optimisticUpvotes.upvoteCount + 1);
                 await handleUpvote(answer, userId, question)
             })
-        }} variant="outline">{upvoteCount} {optimisticUpvotes.upvoting ? 'Progressing' : [statusText]}</Button>
+        }} variant={isUpvotedAnswer? 'secondary':'outline'}>{upvoteCount} {optimisticUpvotes.upvoting ? 'Progressing' : [statusText]}</Button>
     )
 }
