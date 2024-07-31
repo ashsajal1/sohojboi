@@ -52,7 +52,7 @@ export default function CreateForm({ topics }: { topics: Topic[] }) {
 const SubmitButton = () => {
     const { pending } = useFormStatus();
     return <>
-        <Button>
+        <Button className="w-full">
             {pending ? 'Submitting...' : 'Submit'}
         </Button>
     </>
