@@ -196,7 +196,7 @@ model Comment {
   content   String
   authorId  String
   articleId String    @db.ObjectId
-  article   Article   @relation("ArticleComments", fields: [articleId], references: [id])
+  article   Article   @relation("ArticleComments", fields: [articleId], references: [id], onDelete: Cascade) 
   parentId  String?   @db.ObjectId
   parent    Comment?  @relation("NestedComments", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   replies   Comment[] @relation("NestedComments")
