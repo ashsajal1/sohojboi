@@ -12,6 +12,7 @@ import ProfileImgCard from '@/components/profile-img-card'
 export default async function Page({ searchParams }: { searchParams: { page: string } }) {
     const page = parseInt(searchParams.page) || 1;
     const skipSize = (page - 1) * 10;
+    const totalArticles = await prisma.article.count();
 
     const articles = await prisma.article.findMany({
         skip: skipSize,
@@ -23,6 +24,8 @@ export default async function Page({ searchParams }: { searchParams: { page: str
             createdAt: 'desc'
         }
     });
+
+    const hasMoreArticles = totalArticles > skipSize + articles.length;
 
     return (
         <div>
@@ -64,20 +67,23 @@ export default async function Page({ searchParams }: { searchParams: { page: str
                                 Previous Page
                             </Button>
                         </Link>
-                        <Link href={`/article?page=${page + 1}`}>
-                            <Button>
+
+                        {hasMoreArticles && <Link className='ml-auto w-full md:w-auto' href={`/article?page=${page + 1}`}>
+                            <Button className='w-full md:w-auto'>
+                                Next Page
+                                <ArrowRight className='h-4 w-4 ml-2' />
+                            </Button>
+                        </Link>}
+                    </>
+                ) : (
+                    hasMoreArticles && <>
+                        <Link className='ml-auto w-full md:w-auto' href={`/article?page=${page + 1}`}>
+                            <Button className='w-full md:w-auto'>
                                 Next Page
                                 <ArrowRight className='h-4 w-4 ml-2' />
                             </Button>
                         </Link>
                     </>
-                ) : (
-                    <Link className='ml-auto w-full md:w-auto' href={`/article?page=${page + 1}`}>
-                        <Button className='w-full md:w-auto'>
-                            Next Page
-                            <ArrowRight className='h-4 w-4 ml-2' />
-                        </Button>
-                    </Link>
                 )}
             </div>
         </div>
