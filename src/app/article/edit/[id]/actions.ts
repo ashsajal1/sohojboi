@@ -2,6 +2,7 @@
 
 import prisma from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
+import { Article } from "@prisma/client";
 import { redirect } from "next/navigation";
 
 export const editArticle = async (
@@ -30,3 +31,19 @@ export const editArticle = async (
 
   redirect(`/article/${editedArticle.id}`);
 };
+
+export const deleteArticle = async (article:Article) => {
+  try {
+    const deletedArticle = await prisma.article.delete({
+      where: {
+        id: article.id
+      }
+    })
+
+    if(deletedArticle) {
+      redirect('/article')
+    }
+  } catch (error) {
+    throw error;
+  }
+}

@@ -1,9 +1,13 @@
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogFooter } from '@/components/ui/dialog'
+import { Article } from '@prisma/client'
 import { TrashIcon } from '@radix-ui/react-icons'
-import React from 'react'
+import React, { useTransition } from 'react'
+import { deleteArticle } from './actions'
 
-export default function DeleteArticleBtn() {
+export default function DeleteArticleBtn({ article }: { article: Article }) {
+    const [pending, startTransiton] = useTransition();
+
     return (
         <Dialog>
             <DialogTrigger>
@@ -15,8 +19,12 @@ export default function DeleteArticleBtn() {
             <DialogContent>
                 <DialogHeader>Are you sure to delete the article?</DialogHeader>
                 <DialogFooter>
-                    <Button variant='ghost'>No</Button>
-                    <Button variant='destructive'>Yes, Delete!</Button>
+                    <Button disabled={pending} variant='ghost'>No</Button>
+                    <Button disabled={pending} onClick={async () => {
+                        await startTransiton(async () => {
+                            await deleteArticle(article)
+                        })
+                    }} variant='destructive'>{pending ? 'Deleting' : 'Yes, Delete!'}</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>

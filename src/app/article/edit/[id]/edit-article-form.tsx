@@ -47,7 +47,7 @@ const EditArticleForm = ({ topics, article }: { topics: Topic[], article: Articl
                         <CardHeader>
                             <div className='flex items-center justify-between'>
                                 <CardTitle>Write your article:</CardTitle>
-                                <DeleteArticleBtn />
+                                <DeleteArticleBtn article={article} />
                             </div>
                             <div className='flex flex-col gap-2 mt-4'>
                                 <Input
