@@ -48,6 +48,64 @@ const CreateArticleForm = ({ topics }: { topics: Topic[] }) => {
                     <CardContent>
                         <CardHeader>
                             <CardTitle>Write your article:</CardTitle>
+                            <Controller
+                                control={control}
+                                name="topic"
+                                render={({ field }) => (
+                                    <Popover open={open} onOpenChange={setOpen}>
+
+                                        <PopoverTrigger className='w-full' asChild>
+                                            <Button
+                                                disabled={pending}
+                                                variant="outline"
+                                                role="combobox"
+                                                aria-expanded={open}
+                                                className="w-[200px] justify-between"
+                                                onClick={() => setOpen(true)}
+                                            >
+                                                {field.value
+                                                    ? topics.find((topic) => topic.id === field.value)?.name
+                                                    : "Select topic..."}
+                                                <ArrowUpIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                            </Button>
+                                        </PopoverTrigger>
+                                        <PopoverContent className="w-[200px] p-0">
+                                            <Command>
+                                                <CommandInput placeholder="Search topic..." />
+                                                <CommandEmpty>No topic found.</CommandEmpty>
+                                                <CommandGroup>
+                                                    <CommandList>
+                                                        {Array.isArray(topics) && topics.length > 0 ? (
+                                                            topics.map((topic) => (
+                                                                <CommandItem
+                                                                    key={topic.id}
+                                                                    value={topic.id}
+                                                                    onSelect={(currentValue) => {
+                                                                        field.onChange(currentValue);
+                                                                        setOpen(false);
+                                                                    }}
+                                                                >
+                                                                    <CheckIcon
+                                                                        className={cn(
+                                                                            "mr-2 h-4 w-4",
+                                                                            field.value === topic.name ? "opacity-100" : "opacity-0"
+                                                                        )}
+                                                                    />
+                                                                    {topic.name}
+                                                                </CommandItem>
+                                                            ))
+                                                        ) : (
+                                                            <CommandEmpty>No topics available</CommandEmpty>
+                                                        )}
+                                                    </CommandList>
+                                                </CommandGroup>
+                                            </Command>
+                                        </PopoverContent>
+                                    </Popover>
+                                )}
+                            />
+
+                            {errors.topic && <span className="text-red-500">{errors.topic.message}</span>}
                             <div className='flex flex-col gap-2 mt-4'>
                                 <Input
                                     disabled={pending}
@@ -62,70 +120,11 @@ const CreateArticleForm = ({ topics }: { topics: Topic[] }) => {
                                     rows={10}
                                 />
                                 {errors.content && <span className="text-red-500">{errors.content.message}</span>}
-
-                                <Controller
-                                    control={control}
-                                    name="topic"
-                                    render={({ field }) => (
-                                        <Popover open={open} onOpenChange={setOpen}>
-                                            
-                                            <PopoverTrigger asChild>
-                                                <Button
-                                                    disabled={pending}
-                                                    variant="outline"
-                                                    role="combobox"
-                                                    aria-expanded={open}
-                                                    className="w-[200px] justify-between"
-                                                    onClick={() => setOpen(true)}
-                                                >
-                                                    {field.value
-                                                        ? topics.find((topic) => topic.id === field.value)?.name
-                                                        : "Select topic..."}
-                                                    <ArrowUpIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                                                </Button>
-                                            </PopoverTrigger>
-                                            <PopoverContent className="w-[200px] p-0">
-                                                <Command>
-                                                    <CommandInput placeholder="Search topic..." />
-                                                    <CommandEmpty>No topic found.</CommandEmpty>
-                                                    <CommandGroup>
-                                                        <CommandList>
-                                                            {Array.isArray(topics) && topics.length > 0 ? (
-                                                                topics.map((topic) => (
-                                                                    <CommandItem
-                                                                        key={topic.id}
-                                                                        value={topic.id}
-                                                                        onSelect={(currentValue) => {
-                                                                            field.onChange(currentValue);
-                                                                            setOpen(false);
-                                                                        }}
-                                                                    >
-                                                                        <CheckIcon
-                                                                            className={cn(
-                                                                                "mr-2 h-4 w-4",
-                                                                                field.value === topic.name ? "opacity-100" : "opacity-0"
-                                                                            )}
-                                                                        />
-                                                                        {topic.name}
-                                                                    </CommandItem>
-                                                                ))
-                                                            ) : (
-                                                                <CommandEmpty>No topics available</CommandEmpty>
-                                                            )}
-                                                        </CommandList>
-                                                    </CommandGroup>
-                                                </Command>
-                                            </PopoverContent>
-                                        </Popover>
-                                    )}
-                                />
-
-                                {errors.topic && <span className="text-red-500">{errors.topic.message}</span>}
                             </div>
                         </CardHeader>
 
                         <CardFooter>
-                            <Button disabled={pending} type="submit">
+                            <Button className='w-full' disabled={pending} type="submit">
                                 {pending ? 'Submiting' : 'Submit'}
                             </Button>
                         </CardFooter>
