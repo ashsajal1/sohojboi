@@ -56,18 +56,29 @@ export default async function Page({ searchParams }: { searchParams: { page: str
             </div>
             {articles.length === 0 && <h1 className='font-bold text-xl text-center p-12'>No articles Found!</h1>}
             <div className='mt-2 flex items-center justify-between gap-2'>
-                {page > 1 && <Link href={`/article?page=${page - 1}`}>
-                    <Button variant={'outline'}>
-                        <ArrowLeft className='h-4 w-4 mr-2' />
-                        Previous Page
-                    </Button>
-                </Link>}
-                <Link href={`/article?page=${page + 1}`}>
-                    <Button>
-                        Next Page
-                        <ArrowRight className='h-4 w-4 ml-2' />
-                    </Button>
-                </Link>
+                {page > 1 ? (
+                    <>
+                        <Link href={`/article?page=${page - 1}`}>
+                            <Button variant={'outline'}>
+                                <ArrowLeft className='h-4 w-4 mr-2' />
+                                Previous Page
+                            </Button>
+                        </Link>
+                        <Link href={`/article?page=${page + 1}`}>
+                            <Button>
+                                Next Page
+                                <ArrowRight className='h-4 w-4 ml-2' />
+                            </Button>
+                        </Link>
+                    </>
+                ) : (
+                    <Link className='ml-auto' href={`/article?page=${page + 1}`}>
+                        <Button>
+                            Next Page
+                            <ArrowRight className='h-4 w-4 ml-2' />
+                        </Button>
+                    </Link>
+                )}
             </div>
         </div>
     )
