@@ -9,7 +9,7 @@ export const editArticle = async (
   title: string,
   content: string,
   topicId: string,
-  articleId: string,
+  articleId: string
 ) => {
   let editedArticle;
   try {
@@ -32,18 +32,22 @@ export const editArticle = async (
   redirect(`/article/${editedArticle.id}`);
 };
 
-export const deleteArticle = async (article:Article) => {
+export const deleteArticle = async (article: Article) => {
   try {
+    const currentUserId = await auth().userId;
+    if (currentUserId !== article.authorId) {
+      throw new Error("Unauthorized access!");
+    }
     const deletedArticle = await prisma.article.delete({
       where: {
-        id: article.id
-      }
-    })
+        id: article.id,
+      },
+    });
 
-    if(deletedArticle) {
-      redirect('/article')
+    if (deletedArticle) {
+      redirect("/article");
     }
   } catch (error) {
     throw error;
   }
-}
+};
