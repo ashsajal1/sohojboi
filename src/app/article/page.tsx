@@ -72,8 +72,8 @@ export default async function Page({ searchParams }: { searchParams: { page: str
                         </Link>
                     </>
                 ) : (
-                    <Link className='ml-auto' href={`/article?page=${page + 1}`}>
-                        <Button>
+                    <Link className='ml-auto w-full md:w-auto' href={`/article?page=${page + 1}`}>
+                        <Button className='w-full md:w-auto'>
                             Next Page
                             <ArrowRight className='h-4 w-4 ml-2' />
                         </Button>
