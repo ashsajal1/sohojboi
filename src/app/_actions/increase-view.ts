@@ -1,3 +1,13 @@
+/**
+ * Increases the view count for a given user and type.
+ *
+ * @param {string} userId - The ID of the user.
+ * @param {string} id - The ID of the article or question.
+ * @param {"article" | "question"} type - The type of the item.
+ * @throws {Error} If the input parameters are invalid or the type is invalid.
+ * @throws {Error} If failed to increase the view count.
+ */
+
 import prisma from "@/lib/prisma";
 
 export const increaseView = async (
