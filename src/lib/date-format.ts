@@ -29,8 +29,13 @@ export function formatDate(date: Date): string {
 
   const months = differenceInMonths(now, date);
   if (months < 1) {
-    return `${weeks}w ago`;
+    return `${Math.floor(weeks / 4)}w ago`;
+  }
+
+  if (months < 12) {
+    return `${months}m ago`;
   }
 
   return format(date, 'd MMM yyyy');
 }
+
