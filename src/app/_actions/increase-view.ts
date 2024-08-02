@@ -54,11 +54,9 @@ export const increaseView = async (
         break;
 
       default:
-        console.log("Invalid type");
         throw new Error("Invalid type provided");
     }
   } catch (error) {
-    console.error("Error increasing view count:", error);
     throw new Error("Failed to increase view count");
   }
 };
