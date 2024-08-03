@@ -110,7 +110,7 @@ const EditQuestion = ({ question, topics }: { question: Question; topics: Topic[
             )}
           </div>
           <Button disabled={pending} className="w-full" type="submit">
-            Save
+            {pending ? "Saving..." : "Save"}
           </Button>
         </div>
       </form>
