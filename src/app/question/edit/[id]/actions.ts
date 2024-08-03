@@ -4,7 +4,6 @@ import prisma from "@/lib/prisma";
 import { redirect } from "next/navigation";
 
 export const deleteQuestion = async (questionId: string) => {
-  console.log("started doing sth")
   try {
     const deletedQuestion = await prisma.question.delete({
       where: {

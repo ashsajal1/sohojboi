@@ -12,7 +12,7 @@ const EditQuestion = ({ question, topics }: { question: Question, topics: Topic[
     const [title, setTitle] = useState(question.questionTitle);
     const [content, setContent] = useState(question.questionDescription);
     const [topicId, setTopicId] = useState(question.topicId);
-    const [, startTransition] = useTransition();
+    const [pending, startTransition] = useTransition();
 
     const handleSave = async () => {
         startTransition(async () => {
@@ -30,10 +30,11 @@ const EditQuestion = ({ question, topics }: { question: Question, topics: Topic[
                 topicId={question.topicId!}
                 setTopicId={setTopicId}
                 topics={topics}
+                pending={pending}
             />
-            <div className="flex justify-end">
-                <Button onClick={handleSave}>Save</Button>
-            </div>
+
+            <Button disabled={pending} className="w-full" onClick={handleSave}>Save</Button>
+
         </div>
     );
 };
@@ -45,7 +46,8 @@ const InputFields = ({
     setContent,
     topicId,
     setTopicId,
-    topics
+    topics,
+    pending
 }: {
     title: string;
     setTitle: (title: string) => void;
@@ -53,14 +55,15 @@ const InputFields = ({
     setContent: (content: string) => void;
     topicId: string;
     setTopicId: (topicId: string) => void;
-    topics: Topic[]
+    topics: Topic[],
+    pending: boolean
 }) => {
 
     return (
         <div className="space-y-4">
             <div className="space-y-2">
                 <h2 className="text-lg font-medium">Topic</h2>
-                <Select onValueChange={(newValue) => setTopicId(newValue)} defaultValue={topicId}>
+                <Select disabled={pending} onValueChange={(newValue) => setTopicId(newValue)} defaultValue={topicId}>
                     <SelectTrigger>
                         <SelectValue placeholder="Select a topic">
 
@@ -81,6 +84,7 @@ const InputFields = ({
             <div className="space-y-2">
                 <h2 className="text-lg font-medium">Question</h2>
                 <Input
+                    disabled={pending}
                     defaultValue={title}
                     placeholder="Type your question here"
                     value={title}
@@ -90,6 +94,7 @@ const InputFields = ({
             <div className="space-y-2">
                 <h2 className="text-lg font-medium">Content</h2>
                 <Textarea
+                    disabled={pending}
                     defaultValue={content}
                     rows={10}
                     placeholder="Type your content here"
