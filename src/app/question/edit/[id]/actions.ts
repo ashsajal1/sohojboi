@@ -38,3 +38,25 @@ export const updateQuestion = async (_: any, formData: FormData) => {
 
   redirect(`/question/${questionId}`);
 };
+
+
+export const editQuestion = async (
+  title: string,
+  content: string,
+  topicId: string,
+  questionId: string
+) => {
+  console.log(topicId)
+  const updatedQuestion = await prisma.question.update({
+    where: {
+      id: questionId,
+    },
+    data: {
+      questionTitle: title,
+      questionDescription: content,
+      topicId: topicId,
+    },
+  });
+
+  redirect(`/question/${questionId}`);
+};

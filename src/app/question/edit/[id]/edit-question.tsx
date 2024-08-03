@@ -1,52 +1,104 @@
 "use client"
-
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { useState } from "react";
+import { useTransition } from "react";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import DeleteQuestion from "./delete-question";
-import { updateQuestion } from "./actions";
-import { useFormState, useFormStatus } from "react-dom";
 import { Question, Topic } from "@prisma/client";
-import { SubmitButton } from "@/components/submit-btn";
-import { PopoverTrigger, Popover, PopoverContent } from "@/components/ui/popover";
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
-import { Controller } from "react-hook-form";
-import { Button } from "@/components/ui/button";
-import { ArrowUpIcon } from "lucide-react";
+import { editQuestion } from "./actions";
+import { Select, SelectItem, SelectTrigger, SelectValue, SelectContent, SelectGroup, SelectLabel } from "@/components/ui/select";
 
-export default function EditQuestion({ question, topics }: { question: Question, topics: Topic[] }) {
-    const [errorState, updateQuestionAction] = useFormState(updateQuestion, null)
+const EditQuestion = ({ question, topics }: { question: Question, topics: Topic[] }) => {
+    const [title, setTitle] = useState(question.questionTitle);
+    const [content, setContent] = useState(question.questionDescription);
+    const [topicId, setTopicId] = useState(question.topicId);
+    const [, startTransition] = useTransition();
+
+    const handleSave = async () => {
+        startTransition(async () => {
+            await editQuestion(title, content, topicId!, question.id);
+        });
+    };
 
     return (
-        <div className="p-4">
-            <form action={updateQuestionAction}>
-                <Card>
-                    <CardHeader>
-                        <div className="flex justify-between items-center w-full">
-                            <CardTitle>Edit question</CardTitle>
-                            <DeleteQuestion questionId={question.id} />
-                        </div>
-                    </CardHeader>
-
-                    <CardContent>
-                        <InputFields topics={topics} question={question} />
-                    </CardContent>
-                    <CardFooter>
-                        <SubmitButton />
-                    </CardFooter>
-                </Card>
-            </form>
+        <div className="space-y-4">
+            <InputFields
+                title={title}
+                setTitle={setTitle}
+                content={content}
+                setContent={setContent}
+                topicId={question.topicId!}
+                setTopicId={setTopicId}
+                topics={topics}
+            />
+            <div className="flex justify-end">
+                <Button onClick={handleSave}>Save</Button>
+            </div>
         </div>
-    )
-}
+    );
+};
 
+const InputFields = ({
+    title,
+    setTitle,
+    content,
+    setContent,
+    topicId,
+    setTopicId,
+    topics
+}: {
+    title: string;
+    setTitle: (title: string) => void;
+    content: string;
+    setContent: (content: string) => void;
+    topicId: string;
+    setTopicId: (topicId: string) => void;
+    topics: Topic[]
+}) => {
 
-const InputFields = ({ question, topics }: { question: Question, topics: Topic[] }) => {
-    const { pending } = useFormStatus();
-    
-    return <>
-        <Input disabled={pending} defaultValue={question.questionTitle} name="title" placeholder="Enter title..." />
-        <Input className="hidden" defaultValue={question.id} hidden={true} name="questionId" placeholder="Enter title..." />
-        <Textarea disabled={pending} defaultValue={question.questionDescription} name="description" rows={12} placeholder="Enter description..." className="mt-3" />
-    </>
-}
+    return (
+        <div className="space-y-4">
+            <div className="space-y-2">
+                <h2 className="text-lg font-medium">Topic</h2>
+                <Select onValueChange={(newValue) => setTopicId(newValue)} defaultValue={topicId}>
+                    <SelectTrigger>
+                        <SelectValue placeholder="Select a topic">
+
+                        </SelectValue>
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectGroup>
+                            <SelectLabel>Topic</SelectLabel>
+                            {topics.map((topic) => (
+                                <SelectItem value={topic.id} key={topic.id}>
+                                    {topic.name}
+                                </SelectItem>
+                            ))}
+                        </SelectGroup>
+                    </SelectContent>
+                </Select>
+            </div>
+            <div className="space-y-2">
+                <h2 className="text-lg font-medium">Question</h2>
+                <Input
+                    defaultValue={title}
+                    placeholder="Type your question here"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                />
+            </div>
+            <div className="space-y-2">
+                <h2 className="text-lg font-medium">Content</h2>
+                <Textarea
+                    defaultValue={content}
+                    rows={10}
+                    placeholder="Type your content here"
+                    value={content}
+                    onChange={(e) => setContent(e.target.value)}
+                />
+            </div>
+        </div>
+    );
+};
+
+export default EditQuestion;
