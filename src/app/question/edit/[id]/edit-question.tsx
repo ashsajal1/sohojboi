@@ -6,10 +6,15 @@ import { Textarea } from "@/components/ui/textarea";
 import DeleteQuestion from "./delete-question";
 import { updateQuestion } from "./actions";
 import { useFormState, useFormStatus } from "react-dom";
-import { Question } from "@prisma/client";
+import { Question, Topic } from "@prisma/client";
 import { SubmitButton } from "@/components/submit-btn";
+import { PopoverTrigger, Popover, PopoverContent } from "@/components/ui/popover";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import { Controller } from "react-hook-form";
+import { Button } from "@/components/ui/button";
+import { ArrowUpIcon } from "lucide-react";
 
-export default function EditQuestion({ question }: { question: Question }) {
+export default function EditQuestion({ question, topics }: { question: Question, topics: Topic[] }) {
     const [errorState, updateQuestionAction] = useFormState(updateQuestion, null)
 
     return (
@@ -24,7 +29,7 @@ export default function EditQuestion({ question }: { question: Question }) {
                     </CardHeader>
 
                     <CardContent>
-                        <InputFields question={question} />
+                        <InputFields topics={topics} question={question} />
                     </CardContent>
                     <CardFooter>
                         <SubmitButton />
@@ -36,8 +41,9 @@ export default function EditQuestion({ question }: { question: Question }) {
 }
 
 
-const InputFields = ({ question }: { question: Question }) => {
+const InputFields = ({ question, topics }: { question: Question, topics: Topic[] }) => {
     const { pending } = useFormStatus();
+    
     return <>
         <Input disabled={pending} defaultValue={question.questionTitle} name="title" placeholder="Enter title..." />
         <Input className="hidden" defaultValue={question.id} hidden={true} name="questionId" placeholder="Enter title..." />

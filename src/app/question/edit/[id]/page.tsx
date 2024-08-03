@@ -12,11 +12,14 @@ export default async function Create({ params }: { params: { id: string } }) {
     const userId = await (await currentUser())?.id;
     const questionId = params.id;
 
-    const questionData = await prisma.question.findUnique({
-        where: {
-            id: questionId
-        }
-    });
+    const [questionData, topics] = await Promise.all([
+        prisma.question.findUnique({
+            where: {
+                id: questionId
+            }
+        }),
+        prisma.topic.findMany()
+    ])
 
     if (questionData?.userId !== userId) {
         throw new Error("Unauthorized access!")
@@ -26,9 +29,10 @@ export default async function Create({ params }: { params: { id: string } }) {
         throw new Error("Please enter a valid question id!")
     }
 
+
     return (
         <div className="p-4">
-            <EditQuestion question={questionData!} />
+            <EditQuestion topics={topics} question={questionData!} />
         </div>
     )
 }
