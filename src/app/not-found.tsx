@@ -17,7 +17,7 @@ export default function NotFound() {
                             Home
                         </Button>
                     </a>
-                    <Button variant={'outline'} onClick={() => location.reload()}>
+                    <Button variant={'outline'} onClick={() => history.back()}>
                         Back
                     </Button>
                 </CardContent>
