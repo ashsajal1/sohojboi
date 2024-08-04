@@ -12,11 +12,11 @@ export default function NotFound() {
                     <p>The content you are looking for is not found!</p>
                 </CardHeader>
                 <CardContent className="flex gap-2 items-center">
-                    <Link href={'/'}>
+                    <a href={'/'}>
                         <Button>
                             Home
                         </Button>
-                    </Link>
+                    </a>
                     <Button variant={'outline'} onClick={() => location.reload()}>
                         Back
                     </Button>
