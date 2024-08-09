@@ -13,6 +13,7 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Sohojboi: Learn Something with Fun",
   description: "Sohojboi offers an engaging platform where students can ask questions, provide answers, play quizzes, and learn through a fun and interactive blog section.",
+  manifest: "/manifest.json",
 };
 
 export default function RootLayout({
