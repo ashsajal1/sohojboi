@@ -52,7 +52,7 @@ export default async function Page({ params }: { params: { id: string } }) {
         }
     })
 
-    if(userId) {
+    if (userId) {
         isUpvoted = await prisma.upvote.findUnique({
             where: {
                 userId_articleId: {

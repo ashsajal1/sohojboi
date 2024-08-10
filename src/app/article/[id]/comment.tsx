@@ -1,7 +1,7 @@
 import { type Comment as PrismaComment } from '@prisma/client';
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader } from '@/components/ui/card';
-import { clerkClient } from '@clerk/nextjs/server';
+import { auth, clerkClient } from '@clerk/nextjs/server';
 import ProfileImgCard from '@/components/profile-img-card';
 import { Button } from '@/components/ui/button';
 
@@ -20,6 +20,7 @@ interface CommentProps {
 }
 
 export default async function Comment({ comment }: CommentProps) {
+    const currentUser = auth();
     const user = await clerkClient().users.getUser(comment.authorId);
     const commentReplies = await prisma.comment.findMany({
         where: {
@@ -38,7 +39,7 @@ export default async function Comment({ comment }: CommentProps) {
                     createdAt={comment.createdAt}
                 />
                 <div>
-                    <Accordion type="single" collapsible className="w-full">
+                    {currentUser.userId && <Accordion type="single" collapsible className="w-full">
                         <AccordionItem value="item-1">
                             <AccordionTrigger>
                                 <Button>Reply</Button>
@@ -47,7 +48,7 @@ export default async function Comment({ comment }: CommentProps) {
                                 <CommentForm articleId={comment.articleId} parentId={comment.id} />
                             </AccordionContent>
                         </AccordionItem>
-                    </Accordion>
+                    </Accordion>}
 
                 </div>
             </CardHeader>
