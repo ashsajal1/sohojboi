@@ -4,6 +4,7 @@ import prisma from "@/lib/prisma";
 import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import z from "zod";
+import { logger } from "@/logger";
 const questionSchema = z.object({
   title: z
     .string()
@@ -40,6 +41,7 @@ export const createQuestion = async (_: any, formData: FormData) => {
       },
     });
   } catch (error) {
+    logger.error(error);
     return { error: "An unexpected error occurred. Try again." };
   }
 
