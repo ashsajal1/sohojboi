@@ -53,6 +53,7 @@ export default async function page({ searchParams }: { searchParams: any }) {
       challengerId: {
         not: user.userId as string || ''
       },
+      challengeeId: user.userId!,
       status: { equals: "pending" }
     }
   });
