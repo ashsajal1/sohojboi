@@ -5,6 +5,17 @@ import { auth, clerkClient } from "@clerk/nextjs/server";
 import { Article, NotificationType } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { z } from "zod";
+
+// Define Zod schemas
+const commentSchema = z.object({
+  articleId: z.string().min(1, "articleId is required"),
+  content: z.string().min(1, "Content cannot be empty"),
+  commentType: z.object({
+    type: z.enum(["comment", "nestedComment"]),
+  }),
+  parentId: z.string().optional(),
+});
 
 interface Type {
   type: "comment" | "nestedComment";
@@ -16,8 +27,10 @@ export const createComment = async (
   commentType: Type,
   parentId?: string
 ) => {
-  if (!articleId) {
-    throw new Error("articleId is required");
+  // Validate input
+  const parsed = commentSchema.safeParse({ articleId, content, commentType, parentId });
+  if (!parsed.success) {
+    throw new Error(parsed.error.errors.map((e) => e.message).join(", "));
   }
 
   let comment;
@@ -52,6 +65,7 @@ export const createComment = async (
     throw error;
   }
 };
+
 
 export const handleUpvote = async (article: Article) => {
   const actorId = await auth().userId;
