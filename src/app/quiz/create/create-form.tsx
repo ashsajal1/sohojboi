@@ -93,12 +93,12 @@ export default function CreateForm({ topics }: { topics: Topic[] }) {
                 name="topic"
                 render={({ field }) => (
                     <Popover open={open} onOpenChange={setOpen}>
-                        <PopoverTrigger asChild>
+                        <PopoverTrigger className='w-full' asChild>
                             <Button
                                 variant="outline"
                                 role="combobox"
                                 aria-expanded={open}
-                                className="w-[200px] justify-between"
+                                className="w-full justify-between"
                                 onClick={() => setOpen(true)}
                             >
                                 {field.value
