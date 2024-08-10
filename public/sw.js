@@ -1,27 +1,26 @@
-const STATIC_CACHE = "web-static-cache";
-const DYNAMIC_CACHE = "web-dynamic-cache";
-
-self.addEventListener("install", (event) => {
-  event.waitUntil(
-    caches.open(STATIC_CACHE).then((cache) => {
-      return cache.addAll(["/"]);
-    })
-  );
-});
+// Establish a cache name
+const cacheName = "MyFancyCacheName_v1";
 
 self.addEventListener("fetch", (event) => {
-  event.respondWith(
-    caches.match(event.request).then((response) => {
-      if (response) {
-        return response; // Return the cached response if it exists
-      }
+  // Check if this is a navigation request
+  if (event.request.mode === "navigate") {
+    // Open the cache
+    event.respondWith(
+      caches.open(cacheName).then((cache) => {
+        // Go to the network first
+        return fetch(event.request.url)
+          .then((fetchedResponse) => {
+            cache.put(event.request, fetchedResponse.clone());
 
-      return fetch(event.request).then((networkResponse) => {
-        return caches.open(DYNAMIC_CACHE).then((cache) => {
-          cache.put(event.request, networkResponse.clone()); // Cache the fetched response
-          return networkResponse;
-        });
-      });
-    })
-  );
+            return fetchedResponse;
+          })
+          .catch(() => {
+            // If the network is unavailable, get
+            return cache.match(event.request.url);
+          });
+      })
+    );
+  } else {
+    return;
+  }
 });
