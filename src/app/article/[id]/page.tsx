@@ -33,6 +33,7 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
 export default async function Page({ params }: { params: { id: string } }) {
     const articleId = params.id;
     const userId = await auth().userId;
+    let isUpvoted;
 
     const article = await prisma.article.findUnique({
         where: {
@@ -51,14 +52,16 @@ export default async function Page({ params }: { params: { id: string } }) {
         }
     })
 
-    const isUpvoted = await prisma.upvote.findUnique({
-        where: {
-            userId_articleId: {
-                userId: userId!,
-                articleId: articleId
+    if(userId) {
+        isUpvoted = await prisma.upvote.findUnique({
+            where: {
+                userId_articleId: {
+                    userId: userId!,
+                    articleId: articleId
+                }
             }
-        }
-    })
+        })
+    }
 
     const viewCount = await prisma.view.aggregate({
         _sum: {
@@ -94,7 +97,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                             {userId === article?.authorId && <Link href={`/article/edit/${article?.id}`}>
                                 <Button variant={'outline'}>Edit</Button>
                             </Link>}
-                            <UpvoteArticle upvoteCount={article?.upvotes.length!} article={article!} isUpvoted={!!isUpvoted} />
+                            <UpvoteArticle upvoteCount={article?.upvotes.length!} article={article!} isUpvoted={!!isUpvoted ?? false} />
                         </div>
                     </div>
 
