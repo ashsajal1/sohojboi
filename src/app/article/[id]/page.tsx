@@ -102,7 +102,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                     </div>
 
                     <h1 className='font-bold mt-3'>Enter comments  :</h1>
-                    <CommentForm articleId={article?.id!} />
+                    {userId ? <CommentForm articleId={articleId} /> : <p>Please <Link className="border-b" href='/login'>Login</Link> to comment</p>}
                 </CardHeader>
                 <CardContent>
                     {article?.comments.map(comment => (
