@@ -16,15 +16,6 @@ interface QuestionProps {
 export default async function QuestionCard({ question }: QuestionProps) {
     const actorId = await auth().userId;
     let isUpvotedQuestion = await chekcIsQuestionUpvoted(actorId || '', question.id);
-    let profileImageSrc;
-    let questionUser;
-
-    try {
-        questionUser = await clerkClient().users.getUser(question.userId);
-        profileImageSrc = questionUser.imageUrl;
-    } catch (error: any) {
-        // throw new Error(error.message)
-    }
 
     const viewCount = await prisma.view.aggregate({
         _sum: {
