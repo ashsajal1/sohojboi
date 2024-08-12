@@ -6,7 +6,6 @@ import { ClerkProvider } from '@clerk/nextjs'
 import Navbar from "@/components/navbar";
 import Questions from "./@questions/questions";
 import Nprogress from "@/components/nprogress";
-import Script from 'next/script'
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -43,7 +42,6 @@ export default function RootLayout({
         
             </main>
           </ThemeProvider>
-          <Script src="/service-worker.js" />
         </body>
       </html>
     </ClerkProvider>
