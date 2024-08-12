@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { createCompetition } from './actions';
@@ -19,11 +19,24 @@ const Challenge: React.FC<ChallengeProps> = ({ challengeeId, challengerId, quizI
     const [score, setScore] = useState(0);
     const [showResults, setShowResults] = useState(false);
 
+    const questionsIds = quizQuestions.map(q => q.id)
+
+    useEffect(() => {
+
+        createCompetitionFunc();
+
+        async function createCompetitionFunc() {
+            if (showResults) {
+                await createCompetition(challengeeId, challengerId, questionsIds, score);
+            }
+        }
+    }, [challengeeId, challengerId, questionsIds, score, showResults])
+
     const handleOptionSelect = (optionId: string) => {
         setSelectedOption(optionId);
     };
 
-    const questionsIds = quizQuestions.map(q => q.id)
+
 
     const nextQuestion = async () => {
         const currentQuestion = quizQuestions[currentQuestionIndex];
@@ -38,8 +51,7 @@ const Challenge: React.FC<ChallengeProps> = ({ challengeeId, challengerId, quizI
             setSelectedOption(null);
         } else {
             setShowResults(true);
-            console.log(challengeeId, challengerId, "user ids from client")
-            await createCompetition(challengeeId, challengerId, questionsIds, score);
+            // console.log(challengeeId, challengerId, "user ids from client")
         }
     };
 
