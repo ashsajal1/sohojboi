@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Button } from "./ui/button";
 import { ModeToggle } from "./mode-toggle";
-import { SignedIn, SignedOut } from '@clerk/nextjs'
+import { SignedIn, SignedOut, SignOutButton } from '@clerk/nextjs'
 import { BellIcon } from "@radix-ui/react-icons";
 import { Badge } from "./ui/badge";
 import prisma from "@/lib/prisma";
@@ -89,7 +89,7 @@ export default async function Navbar() {
                                 size='sm'
                                 className="w-full">
                                 <LogOut className="w-4 h-4 mr-2" />
-                                Logout
+                                <SignOutButton />
                             </Button>
                         </HoverCardContent>
                     </HoverCard>
