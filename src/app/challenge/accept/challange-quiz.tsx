@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { completeCompetition } from './actions';
@@ -19,7 +19,18 @@ const Challange: React.FC<ChallengeProps> = ({ quizQuestions, competitionId, cha
     const [selectedOption, setSelectedOption] = useState<string | null>(null);
     const [score, setScore] = useState(0);
     const [showResults, setShowResults] = useState(false);
-    console.log(quizQuestions);
+    // console.log(quizQuestions);
+
+    useEffect(() => {
+        createCompetitionFunc();
+        async function createCompetitionFunc() {
+            if (showResults) {
+                await completeCompetition(competitionId, score, challengerId, winnerId, challengeeId)
+
+            }
+        }
+    }, [challengeeId, challengerId, competitionId, score, showResults, winnerId])
+
 
     const handleOptionSelect = (optionId: string) => {
         setSelectedOption(optionId);
@@ -40,7 +51,6 @@ const Challange: React.FC<ChallengeProps> = ({ quizQuestions, competitionId, cha
             setSelectedOption(null);
         } else {
             setShowResults(true);
-            await completeCompetition(competitionId, score, challengerId, winnerId, challengeeId)
         }
     };
 
