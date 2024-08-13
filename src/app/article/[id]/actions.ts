@@ -136,3 +136,20 @@ export const deleteComment = async (commentId: string) => {
     throw new Error("Cannot delete comment")
   }
 }
+
+export const editComment = async (commentId: string, value: string) => {
+  try {
+    await prisma.comment.update({
+      where: {
+        id: commentId,
+      },
+      data: {
+        content: value,
+      }
+    })
+
+    revalidatePath("/")
+  } catch (error) {
+    throw new Error("Cannot edit comment")
+  }
+}
