@@ -123,8 +123,33 @@ export const handleUpvote = async (article: Article) => {
   revalidatePath("/");
 };
 
-// export const getUpvoteCount = async () => {
-//   const count = await prisma.upvote.count({
+export const deleteComment = async (commentId: string) => {
+  try {
+    await prisma.comment.delete({
+      where: {
+        id: commentId,
+      }
+    })
 
-//   })
-// }
+    revalidatePath("/")
+  } catch (error) {
+    throw new Error("Cannot delete comment")
+  }
+}
+
+export const editComment = async (commentId: string, value: string) => {
+  try {
+    await prisma.comment.update({
+      where: {
+        id: commentId,
+      },
+      data: {
+        content: value,
+      }
+    })
+
+    revalidatePath("/")
+  } catch (error) {
+    throw new Error("Cannot edit comment")
+  }
+}
