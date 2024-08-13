@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react'
 
-export default function AdminLayout({ children, questions, users, summary }: { children: ReactNode, questions: ReactNode, users: ReactNode, summary: ReactNode }) {
+export default function AdminLayout({ children, questions, users, summary, article }: { children: ReactNode, questions: ReactNode, users: ReactNode, summary: ReactNode, article: ReactNode }) {
     return (
         <div>
             <div>
@@ -10,7 +10,12 @@ export default function AdminLayout({ children, questions, users, summary }: { c
             <section className='flex flex-col md:flex-row items-start'>
                 {users}
                 {questions}
+
             </section>
+
+            <div>
+                {article}
+            </div>
 
         </div>
     )
