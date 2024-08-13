@@ -123,8 +123,16 @@ export const handleUpvote = async (article: Article) => {
   revalidatePath("/");
 };
 
-// export const getUpvoteCount = async () => {
-//   const count = await prisma.upvote.count({
+export const deleteComment = async (commentId: string) => {
+  try {
+    await prisma.comment.delete({
+      where: {
+        id: commentId,
+      }
+    })
 
-//   })
-// }
+    revalidatePath("/")
+  } catch (error) {
+    throw new Error("Cannot delete comment")
+  }
+}
