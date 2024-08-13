@@ -16,7 +16,7 @@ import {
 
 import { ArrowUpDown, MoreHorizontal } from "lucide-react"
 import { DataTableColumnHeader } from "../../../../../components/table-header"
-import { Article, ChallengeQuestion } from "@prisma/client"
+import { Article } from "@prisma/client"
 import DeleteArticle from "./delete-article"
 import { useState } from "react"
 
@@ -129,7 +129,7 @@ export const columns: ColumnDef<Article>[] = [
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem>View article details</DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setOpen(true)}>Delete question</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setOpen(true)}>Delete article</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </>

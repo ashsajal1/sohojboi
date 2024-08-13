@@ -13,7 +13,7 @@ export default function DeleteArticle({ questionId, open, setOpen }: { questionI
             <Dialog open={open} onOpenChange={setOpen}>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Are you sure to delete the qustion?</DialogTitle>
+                        <DialogTitle>Are you sure to delete the article?</DialogTitle>
                     </DialogHeader>
                     <DialogFooter>
                         <Button disabled={isPending} variant={'ghost'} onClick={() => setOpen(false)}>No</Button>
