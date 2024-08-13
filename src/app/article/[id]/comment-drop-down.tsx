@@ -28,31 +28,31 @@ export default function CommentDropDown({ commentId, commentText }: { commentId:
 
   return (
     <>
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant={'ghost'}>
-          <Ellipsis />
-        </Button>
-      </DropdownMenuTrigger>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant={'ghost'}>
+            <Ellipsis />
+          </Button>
+        </DropdownMenuTrigger>
 
-      <DropdownMenuContent>
-        <DropdownMenuGroup>
-          <DropdownMenuLabel>Comment Options</DropdownMenuLabel>
-          <DropdownMenuItem onClick={() => setIsEditDialogOpen(true)}>
-            <Pencil1Icon className="mr-1 h-4 w-4" />
-            Edit
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={handleDeleteClick}>
-            <TrashIcon className="mr-1 h-4 w-4" />
-            Delete
-          </DropdownMenuItem>
-          <DropdownMenuLabel>Reports</DropdownMenuLabel>
-          <DropdownMenuItem>Spam</DropdownMenuItem>
-        </DropdownMenuGroup>
-      </DropdownMenuContent>
-    </DropdownMenu>
-    <DeleteDialog open={isDeleteDialogOpen} onClose={handleDeleteDialogClose} />
-    <EditDialog value={commentText} open={isEditDialogOpen} onClose={() => setIsEditDialogOpen(false)} />
+        <DropdownMenuContent>
+          <DropdownMenuGroup>
+            <DropdownMenuLabel>Comment Options</DropdownMenuLabel>
+            <DropdownMenuItem onClick={() => setIsEditDialogOpen(true)}>
+              <Pencil1Icon className="mr-1 h-4 w-4" />
+              Edit
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={handleDeleteClick}>
+              <TrashIcon className="mr-1 h-4 w-4" />
+              Delete
+            </DropdownMenuItem>
+            <DropdownMenuLabel>Reports</DropdownMenuLabel>
+            <DropdownMenuItem>Spam</DropdownMenuItem>
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <DeleteDialog open={isDeleteDialogOpen} onClose={handleDeleteDialogClose} commentId={commentId} />
+      <EditDialog value={commentText} open={isEditDialogOpen} onClose={() => setIsEditDialogOpen(false)} />
     </>
   );
 }
