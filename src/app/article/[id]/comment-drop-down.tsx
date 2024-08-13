@@ -52,7 +52,7 @@ export default function CommentDropDown({ commentId, commentText }: { commentId:
         </DropdownMenuContent>
       </DropdownMenu>
       <DeleteDialog open={isDeleteDialogOpen} onClose={handleDeleteDialogClose} commentId={commentId} />
-      <EditDialog value={commentText} open={isEditDialogOpen} onClose={() => setIsEditDialogOpen(false)} />
+      <EditDialog commentId={commentId} value={commentText} open={isEditDialogOpen} onClose={() => setIsEditDialogOpen(false)} />
     </>
   );
 }
