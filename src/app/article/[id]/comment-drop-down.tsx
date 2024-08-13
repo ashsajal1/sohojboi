@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Pencil1Icon, TrashIcon } from "@radix-ui/react-icons"
 import { Ellipsis } from "lucide-react"
+import DeleteDialog from "./delete-dialog"
 
 export default function CommentDropDown({commentId}:{commentId: string}) {
     return (
@@ -30,8 +31,9 @@ export default function CommentDropDown({commentId}:{commentId: string}) {
                     <DropdownMenuLabel>Comment Options</DropdownMenuLabel>
                     <DropdownMenuItem>
                         <Pencil1Icon className="mr-1 h-4 w-4" />
-                        Edit</DropdownMenuItem>
-                    <DropdownMenuItem><TrashIcon className="mr-1 h-4 w-4" /> Delete</DropdownMenuItem>
+                        Edit
+                        </DropdownMenuItem>
+                    <DeleteDialog />
                     <DropdownMenuSeparator />
                     <DropdownMenuLabel>Reports</DropdownMenuLabel>
                     <DropdownMenuItem>Spam</DropdownMenuItem>
