@@ -41,6 +41,14 @@ export default async function Navbar() {
                         Blog
                     </Button>
                 </Link>
+                {user?.publicMetadata.role === 'admin' && (
+                    <Link href={'/admin'}>
+                        <Button variant={'ghost'}>
+                            Admin
+                        </Button>
+                    </Link>
+                )}
+
                 <ModeToggle />
                 <SignedIn>
                     <Link href={'/notifications'}>
