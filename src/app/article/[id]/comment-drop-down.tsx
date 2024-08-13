@@ -1,44 +1,55 @@
-import { Button } from "@/components/ui/button"
+"use client"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuGroup,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuPortal,
-    DropdownMenuSeparator,
-    DropdownMenuShortcut,
-    DropdownMenuSub,
-    DropdownMenuSubContent,
-    DropdownMenuSubTrigger,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Pencil1Icon, TrashIcon } from "@radix-ui/react-icons"
-import { Ellipsis } from "lucide-react"
-import DeleteDialog from "./delete-dialog"
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Pencil1Icon, TrashIcon } from "@radix-ui/react-icons";
+import { Ellipsis } from "lucide-react";
+import DeleteDialog from "./delete-dialog";
 
-export default function CommentDropDown({commentId}:{commentId: string}) {
-    return (
-        <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-                <Button variant={'ghost'}>
-                    <Ellipsis />
-                </Button>
-            </DropdownMenuTrigger>
+export default function CommentDropDown({ commentId }: { commentId: string }) {
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
-            <DropdownMenuContent>
-                <DropdownMenuGroup>
-                    <DropdownMenuLabel>Comment Options</DropdownMenuLabel>
-                    <DropdownMenuItem>
-                        <Pencil1Icon className="mr-1 h-4 w-4" />
-                        Edit
-                        </DropdownMenuItem>
-                    <DeleteDialog />
-                    <DropdownMenuSeparator />
-                    <DropdownMenuLabel>Reports</DropdownMenuLabel>
-                    <DropdownMenuItem>Spam</DropdownMenuItem>
-                </DropdownMenuGroup>
-            </DropdownMenuContent>
-        </DropdownMenu>
-    )
+  const handleDeleteClick = () => {
+    setIsDeleteDialogOpen(true);
+  };
+
+  const handleDeleteDialogClose = () => {
+    setIsDeleteDialogOpen(false);
+  };
+
+  return (
+    <>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant={'ghost'}>
+          <Ellipsis />
+        </Button>
+      </DropdownMenuTrigger>
+
+      <DropdownMenuContent>
+        <DropdownMenuGroup>
+          <DropdownMenuLabel>Comment Options</DropdownMenuLabel>
+          <DropdownMenuItem>
+            <Pencil1Icon className="mr-1 h-4 w-4" />
+            Edit
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={handleDeleteClick}>
+            <TrashIcon className="mr-1 h-4 w-4" />
+            Delete
+          </DropdownMenuItem>
+          <DropdownMenuLabel>Reports</DropdownMenuLabel>
+          <DropdownMenuItem>Spam</DropdownMenuItem>
+        </DropdownMenuGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
+    <DeleteDialog open={isDeleteDialogOpen} onClose={handleDeleteDialogClose} />
+    </>
+  );
 }
