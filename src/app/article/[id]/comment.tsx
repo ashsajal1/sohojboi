@@ -14,6 +14,9 @@ import {
 import CommentForm from './comment-form';
 import prisma from '@/lib/prisma';
 import Content from '../../../components/content';
+import ReactMarkdown from 'react-markdown';
+import { Ellipsis, EllipsisIcon, Menu } from 'lucide-react';
+import CommentDropDown from './comment-drop-down';
 
 interface CommentProps {
     comment: PrismaComment;
@@ -31,7 +34,10 @@ export default async function Comment({ comment }: CommentProps) {
         <Card className={`mt-2`} key={comment.id}>
             <CardHeader>
                 <CardDescription>
-                    <Content content={comment.content} />
+                    <div className='flex items-center justify-between'>
+                        <ReactMarkdown>{comment.content}</ReactMarkdown>
+                        <CommentDropDown commentId={comment.id} />
+                    </div>
                 </CardDescription>
                 <ProfileImgCard
                     type={'comment'}
