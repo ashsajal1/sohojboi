@@ -14,35 +14,37 @@ datasource db {
 }
 
 model Question {
-  id                  String   @id @default(auto()) @map("_id") @db.ObjectId
+  id                  String    @id @default(auto()) @map("_id") @db.ObjectId
   userId              String
   questionTitle       String
   questionDescription String
-  upvoteCount         Int      @default(0)
+  upvoteCount         Int       @default(0)
   answers             Answer[]
-  createdAt           DateTime @default(now())
-  updatedAt           DateTime @updatedAt
   userFirstName       String
   userLastName        String
   userFullName        String
-  topicId             String?  @db.ObjectId
-  topic               Topic?   @relation(fields: [topicId], references: [id])
+  topicId             String?   @db.ObjectId
+  topic               Topic?    @relation(fields: [topicId], references: [id])
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+  deletedAt           DateTime?
 }
 
 model Answer {
-  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
   userId        String
-  questionId    String   @db.ObjectId
+  questionId    String    @db.ObjectId
   answer        String
-  upvoteCount   Int      @default(0)
-  question      Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  upvoteCount   Int       @default(0)
+  question      Question  @relation(fields: [questionId], references: [id], onDelete: Cascade)
   userFirstName String
   userLastName  String
   userFullName  String
-  topicId       String?  @db.ObjectId
-  topic         Topic?   @relation(fields: [topicId], references: [id])
+  topicId       String?   @db.ObjectId
+  topic         Topic?    @relation(fields: [topicId], references: [id])
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  deletedAt     DateTime?
 }
 
 enum ChallengeQuestionStatus {
