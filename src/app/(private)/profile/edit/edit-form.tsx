@@ -55,7 +55,7 @@ export default function EditForm({ userData }: { userData: UserDataProps }) {
                 {errors.address && <p className='text-red-500 text-sm'>{errors.address.message}</p>}
             </div>
             <div>
-                <Input defaultValue={userData.grade} disabled={pending} placeholder='Enter grade' {...register('grade')} />
+                <Input defaultValue={userData.grade} disabled={pending} placeholder='Enter class eg, 9, 10, 11, 12' {...register('grade')} />
                 {errors.grade && <p className='text-red-500 text-sm'>{errors.grade.message}</p>}
             </div>
             <Button disabled={pending} type='submit'>

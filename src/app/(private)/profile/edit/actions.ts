@@ -20,6 +20,8 @@ export const createOrUpdateProfile = async (data: EditFormSchema, currentUserId:
       },
       update: {
         bio: data.bio,
+        grade: parseInt(data.grade),
+        address: data.address,
       },
       create: {
         clerkUserId: currentUserId,
