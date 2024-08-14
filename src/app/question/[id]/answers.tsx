@@ -6,17 +6,15 @@ import { Question, type Answer } from "@prisma/client";
 import { chekcIsAnswerUpvoted } from "@/lib/utils";
 import ProfileImgCard from "@/components/profile-img-card";
 import { Button } from "@/components/ui/button";
-import { DotsHorizontalIcon, GearIcon, Pencil1Icon, TrashIcon } from "@radix-ui/react-icons";
+import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import {
     HoverCard,
     HoverCardContent,
     HoverCardTrigger,
 } from "@/components/ui/hover-card"
-import Link from "next/link";
 import DeleteAnswer from "./delete-answer";
 import EditAnswer from "./edit-answer";
 import ReactMarkdown from 'react-markdown';
-import Content from "@/components/content";
 
 interface AnswersProps {
     answers: Answer[];
@@ -56,7 +54,7 @@ const Answer = async ({ answer, question }: { answer: Answer, question: Question
         <CardHeader>
             <div className="flex justify-between items-start">
                 <CardDescription>
-                    <Content content={answer.answer} />
+                    <ReactMarkdown>{answer.answer}</ReactMarkdown>
                 </CardDescription>
                 {user.userId === answer?.userId && <HoverCard>
                     <HoverCardTrigger>
