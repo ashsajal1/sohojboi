@@ -1,7 +1,7 @@
 import { type Comment as PrismaComment } from '@prisma/client';
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader } from '@/components/ui/card';
-import { auth, clerkClient } from '@clerk/nextjs/server';
+import { auth, clerkClient, currentUser } from '@clerk/nextjs/server';
 import ProfileImgCard from '@/components/profile-img-card';
 import { Button } from '@/components/ui/button';
 
@@ -17,19 +17,23 @@ import Content from '../../../components/content';
 import ReactMarkdown from 'react-markdown';
 import { Ellipsis, EllipsisIcon, Menu } from 'lucide-react';
 import CommentDropDown from './comment-drop-down';
+import { checkRole } from '@/lib/roles';
 
 interface CommentProps {
     comment: PrismaComment;
-}
+};
 
 export default async function Comment({ comment }: CommentProps) {
-    const currentUser = auth();
+    const cUser = await currentUser();
     const user = await clerkClient().users.getUser(comment.authorId);
     const commentReplies = await prisma.comment.findMany({
         where: {
             parentId: comment.id
         }
-    })
+    });
+
+    const hasPermission = cUser?.id === comment.articleId || checkRole("admin")
+
     return (
         <Card className={`mt-2`} key={comment.id}>
             <CardHeader>
@@ -45,7 +49,7 @@ export default async function Comment({ comment }: CommentProps) {
                     createdAt={comment.createdAt}
                 />
                 <div>
-                    {currentUser.userId && <Accordion type="single" collapsible className="w-full">
+                    {cUser?.id && <Accordion type="single" collapsible className="w-full">
                         <AccordionItem value="item-1">
                             <AccordionTrigger>
                                 <Button>Reply</Button>
