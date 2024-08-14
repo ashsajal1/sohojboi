@@ -14,7 +14,7 @@ import { Ellipsis } from "lucide-react";
 import DeleteDialog from "./delete-dialog";
 import EditDialog from "./edit-dialog";
 
-export default function CommentDropDown({ commentId, commentText }: { commentId: string, commentText: string }) {
+export default function CommentDropDown({ commentId, commentText, hasPermission }: { commentId: string, commentText: string, hasPermission : boolean }) {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 
@@ -37,7 +37,8 @@ export default function CommentDropDown({ commentId, commentText }: { commentId:
 
         <DropdownMenuContent>
           <DropdownMenuGroup>
-            <DropdownMenuLabel>Comment Options</DropdownMenuLabel>
+            {hasPermission && <>
+              <DropdownMenuLabel>Comment Options</DropdownMenuLabel>
             <DropdownMenuItem onClick={() => setIsEditDialogOpen(true)}>
               <Pencil1Icon className="mr-1 h-4 w-4" />
               Edit
@@ -45,7 +46,7 @@ export default function CommentDropDown({ commentId, commentText }: { commentId:
             <DropdownMenuItem onClick={handleDeleteClick}>
               <TrashIcon className="mr-1 h-4 w-4" />
               Delete
-            </DropdownMenuItem>
+            </DropdownMenuItem></>}
             <DropdownMenuLabel>Reports</DropdownMenuLabel>
             <DropdownMenuItem>Spam</DropdownMenuItem>
           </DropdownMenuGroup>
