@@ -17,6 +17,9 @@ export default async function Page({ searchParams }: { searchParams: { page: str
     const articles = await prisma.article.findMany({
         skip: skipSize,
         take: 10,
+        where: {
+            deletedAt: null
+        },
         include: {
             comments: true
         },
