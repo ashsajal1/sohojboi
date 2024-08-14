@@ -16,8 +16,13 @@ const editFormSchema = z.object({
 });
 
 export type EditFormSchema = z.infer<typeof editFormSchema>;
-
-export default function EditForm() {
+export interface UserDataProps {
+    name: string,
+    bio: string,
+    address: string,
+    grade: number
+}
+export default function EditForm({userData}:{userData: UserDataProps}) {
     const {
         register,
         handleSubmit,
@@ -25,7 +30,6 @@ export default function EditForm() {
     } = useForm<EditFormSchema>({
         resolver: zodResolver(editFormSchema),
     });
-
     const [pending, startTransition] = useTransition()
 
     const onSubmit = (data: EditFormSchema) => {
@@ -37,19 +41,19 @@ export default function EditForm() {
     return (
         <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-2'>
             <div>
-                <Input disabled={pending} placeholder='Enter name..' {...register('name')} />
+                <Input defaultValue={userData.name} disabled={pending} placeholder='Enter name..' {...register('name')} />
                 {errors.bio && <p className='text-red-500 text-sm'>{errors.bio.message}</p>}
             </div>
             <div>
-                <Textarea disabled={pending} placeholder='Enter bio..' {...register('bio')} />
+                <Textarea defaultValue={userData.bio} disabled={pending} placeholder='Enter bio..' {...register('bio')} />
                 {errors.bio && <p className='text-red-500 text-sm'>{errors.bio.message}</p>}
             </div>
             <div>
-                <Input disabled={pending} placeholder='Enter address' {...register('address')} />
+                <Input defaultValue={userData.address} disabled={pending} placeholder='Enter address' {...register('address')} />
                 {errors.address && <p className='text-red-500 text-sm'>{errors.address.message}</p>}
             </div>
             <div>
-                <Input disabled={pending} placeholder='Enter grade' {...register('grade')} />
+                <Input defaultValue={userData.grade} disabled={pending} placeholder='Enter grade' {...register('grade')} />
                 {errors.grade && <p className='text-red-500 text-sm'>{errors.grade.message}</p>}
             </div>
             <Button disabled={pending} type='submit'>

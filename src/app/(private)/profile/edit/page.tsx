@@ -1,10 +1,27 @@
 import React from 'react'
-import EditForm from './edit-form'
+import EditForm, { UserDataProps } from './edit-form'
+import { currentUser } from '@clerk/nextjs/server';
+import prisma from '@/lib/prisma';
 
-export default function page() {
+export default async function page() {
+  let userData: UserDataProps;
+  const thisUser = await currentUser();
+  const dbUser = await prisma.profile.findUnique({
+    where: {
+      clerkUserId: thisUser?.id
+    }
+  })
+
+  userData = {
+    name: thisUser?.fullName!,
+    bio: dbUser?.bio || '',
+    address: dbUser?.address!,
+    grade: dbUser?.grade!
+  }
+
   return (
     <div>
-        <EditForm />
+      <EditForm userData={userData} />
     </div>
   )
 }
