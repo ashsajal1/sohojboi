@@ -9,7 +9,6 @@ export const createArticle = async (
   content: string,
   topicId: string
 ) => {
-
   let newArticle;
   try {
     const authorId = await auth().userId;
@@ -18,12 +17,13 @@ export const createArticle = async (
         title: title,
         content: content,
         authorId: authorId!,
-        topicId: topicId
+        topicId: topicId,
+        deletedAt: null,
       },
     });
   } catch (error) {
-    throw new Error("Cannot create article!")
+    throw new Error("Cannot create article!");
   }
 
-  redirect(`/article/${newArticle.id}`)
+  redirect(`/article/${newArticle.id}`);
 };

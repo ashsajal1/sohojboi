@@ -49,6 +49,7 @@ export const createComment = async (
           articleId: articleId,
           content: content,
           authorId: authorId,
+          deletedAt: null,
         },
       });
     } else if (commentType.type === "nestedComment") {

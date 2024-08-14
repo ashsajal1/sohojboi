@@ -38,10 +38,13 @@ export const deleteArticle = async (article: Article) => {
     if (currentUserId !== article.authorId) {
       throw new Error("Unauthorized access!");
     }
-    const deletedArticle = await prisma.article.delete({
+    const deletedArticle = await prisma.article.update({
       where: {
         id: article.id,
       },
+      data: {
+        deletedAt: new Date(),
+      }
     });
 
     if (deletedArticle) {
