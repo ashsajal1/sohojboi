@@ -40,7 +40,7 @@ export default async function Comment({ comment }: CommentProps) {
                 <CardDescription>
                     <div className='flex items-center justify-between'>
                         <ReactMarkdown>{comment.content}</ReactMarkdown>
-                        <CommentDropDown hasPermission={false} commentText={comment.content} commentId={comment.id} />
+                        <CommentDropDown hasPermission={hasPermission} commentText={comment.content} commentId={comment.id} />
                     </div>
                 </CardDescription>
                 <ProfileImgCard
