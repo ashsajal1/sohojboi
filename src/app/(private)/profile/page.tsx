@@ -124,16 +124,20 @@ export default async function Page({ searchParams }: { searchParams: { id: strin
                 </TabsList>
 
                 <TabsContent className="flex flex-col gap-2" value="questions">
+                    {questions.length === 0 && <h3 className="text-center p-4 font-bold text-xl">No questions found!</h3>}
                     {questions.map(question => (
                         <QuestionCard key={question.id} question={question} />
                     ))}
                 </TabsContent>
                 <TabsContent value="answers">
+                    {answers.length === 0 && <h3 className="text-center p-4 font-bold text-xl">No answers found!</h3>}
+
                     {questions.map(question => (
                         <Answers key={question.id} question={question} answers={answers.filter(answer => answer.questionId === question.id)} />
                     ))}
                 </TabsContent>
                 <TabsContent className="grid md:grid-cols-2 gap-2" value="challenges">
+                    {challenges.length === 0 && <h3 className="text-center p-4 font-bold text-xl">No challenges found!</h3>}
                     {challenges.map(challenge => (
                         <Card key={challenge.id}>
                             <CardHeader>
