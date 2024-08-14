@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Textarea } from "@/components/ui/textarea";
 import prisma from "@/lib/prisma"
 import { isValidObjectId } from "@/lib/validate";
 import { revalidatePath } from "next/cache";
@@ -9,12 +8,11 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { clerkClient, currentUser } from '@clerk/nextjs/server';
 import { Answers } from "./answers";
-import { Input } from "@/components/ui/input";
 import { NotificationType, type Question } from "@prisma/client";
 import UpvoteBtn from "../upvote-btn";
 import ProfileImgCard from "@/components/profile-img-card";
 import { chekcIsQuestionUpvoted } from "@/lib/utils";
-import { CaretUpIcon, DotsHorizontalIcon, EyeOpenIcon, GearIcon, Pencil1Icon, TrashIcon } from "@radix-ui/react-icons";
+import { CaretUpIcon, DotsHorizontalIcon, EyeOpenIcon, Pencil1Icon, TrashIcon } from "@radix-ui/react-icons";
 import {
     HoverCard,
     HoverCardContent,
@@ -60,39 +58,6 @@ export async function generateMetadata({ params }: Params) {
 }
 export default async function Question({ params }: Params) {
     const user = await currentUser();
-
-    const postAnswer = async (formData: FormData) => {
-        "use server"
-        const answerText = await formData.get("answerText");
-        const questionUserId = await formData.get("userId");
-        if (answerText) {
-            const answer = await prisma.answer.create({
-                data: {
-                    userId: user?.id as string,
-                    questionId: params.id,
-                    upvoteCount: 0,
-                    answer: answerText as string,
-                    userFirstName: user?.firstName as string,
-                    userLastName: user?.lastName as string,
-                    userFullName: user?.fullName as string,
-                },
-            });
-
-            if (user?.id !== questionUserId) {
-                const notif = await prisma.notification.create({
-                    data: {
-                        userId: questionUserId as string,
-                        message: `${user?.fullName} has answered your questions.`,
-                        type: NotificationType.ANSWER,
-                        answerId: answer.id,
-                        questionId: answer.questionId
-                    }
-                })
-            }
-
-            revalidatePath(`/question/${params.id}`)
-        }
-    }
 
     let question = null;
     let profileImageSrc;
