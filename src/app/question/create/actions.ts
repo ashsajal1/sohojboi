@@ -38,6 +38,7 @@ export const createQuestion = async (_: any, formData: FormData) => {
         userLastName: user?.lastName as string,
         userFullName: user?.fullName as string,
         topicId: topic as string,
+        deletedAt: null,
       },
     });
   } catch (error) {

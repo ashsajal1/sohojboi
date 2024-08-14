@@ -18,6 +18,9 @@ export default async function Page({ searchParams }: { searchParams: { page: str
     const questions = await prisma.question.findMany({
         skip: skipSize,
         take: 10,
+        where: {
+            deletedAt: null
+        },
         orderBy: {
             createdAt: 'desc'
         }

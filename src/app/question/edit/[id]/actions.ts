@@ -5,10 +5,13 @@ import { redirect } from "next/navigation";
 
 export const deleteQuestion = async (questionId: string) => {
   try {
-    const deletedQuestion = await prisma.question.delete({
+    const deletedQuestion = await prisma.question.update({
       where: {
         id: questionId,
       },
+      data: {
+        deletedAt: new Date(),
+      }
     });
 
     // console.log(deletedQuestion);
