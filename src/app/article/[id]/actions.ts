@@ -28,7 +28,12 @@ export const createComment = async (
   parentId?: string
 ) => {
   // Validate input
-  const parsed = commentSchema.safeParse({ articleId, content, commentType, parentId });
+  const parsed = commentSchema.safeParse({
+    articleId,
+    content,
+    commentType,
+    parentId,
+  });
   if (!parsed.success) {
     throw new Error(parsed.error.errors.map((e) => e.message).join(", "));
   }
@@ -65,7 +70,6 @@ export const createComment = async (
     throw error;
   }
 };
-
 
 export const handleUpvote = async (article: Article) => {
   const actorId = await auth().userId;
@@ -114,7 +118,7 @@ export const handleUpvote = async (article: Article) => {
           userId: article.authorId,
           type: NotificationType.UPVOTE_ARTICLE,
           message: message,
-          articleId: article.id
+          articleId: article.id,
         },
       });
     }
@@ -125,17 +129,20 @@ export const handleUpvote = async (article: Article) => {
 
 export const deleteComment = async (commentId: string) => {
   try {
-    await prisma.comment.delete({
+    await prisma.comment.update({
       where: {
         id: commentId,
-      }
-    })
+      },
+      data: {
+        deletedAt: new Date(),
+      },
+    });
 
-    revalidatePath("/")
+    revalidatePath("/");
   } catch (error) {
-    throw new Error("Cannot delete comment")
+    throw new Error("Cannot delete comment");
   }
-}
+};
 
 export const editComment = async (commentId: string, value: string) => {
   try {
@@ -145,11 +152,11 @@ export const editComment = async (commentId: string, value: string) => {
       },
       data: {
         content: value,
-      }
-    })
+      },
+    });
 
-    revalidatePath("/")
+    revalidatePath("/");
   } catch (error) {
-    throw new Error("Cannot edit comment")
+    throw new Error("Cannot edit comment");
   }
-}
+};
