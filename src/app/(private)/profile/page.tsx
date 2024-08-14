@@ -22,6 +22,7 @@ import { calculateWinPercentage, getWinnerLoser } from "./lib/utils";
 import ProfileData from "./profile-data";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import Answer from "./answer";
 
 export async function generateMetadata({ searchParams }: { searchParams: { id: string } }) {
     let user: User | null;
@@ -132,8 +133,8 @@ export default async function Page({ searchParams }: { searchParams: { id: strin
                 <TabsContent value="answers">
                     {answers.length === 0 && <h3 className="text-center p-4 font-bold text-xl">No answers found!</h3>}
 
-                    {questions.map(question => (
-                        <Answers key={question.id} question={question} answers={answers.filter(answer => answer.questionId === question.id)} />
+                    {answers.map(answer => (
+                        <Answer key={answer.id} answer={answer}></Answer>
                     ))}
                 </TabsContent>
                 <TabsContent className="grid md:grid-cols-2 gap-2" value="challenges">
