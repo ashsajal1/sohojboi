@@ -1,7 +1,7 @@
 import { type Comment as PrismaComment } from '@prisma/client';
 import React from 'react';
-import { Card, CardContent, CardDescription, CardHeader } from '@/components/ui/card';
-import { auth, clerkClient, currentUser } from '@clerk/nextjs/server';
+import { Card, CardDescription, CardHeader } from '@/components/ui/card';
+import { clerkClient, currentUser } from '@clerk/nextjs/server';
 import ProfileImgCard from '@/components/profile-img-card';
 import { Button } from '@/components/ui/button';
 
@@ -15,7 +15,6 @@ import CommentForm from './comment-form';
 import prisma from '@/lib/prisma';
 import Content from '../../../components/content';
 import ReactMarkdown from 'react-markdown';
-import { Ellipsis, EllipsisIcon, Menu } from 'lucide-react';
 import CommentDropDown from './comment-drop-down';
 import { checkRole } from '@/lib/roles';
 
