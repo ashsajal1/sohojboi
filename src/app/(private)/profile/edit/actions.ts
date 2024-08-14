@@ -13,16 +13,16 @@ export const createOrUpdateProfile = async (data: EditFormSchema, currentUserId:
         lastName: data.name.split(" ")[1] || "",
       });
     }
-    const user = await currentUser();
+
     const updatedProfile = await prisma.profile.upsert({
       where: {
-        clerkUserId: user?.id,
+        clerkUserId: currentUserId,
       },
       update: {
         bio: data.bio,
       },
       create: {
-        clerkUserId: user?.id,
+        clerkUserId: currentUserId,
         bio: data.bio,
         grade: parseInt(data.grade),
         address: data.address,
