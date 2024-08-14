@@ -7,9 +7,9 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { createOrUpdateProfile } from './actions';
-import { DataTable } from '@/app/(admin)/admin/panel/@questions/data-table';
 
 const editFormSchema = z.object({
+    name: z.string().min(1, { message: 'Name is required' }),
     bio: z.string().min(1, { message: 'Bio is required' }),
     address: z.string().min(1, { message: 'Address is required' }),
     grade: z.string().min(1, { message: 'Grade is required' }),
@@ -36,6 +36,10 @@ export default function EditForm() {
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-2'>
+            <div>
+                <Input disabled={pending} placeholder='Enter name..' {...register('name')} />
+                {errors.bio && <p className='text-red-500 text-sm'>{errors.bio.message}</p>}
+            </div>
             <div>
                 <Textarea disabled={pending} placeholder='Enter bio..' {...register('bio')} />
                 {errors.bio && <p className='text-red-500 text-sm'>{errors.bio.message}</p>}
