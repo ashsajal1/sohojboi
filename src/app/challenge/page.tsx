@@ -73,20 +73,23 @@ export default async function page({ searchParams }: { searchParams: any }) {
       </div>}
 
       {/* Display a list of pending challenges */}
-      {(!showQuiz) && competitions.map(c => (
-        <Card key={c.id}>
-          <CardHeader>
-            <CardTitle>
-              {c.title}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Link href={`/challenge/accept?competitionId=${c.id}`}>
-              <Button>Accept Challange</Button>
-            </Link>
-          </CardContent>
-        </Card>
-      ))}
+      <div className='grid grid-cols-1 w-full md:grid-cols-3 gap-2'>
+        {(!showQuiz) && competitions.map(c => (
+          <Card className='w-full' key={c.id}>
+            <CardHeader>
+              <CardTitle>
+                {c.title}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className='flex flex-col gap-2'>
+              <Link href={`/challenge/accept?competitionId=${c.id}`}>
+                <Button variant="outline" className='w-full' size={'sm'}>Accept Challange</Button>
+              </Link>
+              <Button variant="destructive" className='w-full' size={'sm'}>Decline Challange</Button>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
 
       {/* Display the Challenge Quiz component if an opponent is selected */}
       {showQuiz && <Challange quizId={questions![0].id} challengerId={user.userId as string} challengeeId={challengeeId} quizQuestions={questions!} />}
