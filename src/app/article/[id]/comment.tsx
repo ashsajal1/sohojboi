@@ -32,7 +32,7 @@ export default async function Comment({ comment }: CommentProps) {
         }
     });
 
-    const hasPermission = cUser?.id === comment.articleId || checkRole("admin")
+    const hasPermission = cUser?.id === comment.authorId || checkRole("admin")
 
     return (
         <Card className={`mt-2`} key={comment.id}>
