@@ -9,9 +9,8 @@ export const createOrUpdateProfile = async (data: EditFormSchema, currentUserId:
   try {
     if (data.name.length > 0) {
       await clerkClient().users.updateUser(currentUserId, {
-        publicMetadata: {
-          fullName: data.name,
-        },
+        firstName: data.name.split(" ")[0],
+        lastName: data.name.split(" ")[1] || "",
       });
     }
     const user = await currentUser();
