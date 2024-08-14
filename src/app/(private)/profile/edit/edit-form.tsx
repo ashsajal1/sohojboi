@@ -20,9 +20,10 @@ export interface UserDataProps {
     name: string,
     bio: string,
     address: string,
-    grade: number
+    grade: number,
+    id: string,
 }
-export default function EditForm({userData}:{userData: UserDataProps}) {
+export default function EditForm({ userData }: { userData: UserDataProps }) {
     const {
         register,
         handleSubmit,
@@ -34,7 +35,7 @@ export default function EditForm({userData}:{userData: UserDataProps}) {
 
     const onSubmit = (data: EditFormSchema) => {
         startTransition(async () => {
-            await createOrUpdateProfile(data)
+            await createOrUpdateProfile(data, userData.id)
         })
     }
 

@@ -2,11 +2,18 @@
 
 import prisma from "@/lib/prisma";
 import { EditFormSchema } from "./edit-form";
-import { currentUser } from "@clerk/nextjs/server";
+import { clerkClient, currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 
-export const createOrUpdateProfile = async (data: EditFormSchema) => {
+export const createOrUpdateProfile = async (data: EditFormSchema, currentUserId: string) => {
   try {
+    if (data.name.length > 0) {
+      await clerkClient().users.updateUser(currentUserId, {
+        publicMetadata: {
+          fullName: data.name,
+        },
+      });
+    }
     const user = await currentUser();
     const updatedProfile = await prisma.profile.upsert({
       where: {

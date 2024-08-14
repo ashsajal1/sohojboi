@@ -16,7 +16,8 @@ export default async function page() {
     name: thisUser?.fullName!,
     bio: dbUser?.bio || '',
     address: dbUser?.address!,
-    grade: dbUser?.grade!
+    grade: dbUser?.grade!,
+    id: thisUser?.id!
   }
 
   return (
