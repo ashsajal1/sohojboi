@@ -91,10 +91,13 @@ export const handleUpvote = async (
 
 export const deleteAnswer = async (answerId: string, questionId: string) => {
   try {
-    const deletedQuestion = await prisma.answer.delete({
+    const deletedQuestion = await prisma.answer.update({
       where: {
         id: answerId,
       },
+      data: {
+        deletedAt: new Date(),
+      }
     });
   } catch (error) {}
 
@@ -132,6 +135,7 @@ export const createAnswer = async (_: any, formData: FormData) => {
           userFirstName: user?.firstName as string,
           userLastName: user?.lastName as string,
           userFullName: user?.fullName as string,
+          deletedAt: null,
         },
       });
 
@@ -191,7 +195,7 @@ export const increaseView = async (userId: string, questionId: string) => {
     create: {
       userId: userId,
       count: 1,
-      questionId: questionId
+      questionId: questionId,
     },
   });
 };

@@ -105,7 +105,11 @@ export default async function Question({ params }: Params) {
                     id: params.id,
                 },
                 include: {
-                    answers: true,
+                    answers: {
+                        where: {
+                            deletedAt: null,
+                        }
+                    },
                     topic: true,
                 }
             });
