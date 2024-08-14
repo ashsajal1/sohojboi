@@ -19,13 +19,14 @@ export default function Select({ users, userId }: { users: User[], userId: strin
     const filteredUsers = users.filter(user => user.id != userId)
 
     return (
-        <div className="flex flex-wrap gap-2">
+        <div className="grid grid-cols-1 w-full md:grid-cols-3 gap-2">
             {filteredUsers.map(user => (
-                <Card className="flex items-center justify-between p-4 gap-2" key={user.id}>
-                    <Image className="rounded-full" width={30} height={30} src={user.imageUrl} alt={"Profile image"} />
-                    <CardTitle>{user.firstName} {user.lastName}</CardTitle>
-                    <Button onClick={() => handleSearchParms(user.id)}>Select user</Button>
-
+                <Card className="flex w-full items-center justify-between p-4 gap-2" key={user.id}>
+                    <div className="flex items-center gap-2">
+                        <Image className="rounded-full" width={30} height={30} src={user.imageUrl} alt={"Profile image"} />
+                        <CardTitle>{user.firstName} {user.lastName}</CardTitle>
+                    </div>
+                    <Button size="sm" variant="outline" onClick={() => handleSearchParms(user.id)}>Select</Button>
                 </Card>
             ))}
         </div>

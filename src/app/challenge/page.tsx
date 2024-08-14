@@ -67,7 +67,7 @@ export default async function page({ searchParams }: { searchParams: any }) {
     <div className='flex flex-col items-center gap-2'>
 
       {/* Display the Select component if no opponent is selected */}
-      {(!showQuiz) && <div className='mb-2'>
+      {(!showQuiz) && <div className='mb-2 w-full'>
         <h1 className='p-4 text-center font-bold'>Select opponent</h1>
         <Select users={users} userId={user.userId as string} />
       </div>}
