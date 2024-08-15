@@ -7,7 +7,7 @@ import Comment from './comment'
 // import ReactMarkdown from 'react-markdown';
 import remarkGfm from "remark-gfm";
 import { Metadata } from 'next';
-import { auth } from '@clerk/nextjs/server';
+import { auth, clerkClient } from '@clerk/nextjs/server';
 import { increaseView } from '@/app/_actions/increase-view';
 import ProfileImgCard from '@/components/profile-img-card';
 import UpvoteArticle from './upvote';
@@ -18,15 +18,29 @@ import Link from 'next/link';
 
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
     const articleId = params.id;
-
     const article = await prisma.article.findUnique({
         where: {
             id: articleId
         }
-    })
+    });
+
+    const author = await clerkClient().users.getUser(article?.authorId!);
+    const profileImg = await author.imageUrl;
+    const authorName = await author.fullName;
+    const formattedDate = new Date(article?.createdAt!).toLocaleDateString('en-US', {
+        day: 'numeric',
+        year: 'numeric',
+        month: 'short',
+    });
+
+    const ogImage = `/api/og?title=${article?.title}&profileImg=${profileImg}&date=${formattedDate}&authorName=${authorName}`
+
     return {
         title: article?.title,
-        description: article?.content.slice(1, 150)
+        description: article?.content.slice(1, 150),
+        openGraph: {
+            images: [ogImage]
+        }
     }
 }
 
