@@ -21,6 +21,7 @@ import {
 import AnswerForm from "./answer-form";
 import { increaseView } from "./actions";
 import ReactMarkDown from 'react-markdown';
+import { Metadata } from "next";
 
 interface Params {
     params: {
@@ -28,9 +29,9 @@ interface Params {
     }
 }
 
-export async function generateMetadata({ params }: Params) {
+export async function generateMetadata({ params }: Params): Promise<Metadata> {
     let question = null;
-
+    
     if (isValidObjectId(params.id)) {
         try {
             question = await prisma.question.findUnique({
@@ -50,10 +51,23 @@ export async function generateMetadata({ params }: Params) {
         throw new Error('Invalid ObjectId');
     }
 
+    const author = await clerkClient().users.getUser(question?.userId!);
+    const profileImg = await author.imageUrl;
+    const authorName = await author.fullName;
+    const formattedDate = new Date(question?.createdAt!).toLocaleDateString('en-US', {
+        day: 'numeric',
+        year: 'numeric',
+        month: 'short',
+    });
+
+    const ogImage = `/api/og?title=${question?.questionTitle}&profileImg=${profileImg}&date=${formattedDate}&authorName=${authorName}`
+
     return {
         title: question?.questionTitle,
         description: question?.questionDescription.slice(1, 150),
-        tags: question?.questionTitle.split(' ')
+        openGraph: {
+            images: [ogImage]
+        }
     }
 }
 export default async function Question({ params }: Params) {
