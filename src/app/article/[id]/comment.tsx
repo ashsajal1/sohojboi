@@ -99,6 +99,7 @@ export default async function Comment({ comment }: CommentProps) {
 
 const Reply = async ({ reply, userId, parentId, cUser }: { reply: PrismaComment, userId: string, parentId: string, cUser: User }) => {
     let isUpvoted;
+    const hasPermission = cUser?.id === reply.authorId || checkRole("admin")
 
     if (cUser?.id) {
         isUpvoted = await prisma.upvote.findUnique({
@@ -124,7 +125,11 @@ const Reply = async ({ reply, userId, parentId, cUser }: { reply: PrismaComment,
     return <Card className={`ml-4 mt-2`} key={reply.id}>
         <CardHeader>
             <CardDescription>
-                <Content content={reply.content} />
+                <div className='flex items-center justify-between'>
+                    <Content content={reply.content} />
+                    <CommentDropDown hasPermission={hasPermission} commentText={reply.content} commentId={reply.id} />
+                </div>
+
             </CardDescription>
 
             <div className='flex items-center justify-between'>
