@@ -9,11 +9,9 @@ import { useForm, Controller } from 'react-hook-form';
 import { z } from 'zod';
 import { PopoverTrigger, Popover, PopoverContent } from "@/components/ui/popover";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
-import { Label } from '@/components/ui/label';
 import { Topic } from '@prisma/client';
-import { ArrowUpIcon, CheckIcon, PlusCircledIcon, TrashIcon } from "@radix-ui/react-icons"
+import { ArrowUpIcon, CheckIcon } from "@radix-ui/react-icons"
 import { cn } from '@/lib/utils';
-import { create } from 'domain';
 import { createArticle } from './actions';
 import LoaderIcon from '@/components/loader-icon';
 
@@ -29,7 +27,6 @@ type FormData = z.infer<typeof articleSchema>;
 
 const CreateArticleForm = ({ topics }: { topics: Topic[] }) => {
     const [open, setOpen] = useState(false);
-    const [selectedTopic, setSelectedTopic] = useState('');
     const [pending, startTransition] = useTransition();
     const { control, register, handleSubmit, formState: { errors } } = useForm<FormData>({
         resolver: zodResolver(articleSchema)
