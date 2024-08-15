@@ -129,6 +129,7 @@ enum NotificationType {
   UPVOTE_QUESTION
   UPVOTE_ANSWER
   UPVOTE_ARTICLE
+  UPVOTE_COMMENT
 }
 
 model Notification {
@@ -142,6 +143,7 @@ model Notification {
   answerId      String?          @db.ObjectId
   questionId    String?          @db.ObjectId
   articleId     String?          @db.ObjectId
+  commentId     String?          @db.ObjectId
   createdAt     DateTime         @default(now())
   updatedAt     DateTime         @updatedAt
 }
@@ -154,11 +156,13 @@ model Upvote {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   articleId  String?  @db.ObjectId
+  commentId  String?  @db.ObjectId
   Article    Article? @relation("ArticleUpvotes", fields: [articleId], references: [id])
 
   @@unique([userId, answerId])
   @@unique([userId, questionId])
   @@unique([userId, articleId])
+  @@unique([userId, commentId])
 }
 
 model View {

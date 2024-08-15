@@ -2,7 +2,7 @@
 
 import prisma from "@/lib/prisma";
 import { auth, clerkClient } from "@clerk/nextjs/server";
-import { Article, NotificationType } from "@prisma/client";
+import { Article, Comment, NotificationType } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
@@ -161,3 +161,59 @@ export const editComment = async (commentId: string, value: string) => {
     throw new Error("Cannot edit comment");
   }
 };
+
+export const handleCommentUpvote = async (comment: Comment) => {
+  const actorId = await auth().userId;
+  if (!actorId) redirect("/login");
+  const actor = await clerkClient().users.getUser(actorId!);
+  const actorName = actor.fullName || `${actor.firstName} ${actor.lastName}`;
+
+  const existingUpvote = await prisma.upvote.findUnique({
+    where: {
+      userId_commentId: {
+        userId: actorId,
+        commentId: comment.id,
+      },
+    },
+  });
+
+  if (existingUpvote) {
+    await prisma.upvote.delete({
+      where: {
+        userId_commentId: {
+          userId: actorId,
+          commentId: comment.id,
+        },
+      },
+    });
+
+    await prisma.notification.deleteMany({
+      where: {
+        commentId: comment.id,
+        type: NotificationType.UPVOTE_COMMENT,
+      },
+    });
+  } else {
+    await prisma.upvote.create({
+      data: {
+        userId: actorId,
+        commentId: comment.id,
+      },
+    });
+
+    const message = `${actorName} upvoted your comment of ${comment.content}`;
+
+    if (actorId !== comment.authorId) {
+      const notif = await prisma.notification.create({
+        data: {
+          userId: comment.authorId,
+          type: NotificationType.UPVOTE_ARTICLE,
+          message: message,
+          articleId: comment.id,
+        },
+      });
+    }
+  }
+
+  revalidatePath("/");
+}
