@@ -2,16 +2,15 @@
 'use client';
 
 import { AppProgressBar as ProgressBar } from 'next-nprogress-bar';
-import { useTheme } from "next-themes"
 
 const Nprogress = () => {
-  const { theme } = useTheme();
-  // console.log(theme)
+  const randomHighlightColors = ['#cafc03', '#fc3503', '#030bfc','#f403fc', '#03d7fc'];
+  const randomColor = randomHighlightColors[Math.floor(Math.random() * randomHighlightColors.length)];
   return (
     <>
       <ProgressBar
         height="3px"
-        color={theme === 'dark'? '#fff':'#000'}
+        color={randomColor}
         options={{ showSpinner: false }}
         shallowRouting
       />
