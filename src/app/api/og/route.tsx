@@ -48,7 +48,7 @@ export async function GET(request: NextRequest) {
 
                 <div tw="flex items-center">
                     <img tw="rounded-full" src={profileImg!} width='40' height='40' />
-                    <div tw='flex flex-col items-center ml-4'>
+                    <div tw='flex flex-col items-start ml-4'>
                         <p tw='font-bold text-xl mb-0'>{authorName}</p>
                         <p tw='text-slate-600 mt-0'>{date}</p>
                     </div>
