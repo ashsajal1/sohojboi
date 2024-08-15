@@ -29,11 +29,21 @@ export default async function Comment({ comment }: CommentProps) {
     const commentReplies = await prisma.comment.findMany({
         where: {
             parentId: comment.id
-        }
+        },
     });
 
     const hasPermission = cUser?.id === comment.authorId || checkRole("admin")
 
+    const upvoteCount = await prisma.upvote.aggregate({
+        _count: {
+            userId: true
+        },
+        where: {
+            commentId: {
+                in: [comment?.id!]
+            }
+        }
+    })
     return (
         <Card className={`mt-2`} key={comment.id}>
             <CardHeader>
@@ -50,7 +60,7 @@ export default async function Comment({ comment }: CommentProps) {
                         createdAt={comment.createdAt}
                     />
 
-                    <UpvoteComment comment={comment!} isUpvoted={false} upvoteCount={0} />
+                    <UpvoteComment comment={comment!} isUpvoted={false} upvoteCount={upvoteCount._count.userId} />
                 </div>
                 <div>
                     {cUser?.id && <Accordion type="single" collapsible className="w-full">
