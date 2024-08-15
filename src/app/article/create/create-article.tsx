@@ -15,6 +15,7 @@ import { ArrowUpIcon, CheckIcon, PlusCircledIcon, TrashIcon } from "@radix-ui/re
 import { cn } from '@/lib/utils';
 import { create } from 'domain';
 import { createArticle } from './actions';
+import LoaderIcon from '@/components/loader-icon';
 
 // Define validation schema using zod
 const articleSchema = z.object({
@@ -122,7 +123,7 @@ const CreateArticleForm = ({ topics }: { topics: Topic[] }) => {
                 </div>
 
                 <Button className='w-full mt-4' disabled={pending} type="submit">
-                    {pending ? 'Creating' : 'Create'}
+                    {pending ? <><LoaderIcon /> Creating</> : 'Create'}
                 </Button>
             </form>
 
