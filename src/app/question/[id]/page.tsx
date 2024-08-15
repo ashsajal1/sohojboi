@@ -2,13 +2,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import prisma from "@/lib/prisma"
 import { isValidObjectId } from "@/lib/validate";
-import { revalidatePath } from "next/cache";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { clerkClient, currentUser } from '@clerk/nextjs/server';
 import { Answers } from "./answers";
-import { NotificationType, type Question } from "@prisma/client";
+import { type Question } from "@prisma/client";
 import UpvoteBtn from "../upvote-btn";
 import ProfileImgCard from "@/components/profile-img-card";
 import { chekcIsQuestionUpvoted } from "@/lib/utils";
@@ -74,7 +73,6 @@ export default async function Question({ params }: Params) {
     const user = await currentUser();
 
     let question = null;
-    let profileImageSrc;
     let questionUser;
 
     if (isValidObjectId(params.id)) {
@@ -102,7 +100,6 @@ export default async function Question({ params }: Params) {
 
     try {
         questionUser = await clerkClient().users.getUser(question?.userId || "");
-        profileImageSrc = questionUser.imageUrl;
     } catch (error: any) {
         // throw new Error(error.message)
     }
