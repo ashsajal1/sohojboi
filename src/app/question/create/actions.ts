@@ -3,18 +3,7 @@
 import prisma from "@/lib/prisma";
 import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
-import z from "zod";
-import { logger } from "@/logger";
-const questionSchema = z.object({
-  title: z
-    .string()
-    .min(1, "Title is required")
-    .max(100, "Title must be 100 characters or less"),
-  description: z
-    .string()
-    .min(1, "Description is required")
-    .max(1000, "Description must be 1000 characters or less"),
-});
+import { questionSchema } from "./schema";
 
 export const createQuestion = async (
   title: string,
@@ -41,11 +30,10 @@ export const createQuestion = async (
         topicId: topicId as string,
         deletedAt: null,
       },
-    });
-
-    redirect(`/question/${newQuestion.id}`);
+    });]
   } catch (error) {
-    // logger.error(error);
     return { error: "An unexpected error occurred. Try again." };
   }
+
+  redirect(`/question/${newQuestion.id}`);
 };

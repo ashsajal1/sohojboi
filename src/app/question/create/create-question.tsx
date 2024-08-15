@@ -16,22 +16,8 @@ import {
 } from "@/components/ui/select";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { Topic } from "@prisma/client";
-
-export const questionSchema = z.object({
-  title: z
-    .string()
-    .min(5, "Title must be at least 5 characters")
-    .max(100, "Title must not exceed 100 characters")
-    .nonempty("Title is required"),
-  content: z
-    .string()
-    .min(10, "Content must be at least 10 characters")
-    .max(10000, "Content must not exceed 10000 characters")
-    .nonempty("Content is required"),
-  topicId: z.string({ required_error: "Topic selection is required" }).nonempty("Topic selection is required"),
-});
+import { questionSchema } from "./schema";
 
 const CreateQuestion = ({ topics }: { topics: Topic[] }) => {
   const [pending, startTransition] = useTransition();
@@ -46,13 +32,14 @@ const CreateQuestion = ({ topics }: { topics: Topic[] }) => {
   });
 
   const handleSave = async () => {
+    console.log("Saving question...");
     startTransition(async () => {
-      await createQuestion(
+      const res = await createQuestion(
         formMethods.getValues("title"),
         formMethods.getValues("content"),
         formMethods.getValues("topicId")!,
       );
-      formMethods.reset();
+      console.log(res)
     });
   };
 
