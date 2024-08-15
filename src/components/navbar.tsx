@@ -11,10 +11,11 @@ import Logo from "./logo";
 import Image from "next/image";
 
 import {
-    HoverCard,
-    HoverCardContent,
-    HoverCardTrigger,
-} from "@/components/ui/hover-card"
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+
 import { CircleUser, LayoutDashboard, LogOut, Settings2 } from "lucide-react";
 
 export default async function Navbar() {
@@ -58,14 +59,14 @@ export default async function Navbar() {
                         </Button>
                     </Link>
 
-                    <HoverCard>
-                        <HoverCardTrigger asChild>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
                             <Button variant={'ghost'} size={'icon'} className="rounded-full">
                                 <Image className="contain rounded-full" src={user?.imageUrl!} alt={user?.fullName!} width={30} height={30} />
                             </Button>
-                        </HoverCardTrigger>
+                        </DropdownMenuTrigger>
 
-                        <HoverCardContent className="flex flex-col gap-2">
+                        <DropdownMenuContent className="flex flex-col gap-2 p-4">
                             <Link href={'/profile'} className="w-full">
                                 <Button
                                     variant={'outline'}
@@ -73,14 +74,13 @@ export default async function Navbar() {
                                     className="w-full">
                                     <CircleUser className="w-4 h-4 mr-2" />
                                     Profile</Button>
-
                             </Link>
                             <Link href={'/dashboard'} className="w-full">
                                 <Button
                                     variant={'outline'}
                                     size='sm'
                                     className="w-full">
-                                        <LayoutDashboard className="w-4 h-4 mr-2" />Dashboard</Button>
+                                    <LayoutDashboard className="w-4 h-4 mr-2" />Dashboard</Button>
 
                             </Link>
 
@@ -99,8 +99,8 @@ export default async function Navbar() {
                                 <LogOut className="w-4 h-4 mr-2" />
                                 <SignOutButton />
                             </Button>
-                        </HoverCardContent>
-                    </HoverCard>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
 
                 </SignedIn>
                 <SignedOut>
