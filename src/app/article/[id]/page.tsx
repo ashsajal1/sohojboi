@@ -26,9 +26,14 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
 
     const author = await clerkClient().users.getUser(article?.authorId!);
     const profileImg = await author.imageUrl;
-    const authorName = await author.fullName
+    const authorName = await author.fullName;
+    const formattedDate = new Date(article?.createdAt!).toLocaleDateString('en-US', {
+        day: 'numeric',
+        year: 'numeric',
+        month: 'short',
+    });
 
-    const ogImage = `/api/og?title=${article?.title}&profileImg=${profileImg}&date=${article?.createdAt}&authorName=${authorName}`
+    const ogImage = `/api/og?title=${article?.title}&profileImg=${profileImg}&date=${formattedDate}&authorName=${authorName}`
 
     return {
         title: article?.title,
