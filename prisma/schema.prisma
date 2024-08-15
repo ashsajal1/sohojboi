@@ -154,11 +154,13 @@ model Upvote {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   articleId  String?  @db.ObjectId
+  commentId  String?  @db.ObjectId
   Article    Article? @relation("ArticleUpvotes", fields: [articleId], references: [id])
 
   @@unique([userId, answerId])
   @@unique([userId, questionId])
   @@unique([userId, articleId])
+  @@unique([userId, commentId])
 }
 
 model View {
