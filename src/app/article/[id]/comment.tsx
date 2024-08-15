@@ -26,11 +26,24 @@ interface CommentProps {
 export default async function Comment({ comment }: CommentProps) {
     const cUser = await currentUser();
     const user = await clerkClient().users.getUser(comment.authorId);
+    let isUpvoted;
     const commentReplies = await prisma.comment.findMany({
         where: {
             parentId: comment.id
         },
     });
+    
+
+    if (cUser?.id) {
+        isUpvoted = await prisma.upvote.findUnique({
+            where: {
+                userId_commentId: {
+                    userId: cUser?.id!,
+                    commentId: comment.id
+                }
+            }
+        })
+    }
 
     const hasPermission = cUser?.id === comment.authorId || checkRole("admin")
 
@@ -43,7 +56,8 @@ export default async function Comment({ comment }: CommentProps) {
                 in: [comment?.id!]
             }
         }
-    })
+    });
+
     return (
         <Card className={`mt-2`} key={comment.id}>
             <CardHeader>
@@ -60,7 +74,7 @@ export default async function Comment({ comment }: CommentProps) {
                         createdAt={comment.createdAt}
                     />
 
-                    <UpvoteComment comment={comment!} isUpvoted={false} upvoteCount={upvoteCount._count.userId} />
+                    <UpvoteComment comment={comment!} isUpvoted={!!isUpvoted} upvoteCount={upvoteCount._count.userId} />
                 </div>
                 <div>
                     {cUser?.id && <Accordion type="single" collapsible className="w-full">
