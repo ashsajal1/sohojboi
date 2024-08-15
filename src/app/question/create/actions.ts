@@ -16,14 +16,15 @@ const questionSchema = z.object({
     .max(1000, "Description must be 1000 characters or less"),
 });
 
-export const createQuestion = async (_: any, formData: FormData) => {
+export const createQuestion = async (
+  title: string,
+  content: string,
+  topicId: string
+) => {
   const user = await currentUser();
-  const title = formData.get("title");
-  const description = formData.get("description");
-  const topic = formData.get("topic");
-  // console.log(topic);
+
   let newQuestion;
-  const result = questionSchema.safeParse({ title, description });
+  const result = questionSchema.safeParse({ title, content, topicId });
   if (!result.success) {
     return result.error.format();
   }
@@ -33,16 +34,16 @@ export const createQuestion = async (_: any, formData: FormData) => {
       data: {
         userId: user?.id as string,
         questionTitle: title as string,
-        questionDescription: description as string,
+        questionDescription: content,
         userFirstName: user?.firstName as string,
         userLastName: user?.lastName as string,
         userFullName: user?.fullName as string,
-        topicId: topic as string,
+        topicId: topicId as string,
         deletedAt: null,
       },
     });
   } catch (error) {
-    logger.error(error);
+    // logger.error(error);
     return { error: "An unexpected error occurred. Try again." };
   }
 
