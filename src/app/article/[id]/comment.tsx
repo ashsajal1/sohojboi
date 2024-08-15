@@ -27,7 +27,8 @@ export default async function Comment({ comment }: CommentProps) {
     let isUpvoted;
     const commentReplies = await prisma.comment.findMany({
         where: {
-            parentId: comment.id
+            parentId: comment.id,
+            deletedAt: null
         },
     });
 
