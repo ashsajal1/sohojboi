@@ -42,10 +42,10 @@ export const createQuestion = async (
         deletedAt: null,
       },
     });
+
+    redirect(`/question/${newQuestion.id}`);
   } catch (error) {
     // logger.error(error);
     return { error: "An unexpected error occurred. Try again." };
   }
-
-  redirect(`/question/${newQuestion.id}`);
 };

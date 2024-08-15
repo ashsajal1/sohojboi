@@ -108,7 +108,7 @@ const CreateQuestion = ({ topics }: { topics: Topic[] }) => {
             )}
           </div>
           <Button disabled={pending} className="w-full" type="submit">
-            {pending ? "Saving..." : "Save"}
+            {pending ? "Creating..." : "Create"}
           </Button>
         </div>
       </form>
