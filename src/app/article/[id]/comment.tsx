@@ -1,7 +1,7 @@
 import { type Comment as PrismaComment } from '@prisma/client';
 import React from 'react';
 import { Card, CardDescription, CardHeader } from '@/components/ui/card';
-import { clerkClient, currentUser } from '@clerk/nextjs/server';
+import { clerkClient, currentUser, User } from '@clerk/nextjs/server';
 import ProfileImgCard from '@/components/profile-img-card';
 import { Button } from '@/components/ui/button';
 
@@ -18,11 +18,9 @@ import ReactMarkdown from 'react-markdown';
 import CommentDropDown from './comment-drop-down';
 import { checkRole } from '@/lib/roles';
 import UpvoteComment from './upvote-comment';
-
 interface CommentProps {
     comment: PrismaComment;
 };
-
 export default async function Comment({ comment }: CommentProps) {
     const cUser = await currentUser();
     const user = await clerkClient().users.getUser(comment.authorId);
@@ -32,7 +30,7 @@ export default async function Comment({ comment }: CommentProps) {
             parentId: comment.id
         },
     });
-    
+
 
     if (cUser?.id) {
         isUpvoted = await prisma.upvote.findUnique({
@@ -91,7 +89,7 @@ export default async function Comment({ comment }: CommentProps) {
             </CardHeader>
             {commentReplies && (
                 commentReplies?.map(reply => (
-                    <Reply key={reply.id} reply={reply} userId={reply.authorId} parentId={comment.id} />
+                    <Reply key={reply.id} cUser={cUser!} reply={reply} userId={reply.authorId} parentId={comment.id} />
                 ))
             )}
         </Card>
@@ -99,17 +97,45 @@ export default async function Comment({ comment }: CommentProps) {
 }
 
 
-const Reply = ({ reply, userId, parentId }: { reply: PrismaComment, userId: string, parentId: string }) => {
+const Reply = async ({ reply, userId, parentId, cUser }: { reply: PrismaComment, userId: string, parentId: string, cUser: User }) => {
+    let isUpvoted;
+
+    if (cUser?.id) {
+        isUpvoted = await prisma.upvote.findUnique({
+            where: {
+                userId_commentId: {
+                    userId: cUser?.id!,
+                    commentId: reply.id
+                }
+            }
+        })
+    }
+    const upvoteCount = await prisma.upvote.aggregate({
+        _count: {
+            userId: true
+        },
+        where: {
+            commentId: {
+                in: [reply.id!]
+            }
+        }
+    });
+
     return <Card className={`ml-4 mt-2`} key={reply.id}>
         <CardHeader>
             <CardDescription>
                 <Content content={reply.content} />
             </CardDescription>
-            <ProfileImgCard
-                type={'comment'}
-                userId={userId}
-                createdAt={reply.createdAt}
-            />
+
+            <div className='flex items-center justify-between'>
+                <ProfileImgCard
+                    type={'comment'}
+                    userId={userId}
+                    createdAt={reply.createdAt}
+                />
+
+                <UpvoteComment comment={reply!} isUpvoted={!!isUpvoted} upvoteCount={upvoteCount._count.userId} />
+            </div>
             <div>
                 <Accordion type="single" collapsible className="w-full">
                     <AccordionItem value="item-1">
