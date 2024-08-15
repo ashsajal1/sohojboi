@@ -17,6 +17,7 @@ import Content from '../../../components/content';
 import ReactMarkdown from 'react-markdown';
 import CommentDropDown from './comment-drop-down';
 import { checkRole } from '@/lib/roles';
+import UpvoteComment from './upvote-comment';
 
 interface CommentProps {
     comment: PrismaComment;
@@ -42,11 +43,15 @@ export default async function Comment({ comment }: CommentProps) {
                         <CommentDropDown hasPermission={hasPermission} commentText={comment.content} commentId={comment.id} />
                     </div>
                 </CardDescription>
-                <ProfileImgCard
-                    type={'comment'}
-                    userId={user.id}
-                    createdAt={comment.createdAt}
-                />
+                <div className='flex items-center justify-between'>
+                    <ProfileImgCard
+                        type={'comment'}
+                        userId={user.id}
+                        createdAt={comment.createdAt}
+                    />
+
+                    <UpvoteComment comment={comment!} isUpvoted={false} upvoteCount={0} />
+                </div>
                 <div>
                     {cUser?.id && <Accordion type="single" collapsible className="w-full">
                         <AccordionItem value="item-1">
@@ -58,7 +63,6 @@ export default async function Comment({ comment }: CommentProps) {
                             </AccordionContent>
                         </AccordionItem>
                     </Accordion>}
-
                 </div>
             </CardHeader>
             {commentReplies && (
