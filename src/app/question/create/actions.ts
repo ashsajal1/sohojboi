@@ -30,7 +30,7 @@ export const createQuestion = async (
         topicId: topicId as string,
         deletedAt: null,
       },
-    });]
+    });
   } catch (error) {
     return { error: "An unexpected error occurred. Try again." };
   }
