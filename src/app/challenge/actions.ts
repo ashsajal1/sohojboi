@@ -46,6 +46,7 @@ export const createCompetition = async (
 
 export const declineChallange = async (competition: Competition) => {
   try {
+    const user = await clerkClient().users.getUser(competition.challengeeId);
     await Promise.all([
       await prisma.competition.update({
         where: {
@@ -58,7 +59,7 @@ export const declineChallange = async (competition: Competition) => {
       await prisma.notification.create({
         data: {
           userId: competition.challengerId,
-          message: `${competition.challengeeId} declined your challenge!`,
+          message: `${user.fullName} declined your challenge!`,
           type: NotificationType.CHALLENGE,
           competitionId: competition.id,
         },
