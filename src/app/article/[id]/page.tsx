@@ -114,7 +114,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                                 <Button variant={'outline'}>Edit</Button>
                             </Link>}
                             <UpvoteArticle upvoteCount={article?.upvotes.length!} article={article!} isUpvoted={!!isUpvoted ?? false} />
-                            <ShareBtn title={article?.title!} description={article?.content.slice(1, 150)!} />
+                            <ShareBtn title={article?.title!} description={article?.content.slice(0, 150)!} />
                         </div>
                     </div>
 
