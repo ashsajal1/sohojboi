@@ -12,7 +12,7 @@ export default function ShareBtn({title, description}: {title: string, descripti
             window.location.href
         )
             .catch((error) => {
-                alert('Sharing failed: ' + error.message);
+                console.log('Sharing failed: ' + error.message);
             });
     };
     return (
