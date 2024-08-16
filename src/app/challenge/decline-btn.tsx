@@ -16,7 +16,7 @@ export default function DeclineBtn({ competiton }: { competiton: Competition }) 
 
     return (
         <Button onClick={handleDecline} variant="destructive" disabled={pending} className='w-full' size={'sm'}>
-            {pending ? <><LoaderIcon />Declining</> : 'Decline Challange'}
+            {pending ? <><LoaderIcon />Declining</> : 'Decline Challenge'}
         </Button>
     )
 }
