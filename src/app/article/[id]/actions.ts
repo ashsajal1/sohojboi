@@ -62,6 +62,7 @@ export const createComment = async (
           articleId: articleId,
           content: content,
           authorId: authorId,
+          deletedAt: null,
         },
       });
     }
@@ -201,7 +202,10 @@ export const handleCommentUpvote = async (comment: Comment) => {
       },
     });
 
-    const message = `${actorName} upvoted your comment of "${comment.content.slice(0, 20)}..."`;
+    const message = `${actorName} upvoted your comment of "${comment.content.slice(
+      0,
+      20
+    )}..."`;
 
     if (actorId !== comment.authorId) {
       const notif = await prisma.notification.create({
@@ -216,4 +220,4 @@ export const handleCommentUpvote = async (comment: Comment) => {
   }
 
   revalidatePath("/");
-}
+};
