@@ -34,7 +34,7 @@ export default async function QuestionCard({ question }: QuestionProps) {
             <CardHeader>
                 <CardTitle>{question.questionTitle}</CardTitle>
                 <div className="text-sm text-muted-foreground flex items-center gap-2">
-                    <span>Upvoted by {question.upvoteCount} people{question.upvoteCount > 0 ? 's' : ''}</span>
+                    <span>Upvoted by {question.upvoteCount} people</span>
                     <Separator orientation="vertical" />
 
                     <div className="flex items-center gap-1">
