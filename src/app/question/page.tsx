@@ -4,6 +4,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight, PlusIcon } from "lucide-react";
+import NextBtn from "./next-btn";
 
 export const metadata: Metadata = {
     title: "Explore Questions on Various Topics | Sohojboi",
@@ -54,12 +55,9 @@ export default async function Page({ searchParams }: { searchParams: { page: str
                     </Link>
                 )}
                 {hasMoreQuestions && (
-                    <Link href={`/question?page=${page + 1}`} className='ml-auto w-full md:w-auto'>
-                        <Button className='w-full md:w-auto'>
-                            Next Page
-                            <ArrowRight className='h-4 w-4 ml-2' />
-                        </Button>
-                    </Link>
+                    <div className='ml-auto w-full md:w-auto'>
+                        <NextBtn page={page + 1} />
+                    </div>
                 )}
             </div>
         </>
