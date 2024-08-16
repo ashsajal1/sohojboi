@@ -4,12 +4,12 @@ import { Button } from './ui/button'
 import { Share2Icon } from 'lucide-react'
 import { shareContent } from "@/lib/share"
 
-export default function ShareBtn({title, description, url}: {title: string, description: string, url: string}) {
+export default function ShareBtn({title, description}: {title: string, description: string}) {
     const handleShare = () => {
         shareContent(
             title,
             description,
-            url
+            window.location.href
         )
             .catch((error) => {
                 alert('Sharing failed: ' + error.message);
