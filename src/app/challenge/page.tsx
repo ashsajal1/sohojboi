@@ -8,6 +8,7 @@ import Link from 'next/link';
 import Select from './select';
 import { Metadata } from "next";
 import DeclineBtn from './decline-btn';
+import AcceptBtn from './accept-btn';
 
 /**
  * Component for the Challenge page.
@@ -83,9 +84,7 @@ export default async function page({ searchParams }: { searchParams: any }) {
               </CardTitle>
             </CardHeader>
             <CardContent className='flex flex-col gap-2'>
-              <Link href={`/challenge/accept?competitionId=${c.id}`}>
-                <Button variant="outline" className='w-full' size={'sm'}>Accept Challange</Button>
-              </Link>
+              <AcceptBtn competition={c} />
               <DeclineBtn competiton={c} />
             </CardContent>
           </Card>
