@@ -15,6 +15,7 @@ import Views from './views';
 import { Badge } from '@/components/ui/badge';
 import Content from '../../../components/content';
 import Link from 'next/link';
+import ShareBtn from '@/components/share-btn';
 
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
     const articleId = params.id;
@@ -113,6 +114,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                                 <Button variant={'outline'}>Edit</Button>
                             </Link>}
                             <UpvoteArticle upvoteCount={article?.upvotes.length!} article={article!} isUpvoted={!!isUpvoted ?? false} />
+                            <ShareBtn title={article?.title!} description={article?.content.slice(1, 150)!} />
                         </div>
                     </div>
 
