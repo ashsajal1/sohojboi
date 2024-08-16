@@ -21,6 +21,7 @@ import AnswerForm from "./answer-form";
 import { increaseView } from "./actions";
 import ReactMarkDown from 'react-markdown';
 import { Metadata } from "next";
+import ShareBtn from "@/components/share-btn";
 
 interface Params {
     params: {
@@ -180,6 +181,7 @@ export default async function Question({ params }: Params) {
                                 </Link>
                             }
                             <UpvoteBtn isUpvotedQuestion={isUpvotedQuestion} question={question || {} as Question} actorId={user?.id || ''} />
+                            <ShareBtn title={question?.questionTitle!} description={question?.questionDescription.slice(0, 100)!}  />
                         </div>
                     </div>
 
