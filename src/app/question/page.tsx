@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight, PlusIcon } from "lucide-react";
 import NextBtn from "./next-btn";
+import PreviousBtn from "./previous-btn";
 
 export const metadata: Metadata = {
     title: "Explore Questions on Various Topics | Sohojboi",
@@ -47,12 +48,9 @@ export default async function Page({ searchParams }: { searchParams: { page: str
             {questions.length === 0 && <h1 className='font-bold text-xl text-center p-12'>No questions Found!</h1>}
             <div className='mt-2 flex items-center justify-between gap-2'>
                 {page > 1 && (
-                    <Link href={`/question?page=${page - 1}`}>
-                        <Button variant={'outline'}>
-                            <ArrowLeft className='h-4 w-4 mr-2' />
-                            Previous Page
-                        </Button>
-                    </Link>
+                    <div>
+                        <PreviousBtn page={page - 1} />
+                    </div>
                 )}
                 {hasMoreQuestions && (
                     <div className='ml-auto w-full md:w-auto'>
