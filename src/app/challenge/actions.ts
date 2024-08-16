@@ -2,7 +2,8 @@
 
 import prisma from "@/lib/prisma";
 import { clerkClient } from "@clerk/nextjs/server";
-import { NotificationType } from "@prisma/client";
+import { Competition, NotificationType } from "@prisma/client";
+import { revalidatePath } from "next/cache";
 
 export const createCompetition = async (
   challangeeId: string,
@@ -12,17 +13,17 @@ export const createCompetition = async (
 ) => {
   try {
     const challengerName = (await clerkClient().users.getUser(challangerId))
-      .fullName as string | '';
+      .fullName as string | "";
     const challengeeName = (await clerkClient().users.getUser(challangeeId))
-      .fullName as string | '';
+      .fullName as string | "";
 
     const competition = await prisma.competition.create({
       data: {
         title: `${challengerName} vs ${challengeeName}`,
         description: `A competition between ${challengerName} and ${challengeeName}`,
         questionIds: questionIds,
-        challengerId: challangerId || '',
-        challengeeId: challangeeId || '',
+        challengerId: challangerId || "",
+        challengeeId: challangeeId || "",
         challengerScore: challengerScore,
         status: "pending",
       },
@@ -41,4 +42,31 @@ export const createCompetition = async (
   }
 
   // console.log(notif)
+};
+
+export const declineChallange = async (competition: Competition) => {
+  try {
+    await Promise.all([
+      await prisma.competition.update({
+        where: {
+          id: competition.id
+        },
+        data: {
+          status: "declined"
+        }
+      }),
+      await prisma.notification.create({
+        data: {
+          userId: competition.challengerId,
+          message: `${competition.challengeeId} declined your challenge!`,
+          type: NotificationType.CHALLENGE,
+          competitionId: competition.id,
+        },
+      })
+    ]);
+  } catch (error) {
+    return { error };
+  }
+
+  revalidatePath("/challenge");
 };
