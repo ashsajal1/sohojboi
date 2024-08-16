@@ -84,14 +84,16 @@ export default async function Navbar() {
 
                             </Link>
 
-                            <Button
-                                variant={'outline'}
-                                size='sm'
-                                className="w-full"
-                            >
-                                <Settings2 className="w-4 h-4 mr-2" />
-                                Manage Account
-                            </Button>
+                            <Link href='/account'>
+                                <Button
+                                    variant={'outline'}
+                                    size='sm'
+                                    className="w-full"
+                                >
+                                    <Settings2 className="w-4 h-4 mr-2" />
+                                    Manage Account
+                                </Button>
+                            </Link>
                             <Button
                                 variant={'destructive'}
                                 size='sm'
