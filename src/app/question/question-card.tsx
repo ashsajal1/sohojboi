@@ -9,6 +9,7 @@ import ProfileImgCard from "@/components/profile-img-card";
 import { chekcIsQuestionUpvoted } from "@/lib/utils";
 import { EyeOpenIcon } from "@radix-ui/react-icons";
 import { Separator } from "@/components/ui/separator";
+import { CornerDownRightIcon } from "lucide-react";
 
 interface QuestionProps {
     question: Question;
@@ -49,7 +50,7 @@ export default async function QuestionCard({ question }: QuestionProps) {
 
                 <div className="flex items-center gap-2">
                     <Link href={`/question/${question.id}`}>
-                        <Button size={'sm'}>Answer</Button>
+                        <Button variant={'link'} size={'sm'}><CornerDownRightIcon className="mr-2 h-4 w-4" />Answer</Button>
                     </Link>
                     <UpvoteBtn isUpvotedQuestion={isUpvotedQuestion} question={question} actorId={actorId || ''} />
                 </div>
