@@ -1,10 +1,8 @@
 import React from 'react'
 import Challange from './challange'
 import prisma from '@/lib/prisma';
-import { auth, clerkClient, User } from '@clerk/nextjs/server'
+import { auth, clerkClient } from '@clerk/nextjs/server'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import Link from 'next/link';
 import Select from './select';
 import { Metadata } from "next";
 import DeclineBtn from './decline-btn';

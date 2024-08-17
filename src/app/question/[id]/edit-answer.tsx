@@ -13,7 +13,7 @@ import {
     DialogTrigger,
     DialogClose
 } from "@/components/ui/dialog"
-import { deleteAnswer, updateAnswer } from "./actions";
+import { updateAnswer } from "./actions";
 import { useState, useTransition } from "react";
 import { Textarea } from "@/components/ui/textarea";
 

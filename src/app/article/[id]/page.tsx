@@ -4,8 +4,6 @@ import prisma from '@/lib/prisma';
 import React from 'react'
 import CommentForm from './comment-form';
 import Comment from './comment'
-// import ReactMarkdown from 'react-markdown';
-import remarkGfm from "remark-gfm";
 import { Metadata } from 'next';
 import { auth, clerkClient } from '@clerk/nextjs/server';
 import { increaseView } from '@/app/_actions/increase-view';

@@ -1,6 +1,5 @@
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import prisma from '@/lib/prisma'
 import { ArrowLeft, ArrowRight, PlusIcon } from 'lucide-react'
 import Link from 'next/link'

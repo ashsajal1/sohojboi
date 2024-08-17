@@ -11,7 +11,7 @@ import { z } from 'zod';
 import { PopoverTrigger, Popover, PopoverContent } from "@/components/ui/popover";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Article, Topic } from '@prisma/client';
-import { ArrowUpIcon, CheckIcon, TrashIcon } from "@radix-ui/react-icons"
+import { ArrowUpIcon, CheckIcon } from "@radix-ui/react-icons"
 import { cn } from '@/lib/utils';
 import { editArticle } from './actions';
 import DeleteArticleBtn from './delete-btn';

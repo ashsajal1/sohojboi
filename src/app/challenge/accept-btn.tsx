@@ -3,7 +3,6 @@
 import LoaderIcon from '@/components/loader-icon'
 import { Button } from '@/components/ui/button'
 import { useTransition } from 'react'
-import { declineChallange } from './actions';
 import { Competition } from '@prisma/client';
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
