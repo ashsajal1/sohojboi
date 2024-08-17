@@ -7,12 +7,14 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Pencil1Icon, TrashIcon } from "@radix-ui/react-icons";
-import { Ellipsis } from "lucide-react";
+import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import DeleteDialog from "./delete-dialog";
 import EditDialog from "./edit-dialog";
+import { Flag } from "lucide-react";
 
 export default function CommentDropDown({ commentId, commentText, hasPermission }: { commentId: string, commentText: string, hasPermission : boolean }) {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -31,24 +33,26 @@ export default function CommentDropDown({ commentId, commentText, hasPermission 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant={'ghost'}>
-            <Ellipsis />
+            <DotsHorizontalIcon />
           </Button>
         </DropdownMenuTrigger>
 
         <DropdownMenuContent>
           <DropdownMenuGroup>
             {hasPermission && <>
-              <DropdownMenuLabel>Comment Options</DropdownMenuLabel>
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem onClick={() => setIsEditDialogOpen(true)}>
               <Pencil1Icon className="mr-1 h-4 w-4" />
               Edit
             </DropdownMenuItem>
+            
             <DropdownMenuItem onClick={handleDeleteClick}>
               <TrashIcon className="mr-1 h-4 w-4" />
               Delete
             </DropdownMenuItem></>}
+            <DropdownMenuSeparator />
             <DropdownMenuLabel>Reports</DropdownMenuLabel>
-            <DropdownMenuItem>Spam</DropdownMenuItem>
+            <DropdownMenuItem><Flag className="mr-1 h-4 w-4" />Spam</DropdownMenuItem>
           </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenu>
