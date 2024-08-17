@@ -14,6 +14,8 @@ import { Badge } from '@/components/ui/badge';
 import Content from '../../../components/content';
 import Link from 'next/link';
 import ShareBtn from '@/components/share-btn';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { DotsHorizontalIcon, Pencil1Icon, TrashIcon } from '@radix-ui/react-icons';
 
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
     const articleId = params.id;
@@ -96,7 +98,46 @@ export default async function Page({ params }: { params: { id: string } }) {
         <div>
             <Card>
                 <CardHeader>
-                    <CardTitle>{article?.title}</CardTitle>
+                    <div className='flex items-center justify-between'>
+                        <CardTitle>{article?.title}</CardTitle>
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button size='sm' variant='ghost'><DotsHorizontalIcon /></Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent>
+
+                                {userId === article?.authorId && <>
+                                    <DropdownMenuGroup>
+                                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                                        <Link className="w-full" href={`/article/edit/${article?.id}`}>
+                                            <DropdownMenuItem className="w-full">
+                                                <Pencil1Icon className="mr-1" />
+                                                Edit</DropdownMenuItem>
+                                        </Link>
+                                        <Link className="w-full" href={`/article/edit/${article?.id}`}>
+                                            <DropdownMenuItem className="w-full">
+                                                <TrashIcon className="mr-1" />
+                                                Delete</DropdownMenuItem>
+                                        </Link>
+
+                                    </DropdownMenuGroup>
+                                </>}
+                                <DropdownMenuSeparator />
+
+                                <DropdownMenuGroup>
+                                    <DropdownMenuLabel>
+                                        Reports
+                                    </DropdownMenuLabel>
+                                    <DropdownMenuItem className="w-full">
+                                        <TrashIcon className="mr-1" />
+                                        Spam</DropdownMenuItem>
+                                </DropdownMenuGroup>
+
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+
+                    </div>
+
                     <CardDescription>
                         <Content content={article?.content!} />
                         <Badge className='mt-3' variant={'outline'}>
@@ -108,9 +149,6 @@ export default async function Page({ params }: { params: { id: string } }) {
                         <ProfileImgCard createdAt={article?.createdAt} type={'article'} userId={article?.authorId!} />
 
                         <div className='flex items-center gap-2'>
-                            {userId === article?.authorId && <Link href={`/article/edit/${article?.id}`}>
-                                <Button variant={'outline'}>Edit</Button>
-                            </Link>}
                             <UpvoteArticle upvoteCount={article?.upvotes.length!} article={article!} isUpvoted={!!isUpvoted ?? false} />
                             <ShareBtn title={article?.title!} description={article?.content.slice(0, 150)!} />
                         </div>
