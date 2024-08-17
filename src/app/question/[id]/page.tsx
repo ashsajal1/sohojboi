@@ -12,11 +12,8 @@ import UpvoteBtn from "../upvote-btn";
 import ProfileImgCard from "@/components/profile-img-card";
 import { chekcIsQuestionUpvoted } from "@/lib/utils";
 import { CaretUpIcon, DotsHorizontalIcon, EyeOpenIcon, Pencil1Icon, TrashIcon } from "@radix-ui/react-icons";
-import {
-    HoverCard,
-    HoverCardContent,
-    HoverCardTrigger,
-} from "@/components/ui/hover-card"
+// import dropdown component
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import AnswerForm from "./answer-form";
 import { increaseView } from "./actions";
 import ReactMarkDown from 'react-markdown';
@@ -31,7 +28,7 @@ interface Params {
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
     let question = null;
-    
+
     if (isValidObjectId(params.id)) {
         try {
             question = await prisma.question.findUnique({
@@ -130,12 +127,12 @@ export default async function Question({ params }: Params) {
                         <CardTitle>
                             {question?.questionTitle}
                         </CardTitle>
-                        {user?.id === question?.userId && <HoverCard>
-                            <HoverCardTrigger>
-                                <Button size='sm' variant='outline'><DotsHorizontalIcon /></Button>
-                            </HoverCardTrigger>
-                            <HoverCardContent>
-                                <div className="flex items-center gap-2 justify-between">
+                        {user?.id === question?.userId && <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button size='sm' variant='ghost'><DotsHorizontalIcon /></Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent>
+                                <div className="flex flex-col p-2 items-center gap-2 justify-between">
                                     <Link className="w-full" href={`/question/edit/${question?.id}`}>
                                         <Button className="w-full" size={'sm'} variant={'secondary'}>
                                             <Pencil1Icon className="mr-1" />
@@ -147,8 +144,8 @@ export default async function Question({ params }: Params) {
                                             Delete</Button>
                                     </Link>
                                 </div>
-                            </HoverCardContent>
-                        </HoverCard>}
+                            </DropdownMenuContent>
+                        </DropdownMenu>}
                     </div>
 
                     <CardDescription>
@@ -173,15 +170,8 @@ export default async function Question({ params }: Params) {
                         <ProfileImgCard type="question" createdAt={question?.createdAt || new Date()} userId={question?.userId || ''} />
 
                         <div className="flex items-center gap-2">
-                            {user?.id === question?.userId &&
-                                <Link className="w-full" href={`/question/edit/${question?.id}`}>
-                                    <Button className="w-full" size={'sm'} variant={'outline'}>
-                                        <Pencil1Icon className="mr-1" />
-                                        Edit</Button>
-                                </Link>
-                            }
                             <UpvoteBtn isUpvotedQuestion={isUpvotedQuestion} question={question || {} as Question} actorId={user?.id || ''} />
-                            <ShareBtn title={question?.questionTitle!} description={question?.questionDescription.slice(0, 100)!}  />
+                            <ShareBtn title={question?.questionTitle!} description={question?.questionDescription.slice(0, 100)!} />
                         </div>
                     </div>
 
