@@ -1,7 +1,6 @@
 "use client"
 
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -15,6 +14,7 @@ import { ArrowUpIcon, CheckIcon } from "@radix-ui/react-icons"
 import { cn } from '@/lib/utils';
 import { editArticle } from './actions';
 import DeleteArticleBtn from './delete-btn';
+import LoaderIcon from '@/components/loader-icon';
 
 // Define validation schema using zod
 const articleSchema = z.object({
@@ -40,102 +40,98 @@ const EditArticleForm = ({ topics, article }: { topics: Topic[], article: Articl
     };
 
     return (
-        <div>
-            <Card>
-                <form onSubmit={handleSubmit(onSubmit)}>
-                    <CardContent>
-                        <CardHeader>
-                            <div className='flex items-center justify-between'>
-                                <CardTitle>Write your article:</CardTitle>
-                                <DeleteArticleBtn article={article} />
-                            </div>
-                            <div className='flex flex-col gap-2 mt-4'>
-                                <Input
-                                    disabled={pending}
-                                    {...register('title')}
-                                    placeholder='Enter title...'
-                                    defaultValue={article.title}
-                                />
-                                {errors.title && <span className="text-red-500">{errors.title.message}</span>}
-                                <Textarea
-                                    disabled={pending}
-                                    {...register('content')}
-                                    placeholder='Enter content of article...'
-                                    defaultValue={article.content}
-                                    rows={10}
-                                />
-                                {errors.content && <span className="text-red-500">{errors.content.message}</span>}
+        <div className='p-2'>
+            <form onSubmit={handleSubmit(onSubmit)}>
+                <div className='flex items-center justify-between'>
+                    <h3>Edit article:</h3>
+                    <DeleteArticleBtn article={article} />
+                </div>
+                <div className='flex flex-col gap-2 mt-4'>
+                    <h2 className="text-lg font-medium">Topic</h2>
+                    <Controller
+                        control={control}
+                        name="topic"
+                        defaultValue={article.topicId}
+                        render={({ field }) => (
+                            <Popover open={open} onOpenChange={setOpen}>
 
-                                <Controller
-                                    control={control}
-                                    name="topic"
-                                    defaultValue={article.topicId}
-                                    render={({ field }) => (
-                                        <Popover open={open} onOpenChange={setOpen}>
+                                <PopoverTrigger asChild>
+                                    <Button
+                                        disabled={pending}
+                                        variant="outline"
+                                        role="combobox"
+                                        aria-expanded={open}
+                                        className="w-full justify-between"
+                                        onClick={() => setOpen(true)}
+                                    >
+                                        {field.value
+                                            ? topics.find((topic) => topic.id === field.value)?.name
+                                            : "Select topic..."}
+                                        <ArrowUpIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                    </Button>
+                                </PopoverTrigger>
+                                <PopoverContent className="w-[200px] p-0">
+                                    <Command>
+                                        <CommandInput placeholder="Search topic..." />
+                                        <CommandEmpty>No topic found.</CommandEmpty>
+                                        <CommandGroup>
+                                            <CommandList>
+                                                {Array.isArray(topics) && topics.length > 0 ? (
+                                                    topics.map((topic) => (
+                                                        <CommandItem
+                                                            key={topic.id}
+                                                            value={topic.id}
+                                                            onSelect={(currentValue) => {
+                                                                field.onChange(currentValue);
+                                                                setOpen(false);
+                                                            }}
+                                                        >
+                                                            <CheckIcon
+                                                                className={cn(
+                                                                    "mr-2 h-4 w-4",
+                                                                    field.value === topic.name ? "opacity-100" : "opacity-0"
+                                                                )}
+                                                            />
+                                                            {topic.name}
+                                                        </CommandItem>
+                                                    ))
+                                                ) : (
+                                                    <CommandEmpty>No topics available</CommandEmpty>
+                                                )}
+                                            </CommandList>
+                                        </CommandGroup>
+                                    </Command>
+                                </PopoverContent>
+                            </Popover>
+                        )}
+                    />
 
-                                            <PopoverTrigger asChild>
-                                                <Button
-                                                    disabled={pending}
-                                                    variant="outline"
-                                                    role="combobox"
-                                                    aria-expanded={open}
-                                                    className="w-[200px] justify-between"
-                                                    onClick={() => setOpen(true)}
-                                                >
-                                                    {field.value
-                                                        ? topics.find((topic) => topic.id === field.value)?.name
-                                                        : "Select topic..."}
-                                                    <ArrowUpIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                                                </Button>
-                                            </PopoverTrigger>
-                                            <PopoverContent className="w-[200px] p-0">
-                                                <Command>
-                                                    <CommandInput placeholder="Search topic..." />
-                                                    <CommandEmpty>No topic found.</CommandEmpty>
-                                                    <CommandGroup>
-                                                        <CommandList>
-                                                            {Array.isArray(topics) && topics.length > 0 ? (
-                                                                topics.map((topic) => (
-                                                                    <CommandItem
-                                                                        key={topic.id}
-                                                                        value={topic.id}
-                                                                        onSelect={(currentValue) => {
-                                                                            field.onChange(currentValue);
-                                                                            setOpen(false);
-                                                                        }}
-                                                                    >
-                                                                        <CheckIcon
-                                                                            className={cn(
-                                                                                "mr-2 h-4 w-4",
-                                                                                field.value === topic.name ? "opacity-100" : "opacity-0"
-                                                                            )}
-                                                                        />
-                                                                        {topic.name}
-                                                                    </CommandItem>
-                                                                ))
-                                                            ) : (
-                                                                <CommandEmpty>No topics available</CommandEmpty>
-                                                            )}
-                                                        </CommandList>
-                                                    </CommandGroup>
-                                                </Command>
-                                            </PopoverContent>
-                                        </Popover>
-                                    )}
-                                />
+                    {errors.topic && <span className="text-red-500">{errors.topic.message}</span>}
+                    <h2 className="text-lg font-medium">Title</h2>
+                    <Input
+                        disabled={pending}
+                        {...register('title')}
+                        placeholder='Enter title...'
+                        defaultValue={article.title}
+                    />
+                    {errors.title && <span className="text-red-500">{errors.title.message}</span>}
+                    <h2 className="text-lg font-medium">Content</h2>
+                    <Textarea
+                        disabled={pending}
+                        {...register('content')}
+                        placeholder='Enter content of article...'
+                        defaultValue={article.content}
+                        rows={10}
+                    />
+                    {errors.content && <span className="text-red-500">{errors.content.message}</span>}
+                </div>
+                <div className='flex mt-2 w-full justify-end'>
+                    <Button disabled={pending} className='w-full' type="submit">
+                        {pending? <><LoaderIcon /> Saving</> : 'Save'}
+                    </Button>
+                </div>
 
-                                {errors.topic && <span className="text-red-500">{errors.topic.message}</span>}
-                            </div>
-                        </CardHeader>
-
-                        <CardFooter>
-                            <Button disabled={pending} type="submit">
-                                {pending ? 'Submiting' : 'Submit'}
-                            </Button>
-                        </CardFooter>
-                    </CardContent>
-                </form>
-            </Card>
+            </form>
         </div>
     );
 };
