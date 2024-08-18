@@ -18,6 +18,8 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { TrashIcon } from "@radix-ui/react-icons";
+import DeleteQuestion from "./delete-question";
 
 const EditQuestion = ({ question, topics }: { question: Question; topics: Topic[] }) => {
   const [pending, startTransition] = useTransition();
@@ -59,6 +61,10 @@ const EditQuestion = ({ question, topics }: { question: Question; topics: Topic[
 
   return (
     <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <h2>Edit question</h2>
+        <DeleteQuestion questionId={question.id!} />
+      </div>
       <form onSubmit={formMethods.handleSubmit(handleSave)}>
         <div className="space-y-4">
           <div className="space-y-2">
