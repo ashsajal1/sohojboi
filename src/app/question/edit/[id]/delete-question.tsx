@@ -16,6 +16,7 @@ import {
 import { deleteQuestion } from "./actions";
 import { useTransition } from "react";
 import { useFormStatus } from "react-dom";
+import LoaderIcon from "@/components/loader-icon";
 
 export default function DeleteQuestion({ questionId }: { questionId: string }) {
     const [isPending, startTransition] = useTransition();
@@ -25,7 +26,7 @@ export default function DeleteQuestion({ questionId }: { questionId: string }) {
             <DialogTrigger asChild>
                 <Button disabled={pending} className="mt-2" variant={'destructive'}>
                     <TrashIcon className="mr-1" />
-                    Delete Question
+                    Delete
                 </Button>
             </DialogTrigger>
             <DialogContent>
@@ -40,13 +41,13 @@ export default function DeleteQuestion({ questionId }: { questionId: string }) {
                     <DialogClose asChild>
                         <Button disabled={isPending} variant={'ghost'}>No</Button>
                     </DialogClose>
-                    <Button onClick={async () => {
+                    <Button disabled={pending} onClick={async () => {
                         startTransition(async () => {
                             await deleteQuestion(questionId)
                         })
 
                     }} variant={'destructive'}>
-                        {isPending ? 'Deleting...' : 'Yes'}
+                        {isPending ? <><LoaderIcon /> Deleting...</> : 'Yes'}
                     </Button>
                 </DialogFooter>
             </DialogContent>
