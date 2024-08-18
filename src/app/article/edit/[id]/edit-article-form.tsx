@@ -40,7 +40,7 @@ const EditArticleForm = ({ topics, article }: { topics: Topic[], article: Articl
     };
 
     return (
-        <div className='p-2'>
+        <div className='p-4'>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div className='flex items-center justify-between'>
                     <h3>Edit article:</h3>
