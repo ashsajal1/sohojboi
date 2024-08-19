@@ -32,7 +32,12 @@ export default async function page({ searchParams }: { searchParams: any }) {
   const challengeeId = searchParams.challengeeId;
   // Determine if the Challenge Quiz component should be displayed
   const showQuiz = challengeeId;
+  if (challengeeId === user.userId) {
+    throw new Error("You cannot challenge yourself!")
+  }
+
   // Retrieve a list of challenge questions for the Challenge Quiz component
+
   let questions;
   try {
     questions = await prisma.challengeQuestion.findMany({
