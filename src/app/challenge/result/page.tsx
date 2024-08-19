@@ -4,6 +4,7 @@ import { auth } from '@clerk/nextjs/server';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import AcceptBtn from './accept-btn';
 
 export default async function ResultPage({ searchParams }: { searchParams: any }) {
   const { userId } = await auth();
@@ -40,10 +41,7 @@ export default async function ResultPage({ searchParams }: { searchParams: any }
           <p><strong>Opponent&apos;s Score:</strong> {opponentScore}</p>
           <p><strong>Status:</strong> {competition.status}</p>
           {userId === competition.challengeeId && <div className='mt-2'>
-            {competition.status === 'pending' && <Link href={`/challenge/accept?competitionId=${competition.id}`}>
-              <Button variant={'destructive'}>
-                Accept
-              </Button></Link>}
+            {competition.status === 'pending' && <AcceptBtn competition={competition} />}
           </div>}
         </CardContent>
       </Card>
