@@ -45,6 +45,7 @@
     "@tanstack/react-table": "^8.19.3",
     "@uiw/react-markdown-preview": "^5.1.2",
     "@vercel/og": "^0.6.2",
+    "canvas-confetti": "^1.9.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
