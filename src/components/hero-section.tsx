@@ -6,7 +6,7 @@ import RetroGrid from "@/components/magicui/retro-grid";
 
 export default function HeroSection() {
     return (
-        <div className='flex flex-col relative items-center gap-4 p-6 md:p-24'>
+        <div className='flex flex-col relative items-center gap-4 p-12 md:p-24'>
             <h1 className='font-extrabold text-center text-xl md:text-3xl p-4'>Ask question and solve doubt, answer question to practice. Play quiz to enjoy. It&apos;s all about fun!</h1>
 
             <div className='flex flex-col gap-2'>
