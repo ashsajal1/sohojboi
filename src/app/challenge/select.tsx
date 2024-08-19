@@ -15,24 +15,22 @@ export default function Select({ users, userId }: { users: User[], userId: strin
     const [pending, startTransiton] = useTransition();
     const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
 
-    const handleSelect = (userId: string) => {
+    const handleSelect = (challengeeId: string) => {
         if (selectedUserId) {
-            handleSearchParms();
+            handleSearchParms(challengeeId);
         } else {
-            setSelectedUserId(userId);
-            handleSearchParms();
+            setSelectedUserId(challengeeId);
+            handleSearchParms(challengeeId);
         }
     }
 
-    const handleSearchParms = async () => {
+    const handleSearchParms = async (challengeeId: string) => {
         const params = new URLSearchParams(searchParams);
         
         await startTransiton(async () => {
-            await params.set('challengeeId', userId);
+            await params.set('challengeeId', challengeeId);
             await replace(`${pathName}?${params.toString()}`);
         });
-        
-        
     };
 
     const filteredUsers = users.filter(user => user.id !== userId);
