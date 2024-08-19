@@ -3,11 +3,12 @@ import React from 'react'
 import { Button } from './ui/button'
 import { MixIcon, QuestionMarkIcon, ShuffleIcon } from '@radix-ui/react-icons';
 import RetroGrid from "@/components/magicui/retro-grid";
+import WordPullUp from "@/components/magicui/word-pull-up";
 
 export default function HeroSection() {
     return (
         <div className='flex flex-col relative items-center gap-4 p-12 md:p-24'>
-            <h1 className='font-extrabold text-center text-xl md:text-3xl p-4'>Ask question and solve doubt, answer question to practice. Play quiz to enjoy. It&apos;s all about fun!</h1>
+            <WordPullUp words='Ask question and solve doubt, answer question to practice. Play quiz to enjoy. It&apos;s all about fun!' className='font-extrabold text-center text-xl md:text-3xl p-4'></WordPullUp>
 
             <div className='flex flex-col gap-2'>
                 <div className='flex items-center gap-2'>
