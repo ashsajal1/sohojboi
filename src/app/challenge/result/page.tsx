@@ -20,6 +20,10 @@ export default async function ResultPage({ searchParams }: { searchParams: any }
     },
   });
 
+  const winnerId = competition?.challengeeScore! > competition?.challengerScore! ? competition?.challengeeId : competition?.challengerId
+
+  const isWinner = userId === winnerId;
+
   if (!competition) {
     return <div>Competition not found.</div>;
   }
@@ -30,6 +34,7 @@ export default async function ResultPage({ searchParams }: { searchParams: any }
 
   return (
     <div>
+      {isWinner && <div className='grid place-items-center'>Winner</div>}
       <Card>
         <CardHeader>
           <CardTitle>
