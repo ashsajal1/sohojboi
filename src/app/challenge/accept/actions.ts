@@ -22,10 +22,6 @@ export const completeCompetition = async (
     },
   });
 
-  if (competition.status === "completed") {
-    redirect(`/challenge/result?competitionId=${competitionId}`);
-  }
-
   const challengeeName = await (
     await clerkClient().users.getUser(challengeeId)
   ).fullName;
@@ -39,7 +35,7 @@ export const completeCompetition = async (
     notificationMessage = `You lost a challenge against ${challengeeName}.`;
   }
 
-  await prisma.notification.create({
+  const result = await prisma.notification.create({
     data: {
       userId: challangerId,
       message: notificationMessage!,
@@ -47,4 +43,9 @@ export const completeCompetition = async (
       competitionId: competition.id,
     },
   });
+
+  // redirect to challenge result
+  if (competition.status === "completed") {
+    redirect(`/challenge/result?competitionId=${competitionId}`);
+  }
 };
