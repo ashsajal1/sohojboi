@@ -42,14 +42,14 @@ export default async function ResultPage({ searchParams }: { searchParams: any }
           {userId === competition.challengeeId && <div className='mt-2'>
             {competition.status === 'pending' && <Link href={`/challenge/accept?competitionId=${competition.id}`}>
               <Button variant={'destructive'}>
-                Accept Challange
+                Accept
               </Button></Link>}
           </div>}
         </CardContent>
       </Card>
       <div className='grid place-items-center'>
-        <Link className='mt-2' href="/challenge">
-          <Button>Back to Competitions</Button>
+        <Link className='mt-2 w-full' href="/challenge">
+          <Button variant={'link'} className='w-full'>Back to Competitions</Button>
         </Link>
       </div>
     </div>
