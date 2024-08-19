@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import AcceptBtn from './accept-btn';
+import WinnerConfetti from './winner-confetti';
 
 export default async function ResultPage({ searchParams }: { searchParams: any }) {
   const { userId } = await auth();
@@ -34,7 +35,9 @@ export default async function ResultPage({ searchParams }: { searchParams: any }
 
   return (
     <div>
-      {isWinner && <div className='grid place-items-center'>Winner</div>}
+      {isWinner && <div className='grid place-items-center'>
+        <WinnerConfetti />
+        </div>}
       <Card>
         <CardHeader>
           <CardTitle>
