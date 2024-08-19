@@ -35,9 +35,6 @@ export default async function ResultPage({ searchParams }: { searchParams: any }
 
   return (
     <div>
-      {isWinner && <div className='grid place-items-center'>
-        <WinnerConfetti />
-        </div>}
       <Card>
         <CardHeader>
           <CardTitle>
@@ -58,6 +55,9 @@ export default async function ResultPage({ searchParams }: { searchParams: any }
           <Button variant={'link'} className='w-full'>Back to Competitions</Button>
         </Link>
       </div>
+      {isWinner && <div className='grid place-items-center'>
+        <WinnerConfetti />
+        </div>}
     </div>
   );
 }

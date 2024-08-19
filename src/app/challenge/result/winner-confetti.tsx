@@ -11,7 +11,7 @@ export default function WinnerConfetti() {
     return (
         <Confetti
             ref={confettiRef}
-            className="absolute left-0 top-0 z-0 size-full"
+            className="absolute left-0 top-20 z-0 size-full"
             onLoad={() => {
                 confettiRef.current?.fire({});
             }}
