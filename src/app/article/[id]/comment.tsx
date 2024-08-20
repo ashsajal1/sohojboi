@@ -79,7 +79,7 @@ export default async function Comment({ comment }: CommentProps) {
                     {cUser?.id && <Accordion type="single" collapsible className="w-full">
                         <AccordionItem value="item-1">
                             <AccordionTrigger>
-                                <Button>Reply</Button>
+                                Reply
                             </AccordionTrigger>
                             <AccordionContent>
                                 <CommentForm articleId={comment.articleId} parentId={comment.id} />
@@ -146,7 +146,7 @@ const Reply = async ({ reply, userId, parentId, cUser }: { reply: PrismaComment,
                 <Accordion type="single" collapsible className="w-full">
                     <AccordionItem value="item-1">
                         <AccordionTrigger>
-                            <Button>Reply</Button>
+                            Reply
                         </AccordionTrigger>
                         <AccordionContent>
                             <CommentForm articleId={reply.articleId} parentId={parentId} />
