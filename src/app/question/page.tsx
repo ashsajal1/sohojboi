@@ -33,7 +33,7 @@ export default async function Page({ searchParams }: { searchParams: { page: str
     return (
         <>
             <div className="grid md:grid-cols-2 gap-2">
-                <div className='fixed bottom-12 right-12'>
+                <div className='fixed bottom-12 z-20 right-12'>
                     <Link href='/question/create'>
                         <Button size={'icon'} variant={'destructive'}>
                             <PlusIcon />
