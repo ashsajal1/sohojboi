@@ -7,6 +7,8 @@ import React from 'react'
 import Markdown from 'react-markdown'
 import Views from './[id]/views'
 import ProfileImgCard from '@/components/profile-img-card'
+import NextBtn from '../question/next-btn'
+import PreviousBtn from '../question/previous-btn'
 
 export default async function Page({ searchParams }: { searchParams: { page: string } }) {
     const page = parseInt(searchParams.page) || 1;
@@ -63,12 +65,7 @@ export default async function Page({ searchParams }: { searchParams: { page: str
             <div className='mt-2 flex items-center justify-between gap-2'>
                 {page > 1 ? (
                     <>
-                        <Link href={`/article?page=${page - 1}`}>
-                            <Button variant={'outline'}>
-                                <ArrowLeft className='h-4 w-4 mr-2' />
-                                Previous Page
-                            </Button>
-                        </Link>
+                       <PreviousBtn page={page - 1} />
 
                         {hasMoreArticles && <Link className='ml-auto w-full md:w-auto' href={`/article?page=${page + 1}`}>
                             <Button className='w-full md:w-auto'>
@@ -79,12 +76,7 @@ export default async function Page({ searchParams }: { searchParams: { page: str
                     </>
                 ) : (
                     hasMoreArticles && <>
-                        <Link className='ml-auto w-full md:w-auto' href={`/article?page=${page + 1}`}>
-                            <Button className='w-full md:w-auto'>
-                                Next Page
-                                <ArrowRight className='h-4 w-4 ml-2' />
-                            </Button>
-                        </Link>
+                    <NextBtn page={page + 1} />
                     </>
                 )}
             </div>
