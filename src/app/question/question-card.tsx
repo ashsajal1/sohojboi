@@ -10,6 +10,7 @@ import { chekcIsQuestionUpvoted } from "@/lib/utils";
 import { EyeOpenIcon } from "@radix-ui/react-icons";
 import { Separator } from "@/components/ui/separator";
 import { CornerDownRightIcon } from "lucide-react";
+import BlurFade from "@/components/magicui/blur-fade";
 
 interface QuestionProps {
     question: Question;
@@ -30,7 +31,9 @@ export default async function QuestionCard({ question }: QuestionProps) {
     })
 
     return (
+
         <Card className="z-10">
+            <BlurFade delay={0.25} inView>
             <CardHeader>
                 <CardTitle>{question.questionTitle}</CardTitle>
                 <div className="text-sm text-muted-foreground flex items-center gap-2">
@@ -55,6 +58,8 @@ export default async function QuestionCard({ question }: QuestionProps) {
                     <UpvoteBtn isUpvotedQuestion={isUpvotedQuestion} question={question} actorId={actorId || ''} />
                 </div>
             </CardFooter>
-        </Card>
+        </BlurFade>
+            </Card >
+        
     )
 }
