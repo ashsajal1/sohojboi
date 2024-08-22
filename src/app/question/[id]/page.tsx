@@ -19,6 +19,7 @@ import { increaseView } from "./actions";
 import ReactMarkDown from 'react-markdown';
 import { Metadata } from "next";
 import ShareBtn from "@/components/share-btn";
+import BoxReveal from "@/components/magicui/box-reveal";
 
 interface Params {
     params: {
@@ -124,9 +125,11 @@ export default async function Question({ params }: Params) {
             <Card>
                 <CardHeader>
                     <div className="flex justify-between items-start">
-                        <CardTitle>
-                            {question?.questionTitle}
-                        </CardTitle>
+                        <BoxReveal>
+                            <CardTitle className="py-2 text-xl">
+                                {question?.questionTitle}
+                            </CardTitle>
+                        </BoxReveal>
                         {user?.id === question?.userId && <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                                 <Button size='sm' variant='ghost'><DotsHorizontalIcon /></Button>
