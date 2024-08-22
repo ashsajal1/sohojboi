@@ -10,7 +10,7 @@ export default function HeroSection() {
         <div className='flex flex-col relative items-center gap-4 p-12 md:p-24'>
             <WordPullUp words='Ask question and solve doubt, answer question to practice. Play quiz to enjoy. It&apos;s all about fun!' className='font-extrabold text-center text-xl md:text-3xl p-4'></WordPullUp>
 
-            <div className='flex flex-col gap-2'>
+            <div className='flex flex-col gap-2 z-10'>
                 <div className='flex items-center gap-2'>
                     <Link href={'/challenge'}>
                         <Button variant={'outline'}>
