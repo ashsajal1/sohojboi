@@ -30,7 +30,7 @@ export default async function QuestionCard({ question }: QuestionProps) {
     })
 
     return (
-        <Card>
+        <Card className="z-10">
             <CardHeader>
                 <CardTitle>{question.questionTitle}</CardTitle>
                 <div className="text-sm text-muted-foreground flex items-center gap-2">
