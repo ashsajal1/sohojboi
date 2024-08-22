@@ -9,6 +9,8 @@ import Views from './[id]/views'
 import ProfileImgCard from '@/components/profile-img-card'
 import NextBtn from '../question/next-btn'
 import PreviousBtn from '../question/previous-btn'
+import GridPattern from "@/components/magicui/grid-pattern";
+import { cn } from "@/lib/utils";
 
 export default async function Page({ searchParams }: { searchParams: { page: string } }) {
     const page = parseInt(searchParams.page) || 1;
@@ -33,6 +35,16 @@ export default async function Page({ searchParams }: { searchParams: { page: str
 
     return (
         <div>
+            <GridPattern
+                width={30}
+                height={30}
+                x={-1}
+                y={-1}
+                strokeDasharray={"4 2"}
+                className={cn(
+                    "[mask-image:radial-gradient(300px_circle_at_center,white,transparent)] -z-10 fixed",
+                )}
+            />
             <div className='fixed bottom-12 right-12'>
                 <Link href='/article/create'>
                     <Button size={'icon'} variant={'destructive'}>
@@ -65,7 +77,7 @@ export default async function Page({ searchParams }: { searchParams: { page: str
             <div className='mt-2 flex items-center justify-between gap-2'>
                 {page > 1 ? (
                     <>
-                       <PreviousBtn page={page - 1} />
+                        <PreviousBtn page={page - 1} />
 
                         {hasMoreArticles && <Link className='ml-auto w-full md:w-auto' href={`/article?page=${page + 1}`}>
                             <Button className='w-full md:w-auto'>
@@ -76,7 +88,7 @@ export default async function Page({ searchParams }: { searchParams: { page: str
                     </>
                 ) : (
                     hasMoreArticles && <>
-                    <NextBtn page={page + 1} />
+                        <NextBtn page={page + 1} />
                     </>
                 )}
             </div>
