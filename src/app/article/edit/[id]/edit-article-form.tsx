@@ -2,7 +2,6 @@
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { zodResolver } from '@hookform/resolvers/zod';
 import React, { useState, useTransition } from 'react';
 import { useForm, Controller } from 'react-hook-form';
@@ -15,7 +14,8 @@ import { cn } from '@/lib/utils';
 import { editArticle } from './actions';
 import DeleteArticleBtn from './delete-btn';
 import LoaderIcon from '@/components/loader-icon';
-
+import MDEditor from '@uiw/react-md-editor';
+import rehypeSanitize from "rehype-sanitize";
 // Define validation schema using zod
 const articleSchema = z.object({
     title: z.string().min(5, 'Title must be at least 5 characters').max(100, 'Title must not exceed 100 characters').nonempty('Title is required'),
@@ -28,6 +28,7 @@ type FormData = z.infer<typeof articleSchema>;
 
 const EditArticleForm = ({ topics, article }: { topics: Topic[], article: Article }) => {
     const [open, setOpen] = useState(false);
+    const [content, setContent] = useState(article.content);
     const [pending, startTransition] = useTransition();
     const { control, register, handleSubmit, formState: { errors } } = useForm<FormData>({
         resolver: zodResolver(articleSchema)
@@ -54,7 +55,6 @@ const EditArticleForm = ({ topics, article }: { topics: Topic[], article: Articl
                         defaultValue={article.topicId}
                         render={({ field }) => (
                             <Popover open={open} onOpenChange={setOpen}>
-
                                 <PopoverTrigger asChild>
                                     <Button
                                         disabled={pending}
@@ -116,18 +116,21 @@ const EditArticleForm = ({ topics, article }: { topics: Topic[], article: Articl
                     />
                     {errors.title && <span className="text-red-500">{errors.title.message}</span>}
                     <h2 className="text-lg font-medium">Content</h2>
-                    <Textarea
-                        disabled={pending}
-                        {...register('content')}
-                        placeholder='Enter content of article...'
-                        defaultValue={article.content}
-                        rows={10}
+                    <Controller
+                        name="content"
+                        control={control}
+                        render={({ field }) => <MDEditor defaultValue={article.content} previewOptions={{
+                            rehypePlugins: [[rehypeSanitize]],
+                        }} value={content} onChange={(value) => {
+                            field.onChange(value);
+                            setContent(value!);
+                        }} />}
                     />
                     {errors.content && <span className="text-red-500">{errors.content.message}</span>}
                 </div>
                 <div className='flex mt-2 w-full justify-end'>
                     <Button disabled={pending} className='w-full' type="submit">
-                        {pending? <><LoaderIcon /> Saving</> : 'Save'}
+                        {pending ? <><LoaderIcon /> Saving</> : 'Save'}
                     </Button>
                 </div>
 
