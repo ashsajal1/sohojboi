@@ -14,6 +14,7 @@ import { ArrowUpIcon, CheckIcon } from "@radix-ui/react-icons"
 import { cn } from '@/lib/utils';
 import { createArticle } from './actions';
 import LoaderIcon from '@/components/loader-icon';
+import MDEditor from '@uiw/react-md-editor';
 
 // Define validation schema using zod
 const articleSchema = z.object({
@@ -110,12 +111,13 @@ const CreateArticleForm = ({ topics }: { topics: Topic[] }) => {
                     />
                     {errors.title && <span className="text-red-500">{errors.title.message}</span>}
                     <h2 className="text-lg font-medium">Content</h2>
-                    <Textarea
-                        disabled={pending}
-                        {...register('content')}
-                        placeholder='Enter content of article...'
-                        rows={10}
+
+                    <Controller
+                        name="content"
+                        control={control}
+                        render={({field}) => <MDEditor value={field.value} onChange={field.onChange} />}
                     />
+                    
                     {errors.content && <span className="text-red-500">{errors.content.message}</span>}
                 </div>
 
