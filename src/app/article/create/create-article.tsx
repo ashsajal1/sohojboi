@@ -68,15 +68,15 @@ const CreateArticleForm = ({ topics }: { topics: Topic[] }) => {
                                 <Command>
                                     <CommandInput placeholder="Search topic..." />
                                     <CommandEmpty>No topic found.</CommandEmpty>
-                                    <CommandGroup>
+                                    {/* <CommandGroup> */}
                                         <CommandList>
                                             {Array.isArray(topics) && topics.length > 0 ? (
                                                 topics.map((topic) => (
                                                     <CommandItem
                                                         key={topic.id}
-                                                        value={topic.id}
+                                                        value={topic.name}
                                                         onSelect={(currentValue) => {
-                                                            field.onChange(currentValue);
+                                                            field.onChange(topics.find((t) => t.name === currentValue)?.id);
                                                             setOpen(false);
                                                         }}
                                                     >
@@ -93,7 +93,7 @@ const CreateArticleForm = ({ topics }: { topics: Topic[] }) => {
                                                 <CommandEmpty>No topics available</CommandEmpty>
                                             )}
                                         </CommandList>
-                                    </CommandGroup>
+                                    {/* </CommandGroup> */}
                                 </Command>
                             </PopoverContent>
                         </Popover>
