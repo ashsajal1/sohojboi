@@ -80,9 +80,9 @@ const EditArticleForm = ({ topics, article }: { topics: Topic[], article: Articl
                                                     topics.map((topic) => (
                                                         <CommandItem
                                                             key={topic.id}
-                                                            value={topic.id}
+                                                            value={topic.name}
                                                             onSelect={(currentValue) => {
-                                                                field.onChange(currentValue);
+                                                                field.onChange(topics.find((t) => t.name === currentValue)?.id);
                                                                 setOpen(false);
                                                             }}
                                                         >
