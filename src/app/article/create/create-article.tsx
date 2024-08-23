@@ -2,7 +2,6 @@
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { zodResolver } from '@hookform/resolvers/zod';
 import React, { useState, useTransition } from 'react';
 import { useForm, Controller } from 'react-hook-form';
@@ -15,6 +14,7 @@ import { cn } from '@/lib/utils';
 import { createArticle } from './actions';
 import LoaderIcon from '@/components/loader-icon';
 import MDEditor from '@uiw/react-md-editor';
+import rehypeSanitize from "rehype-sanitize";
 
 // Define validation schema using zod
 const articleSchema = z.object({
@@ -115,9 +115,11 @@ const CreateArticleForm = ({ topics }: { topics: Topic[] }) => {
                     <Controller
                         name="content"
                         control={control}
-                        render={({field}) => <MDEditor value={field.value} onChange={field.onChange} />}
+                        render={({ field }) => <MDEditor previewOptions={{
+                            rehypePlugins: [[rehypeSanitize]],
+                        }} value={field.value} onChange={field.onChange} />}
                     />
-                    
+
                     {errors.content && <span className="text-red-500">{errors.content.message}</span>}
                 </div>
 
