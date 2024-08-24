@@ -70,9 +70,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 }
 export default async function Question({ params }: Params) {
     const user = await currentUser();
-
     let question = null;
-    let questionUser;
 
     if (isValidObjectId(params.id)) {
         try {
@@ -95,12 +93,6 @@ export default async function Question({ params }: Params) {
         }
     } else {
         throw new Error('Invalid ObjectId');
-    }
-
-    try {
-        questionUser = await clerkClient().users.getUser(question?.userId || "");
-    } catch (error: any) {
-        // throw new Error(error.message)
     }
 
     if (user?.id) {
