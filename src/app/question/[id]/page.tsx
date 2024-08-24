@@ -89,7 +89,7 @@ export default async function Question({ params }: Params) {
             });
 
         } catch (error) {
-            throw new Error('Error fetching question:', error || '');
+            throw new Error('Error fetching question:', error!);
         }
     } else {
         throw new Error('Invalid ObjectId');
@@ -99,7 +99,7 @@ export default async function Question({ params }: Params) {
         increaseView(user?.id!, question?.id!)
     }
 
-    const isUpvotedQuestion = await chekcIsQuestionUpvoted(user?.id || '', question?.id || '');
+    const isUpvotedQuestion = await chekcIsQuestionUpvoted(user?.id!, question?.id!);
 
     const viewCount = await prisma.view.aggregate({
         _sum: {
