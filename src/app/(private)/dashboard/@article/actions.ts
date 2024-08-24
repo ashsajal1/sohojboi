@@ -5,18 +5,14 @@ import { revalidatePath } from "next/cache";
 
 export const deleteArticle = async (articleId: string) => {
   try {
-    await Promise.all([
-      prisma.comment.deleteMany({
-        where: {
-          articleId,
-        },
-      }),
-      prisma.article.delete({
-        where: {
-          id: articleId,
-        },
-      }),
-    ]);
+   await prisma.article.update({
+    where: {
+      id: articleId,
+    },
+    data :{
+      deletedAt: new Date(),
+    }
+   })
     
     revalidatePath("/");
   } catch (error) {
