@@ -45,14 +45,14 @@ export default async function AcceptChallengePage({ searchParams }: { searchPara
     }
 
     let winnerId;
-    const isDraw = competition.challengeeScore || 0 === competition.challengerScore;
-    const isChallengeeWinner = competition.challengeeScore || 0 > competition.challengerScore;
-    if (isDraw) {
-        winnerId = null
-    } else if (isChallengeeWinner) {
-        winnerId = competition.challengeeId
+    if (competition.challengeeScore === null || competition.challengerScore === null) {
+        winnerId = null;
+    } else if (competition.challengeeScore > competition.challengerScore) {
+        winnerId = competition.challengeeId;
+    } else if (competition.challengeeScore < competition.challengerScore) {
+        winnerId = competition.challengerId;
     } else {
-        winnerId = competition.challengerId
+        winnerId = null;
     }
 
     return (
