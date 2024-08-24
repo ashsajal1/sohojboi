@@ -19,11 +19,16 @@ import { DotsHorizontalIcon, Pencil1Icon, TrashIcon } from '@radix-ui/react-icon
 
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
     const articleId = params.id;
-    const article = await prisma.article.findUnique({
-        where: {
-            id: articleId
-        }
-    });
+    let article;
+    try {
+        article = await prisma.article.findUnique({
+            where: {
+                id: articleId
+            }
+        });
+    } catch (err) {
+        throw new Error("Invalid article id!")
+    }
 
     const author = await clerkClient().users.getUser(article?.authorId!);
     const profileImg = await author.imageUrl;
@@ -49,24 +54,30 @@ export default async function Page({ params }: { params: { id: string } }) {
     const articleId = params.id;
     const userId = await auth().userId;
     let isUpvoted;
+    let article;
 
-    const article = await prisma.article.findUnique({
-        where: {
-            id: articleId
-        },
-        include: {
-            comments: {
-                where: {
-                    parentId: null,
-                    deletedAt: null
-                },
-                orderBy: {
-                    createdAt: 'desc'
-                },
+    try {
+        article = await prisma.article.findUnique({
+            where: {
+                id: articleId
             },
-            upvotes: true,
-        }
-    })
+            include: {
+                comments: {
+                    where: {
+                        parentId: null,
+                        deletedAt: null
+                    },
+                    orderBy: {
+                        createdAt: 'desc'
+                    },
+                },
+                upvotes: true,
+            }
+        })
+    } catch (err) {
+        throw new Error("Invalid article id!")
+    }
+
 
     if (userId) {
         isUpvoted = await prisma.upvote.findUnique({
