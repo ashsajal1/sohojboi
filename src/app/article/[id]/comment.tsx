@@ -143,6 +143,7 @@ const Reply = async ({ reply, userId, parentId, cUser }: { reply: PrismaComment,
                 <UpvoteComment comment={reply!} isUpvoted={!!isUpvoted} upvoteCount={upvoteCount._count.userId} />
             </div>
             <div>
+                {cUser && 
                 <Accordion type="single" collapsible className="w-full">
                     <AccordionItem value="item-1">
                         <AccordionTrigger>
@@ -153,7 +154,7 @@ const Reply = async ({ reply, userId, parentId, cUser }: { reply: PrismaComment,
                         </AccordionContent>
                     </AccordionItem>
                 </Accordion>
-
+                }
             </div>
         </CardHeader>
 
