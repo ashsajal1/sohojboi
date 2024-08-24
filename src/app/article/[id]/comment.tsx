@@ -3,7 +3,6 @@ import React from 'react';
 import { Card, CardDescription, CardHeader } from '@/components/ui/card';
 import { clerkClient, currentUser, User } from '@clerk/nextjs/server';
 import ProfileImgCard from '@/components/profile-img-card';
-import { Button } from '@/components/ui/button';
 
 import {
     Accordion,
@@ -13,7 +12,6 @@ import {
 } from "@/components/ui/accordion"
 import CommentForm from './comment-form';
 import prisma from '@/lib/prisma';
-import Content from '../../../components/content';
 import ReactMarkdown from 'react-markdown';
 import CommentDropDown from './comment-drop-down';
 import { checkRole } from '@/lib/roles';
