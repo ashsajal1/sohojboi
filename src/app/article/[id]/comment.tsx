@@ -127,7 +127,7 @@ const Reply = async ({ reply, userId, parentId, cUser }: { reply: PrismaComment,
         <CardHeader>
             <CardDescription>
                 <div className='flex items-center justify-between'>
-                    <Content content={reply.content} />
+                    <ReactMarkdown>{reply.content}</ReactMarkdown>
                     <CommentDropDown hasPermission={hasPermission} commentText={reply.content} commentId={reply.id} />
                 </div>
 
