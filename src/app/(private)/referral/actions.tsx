@@ -24,6 +24,9 @@ export const claimReferBonus = async (refererId: string) => {
                         rewardCount: {
                             increment: 100,
                         },
+                        referralCount: {
+                            increment: 1
+                        }
                     },
                 }),
                 prisma.profile.upsert({
