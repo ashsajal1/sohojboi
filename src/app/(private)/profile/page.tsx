@@ -110,6 +110,7 @@ export default async function Page({ searchParams }: { searchParams: { id: strin
 
                     <div className="flex flex-col gap-2">
                         <Label>User stats : </Label>
+                        <Badge>Points : {profile?.rewardCount}</Badge>
                         <Badge>Total questions : {questions.length}</Badge>
                         <Badge>Total answers : {answers.length}</Badge>
                         <Badge>Challenge win percentage : {calculateWinPercentage(challangeStats.wins, challangeStats.losses)}%</Badge>
