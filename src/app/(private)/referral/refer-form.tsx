@@ -9,6 +9,7 @@ import { useTransition } from "react";
 import { claimReferBonus } from "./actions";
 import { toast } from "sonner"
 import { Toaster } from "@/components/ui/sonner"
+import LoaderIcon from "@/components/loader-icon";
 
 const referralCodeSchema = z.object({
   referralCode: z.string().min(1, "Referral code is required"),
@@ -58,7 +59,7 @@ export default function ReferForm({ userId }: { userId: string }) {
         <p className="text-red-500">{errors.referralCode.message}</p>
       )}
       <Button type="submit" disabled={isPending}>
-        {isPending ? "Submitting..." : "Submit"}
+        {isPending ? <><LoaderIcon /> Submitting</> : "Submit"}
       </Button>
     </form>
   );
