@@ -2,6 +2,7 @@
 
 import prisma from "@/lib/prisma";
 import { clerkClient, currentUser } from "@clerk/nextjs/server";
+import { NotificationType } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 export const claimReferBonus = async (refererId: string) => {
     try {
@@ -30,6 +31,14 @@ export const claimReferBonus = async (refererId: string) => {
                     refereeId: user?.id!,
                     referrerId: refererId,
                     referredAt: new Date(),
+                }
+            })
+
+            await prisma.notification.create({
+                data: {
+                    userId: refererId,
+                    message: `${user?.fullName} claimed your refer bonus! You received 100 points.`,
+                    type: NotificationType.QUESTION,
                 }
             })
         } else {
