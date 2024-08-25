@@ -9,6 +9,7 @@ const isProtectedRoute = createRouteMatcher([
   '/challenge',
   '/notifications',
   '/account',
+  '/referral',
 ]);
 
 export default clerkMiddleware((auth, req) => {
