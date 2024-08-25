@@ -18,7 +18,7 @@ export default async function ReferralPage() {
     return (
         <>
             <div className="p-4">
-                {!isEligible ? <ReferForm /> :
+                {!isEligible ? <ReferForm userId={currentActiveUser?.id!} /> :
                     <p>Sorry, You are not eligible.</p>
                 }
 

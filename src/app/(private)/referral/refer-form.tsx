@@ -5,8 +5,10 @@ import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState, useTransition } from "react";
+import { useTransition } from "react";
 import { claimReferBonus } from "./actions";
+import { toast } from "sonner"
+import { Toaster } from "@/components/ui/sonner"
 
 const referralCodeSchema = z.object({
   referralCode: z.string().min(1, "Referral code is required"),
@@ -14,7 +16,7 @@ const referralCodeSchema = z.object({
 
 type ReferralCodeFormData = z.infer<typeof referralCodeSchema>;
 
-export default function ReferForm() {
+export default function ReferForm({ userId }: { userId: string }) {
   const [isPending, startTransition] = useTransition();
 
   const {
@@ -26,6 +28,18 @@ export default function ReferForm() {
   });
 
   const onSubmit = async (data: ReferralCodeFormData) => {
+    if (data.referralCode === userId) {
+      await toast("You cannot refer yourself!", {
+        description: "Use other's refer id.",
+        action: {
+          label: "Got it",
+          onClick: () => {},
+        },
+      });
+
+      return;
+    };
+
     await startTransition(async () => {
       // Handle form submission
       await claimReferBonus(data.referralCode);
@@ -34,6 +48,7 @@ export default function ReferForm() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-2">
+       <Toaster />
       <Input
         placeholder="Enter referral code.."
         {...register("referralCode")}
