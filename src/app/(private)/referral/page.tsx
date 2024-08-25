@@ -1,7 +1,6 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import prisma from "@/lib/prisma";
 import { currentUser } from "@clerk/nextjs/server";
+import ReferForm from "./refer-form";
 
 export default async function ReferralPage() {
     let currentActiveUser, refer, isEligible;
@@ -18,10 +17,7 @@ export default async function ReferralPage() {
     return (
         <>
             <div className="p-4">
-                {!isEligible ? <form className='flex flex-col gap-2'>
-                    <Input placeholder='Enter referral code..' />
-                    <Button type="submit">Submit</Button>
-                </form> :
+                {!isEligible ? <ReferForm /> :
                     <p>Sorry, You are not eligible.</p>
                 }
             </div>
