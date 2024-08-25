@@ -1,9 +1,11 @@
-"use client"
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useState, useTransition } from "react";
 
 const referralCodeSchema = z.object({
   referralCode: z.string().min(1, "Referral code is required"),
@@ -12,6 +14,8 @@ const referralCodeSchema = z.object({
 type ReferralCodeFormData = z.infer<typeof referralCodeSchema>;
 
 export default function ReferForm() {
+  const [isPending, startTransition] = useTransition();
+
   const {
     register,
     handleSubmit,
@@ -20,9 +24,11 @@ export default function ReferForm() {
     resolver: zodResolver(referralCodeSchema),
   });
 
-  const onSubmit = (data: ReferralCodeFormData) => {
-    // Handle form submission
-    console.log(data);
+  const onSubmit = async (data: ReferralCodeFormData) => {
+    startTransition(() => {
+      // Handle form submission
+      console.log(data);
+    });
   };
 
   return (
@@ -30,11 +36,14 @@ export default function ReferForm() {
       <Input
         placeholder="Enter referral code.."
         {...register("referralCode")}
+        disabled={isPending}
       />
       {errors.referralCode && (
-          <p className="text-red-500">{errors.referralCode.message}</p>
+        <p className="text-red-500">{errors.referralCode.message}</p>
       )}
-      <Button type="submit">Submit</Button>
+      <Button type="submit" disabled={isPending}>
+        {isPending ? "Submitting..." : "Submit"}
+      </Button>
     </form>
   );
 }
