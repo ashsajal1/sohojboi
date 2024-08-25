@@ -7,7 +7,11 @@ import { revalidatePath } from "next/cache";
 export const claimReferBonus = async (refererId: string) => {
     try {
         const user = await currentUser();
-        const refererUser = await clerkClient().users.getUser(refererId)
+        const refererUser = await clerkClient().users.getUser(refererId);
+
+        if(user?.id === refererId) {
+            throw new Error("You cannot refer yourself.")
+        }
 
         if (refererUser) {
             await Promise.all([
