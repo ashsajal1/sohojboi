@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState, useTransition } from "react";
+import { claimReferBonus } from "./actions";
 
 const referralCodeSchema = z.object({
   referralCode: z.string().min(1, "Referral code is required"),
@@ -25,9 +26,9 @@ export default function ReferForm() {
   });
 
   const onSubmit = async (data: ReferralCodeFormData) => {
-    startTransition(() => {
+    await startTransition(async () => {
       // Handle form submission
-      console.log(data);
+      await claimReferBonus(data.referralCode);
     });
   };
 
