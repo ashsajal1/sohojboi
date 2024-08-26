@@ -85,8 +85,6 @@ export const handleUpvote = async (
       });
     }
   }
-
-  revalidatePath("");
 };
 
 export const deleteAnswer = async (answerId: string, questionId: string) => {
