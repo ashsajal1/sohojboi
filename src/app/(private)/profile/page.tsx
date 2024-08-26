@@ -23,6 +23,7 @@ import ProfileData from "./profile-data";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Answer from "./answer";
+import ReferId from "../referral/refer-id";
 
 export async function generateMetadata({ searchParams }: { searchParams: { id: string } }) {
     let user: User | null;
@@ -106,6 +107,7 @@ export default async function Page({ searchParams }: { searchParams: { id: strin
                     <div>
                         <Image className="rounded-ull" width={100} height={100} alt="user image" src={user?.imageUrl || ''} />
                         <p>{user?.fullName}</p>
+                        <ReferId referId={user?.id!} />
                     </div>
 
                     <div className="flex flex-col gap-2">
