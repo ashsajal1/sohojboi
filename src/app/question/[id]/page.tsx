@@ -149,10 +149,8 @@ export default async function Question({ params }: Params) {
                         </ReactMarkDown>
                     </CardDescription>
 
-                    <div className="flex items-center gap-2">
-                        <Badge variant={'secondary'}>
-                            <EyeOpenIcon className="mr-2" />{viewCount._sum.count}
-                        </Badge>
+                    <div className="flex items-center gap-2 text-sm">
+                        <p>{viewCount._sum.count} <span className="ml-1">views</span></p>
                         <Button variant="link">{question?.topic?.name}</Button>
                     </div>
                 </CardHeader>
