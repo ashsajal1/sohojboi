@@ -125,8 +125,6 @@ export const handleUpvote = async (article: Article) => {
       });
     }
   }
-
-  revalidatePath("/");
 };
 
 export const deleteComment = async (commentId: string) => {
@@ -218,6 +216,4 @@ export const handleCommentUpvote = async (comment: Comment) => {
       });
     }
   }
-
-  revalidatePath("/");
 };
