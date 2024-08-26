@@ -18,6 +18,7 @@ const ProfileData = ({ challenge }: { challenge: Competition }) => {
                 challengeStatus={isDraw ? 'draw' : (challenge.challengerId === winnerId ? 'winner' : 'loser')}
             />
             <ProfileImgCard
+                leftSideImage={false}
                 type={"challengeResult"}
                 userId={challenge.challengeeId}
                 challengeStatus={isDraw ? 'draw' : (challenge.challengeeId === winnerId ? 'winner' : 'loser')}
