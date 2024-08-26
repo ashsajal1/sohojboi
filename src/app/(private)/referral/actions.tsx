@@ -10,7 +10,7 @@ export const claimReferBonus = async (refererId: string) => {
         const refererUser = await clerkClient().users.getUser(refererId);
 
         if(user?.id === refererId) {
-            throw new Error("You cannot refer yourself.")
+            return { error : "You cannot refer yourself!" };
         }
 
         if (refererUser) {

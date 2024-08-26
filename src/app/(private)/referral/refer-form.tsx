@@ -43,7 +43,11 @@ export default function ReferForm({ userId }: { userId: string }) {
 
     await startTransition(async () => {
       // Handle form submission
-      await claimReferBonus(data.referralCode);
+      const res = await claimReferBonus(data.referralCode);
+      if(res?.error) {
+        toast.error(res.error)
+        return;
+      }
     });
   };
 
