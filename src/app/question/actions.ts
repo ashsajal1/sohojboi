@@ -84,8 +84,6 @@ export const handleQuestionUpvote = async (
       });
     }
   }
-
-  revalidatePath("");
 };
 
 export const getQuestions = async (page: number): Promise<Question[]> => {
