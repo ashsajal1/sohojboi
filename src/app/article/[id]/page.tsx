@@ -9,8 +9,6 @@ import { auth, clerkClient } from '@clerk/nextjs/server';
 import { increaseView } from '@/app/_actions/increase-view';
 import ProfileImgCard from '@/components/profile-img-card';
 import UpvoteArticle from './upvote';
-import Views from './views';
-import { Badge } from '@/components/ui/badge';
 import Content from '../../../components/content';
 import Link from 'next/link';
 import ShareBtn from '@/components/share-btn';
@@ -151,9 +149,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 
                     <CardDescription>
                         <Content content={article?.content!} />
-                        <Badge className='mt-3' variant={'outline'}>
-                            <Views articleId={articleId} />
-                        </Badge>
+                        <p className='mt-2'> {viewCount._sum.count || 0} views </p>
                     </CardDescription>
 
                     <div className='flex items-center justify-between py-3'>
