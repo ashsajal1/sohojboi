@@ -8,7 +8,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useTransition } from "react";
 import { claimReferBonus } from "./actions";
 import { toast } from "sonner"
-import { Toaster } from "@/components/ui/sonner"
 import LoaderIcon from "@/components/loader-icon";
 
 const referralCodeSchema = z.object({
@@ -49,7 +48,6 @@ export default function ReferForm({ userId }: { userId: string }) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-2">
-      <Toaster />
       <Input
         placeholder="Enter referral code.."
         {...register("referralCode")}
