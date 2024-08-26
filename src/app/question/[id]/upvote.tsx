@@ -1,10 +1,10 @@
-'use client'
+"use client"
 
-import { Button } from "@/components/ui/button";
-import { handleUpvote } from "./actions";
-import { useOptimistic, useTransition } from "react";
-import { Answer, Question } from "@prisma/client";
-import { getStatusText } from "@/lib/utils";
+import { Button } from '@/components/ui/button'
+import React from 'react'
+import { handleUpvote } from './actions'
+import { Answer, Question } from '@prisma/client'
+import { ChevronUp } from 'lucide-react'
 
 interface AnswersParams {
     answer: Answer;
@@ -14,26 +14,29 @@ interface AnswersParams {
 }
 
 export default function Upvote({ answer, userId, question, isUpvotedAnswer }: AnswersParams) {
-    const upvoteCount = answer.upvoteCount;
-    const [optimisticUpvotes, addOptimisticUpvote] = useOptimistic(
-        { upvoteCount, upvoting: false },
-        (state, newUpvoteCount: number) => ({
-            ...state,
-            upvoteCount: newUpvoteCount,
-            upvoting: true
-        })
+    const [upvoteCount, setUpvoteCount] = React.useState(answer.upvoteCount);
+    const [isUpvoted, setIsUpvoted] = React.useState(isUpvotedAnswer);
 
-    )
-
-    const statusText = getStatusText(isUpvotedAnswer)
-
-    let [_, startTransition] = useTransition();
     return (
         <Button size={'sm'} onClick={async () => {
-            startTransition(async () => {
-                addOptimisticUpvote(optimisticUpvotes.upvoteCount + 1);
-                await handleUpvote(answer, userId, question)
-            })
-        }} variant={isUpvotedAnswer? 'secondary':'outline'}>{upvoteCount} {optimisticUpvotes.upvoting ? 'Progressing' : [statusText]}</Button>
+            // if (optimisticUpvotes.upvoting) return;
+            if (isUpvoted) {
+                setIsUpvoted(false);
+                setUpvoteCount(upvoteCount - 1); // Optimistically update the count
+                await handleUpvote(answer, userId, question);
+                return;
+            } else {
+                setIsUpvoted(true);
+                setUpvoteCount(upvoteCount + 1); // Optimistically update the count
+                await handleUpvote(answer, userId, question);
+                return;
+            }
+        }} 
+        className={`transition-colors duration-300 ${isUpvoted ? 'text-green-600' : ''}`}
+        variant={'ghost'}
+        >
+            <ChevronUp className='w-4 h-4 mr-2' />
+            {upvoteCount}
+        </Button>
     )
 }
