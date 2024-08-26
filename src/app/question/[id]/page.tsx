@@ -153,7 +153,7 @@ export default async function Question({ params }: Params) {
                         <Badge variant={'secondary'}>
                             <EyeOpenIcon className="mr-2" />{viewCount._sum.count}
                         </Badge>
-                        <Badge>{question?.topic?.name}</Badge>
+                        <Button variant="link">{question?.topic?.name}</Button>
                     </div>
                 </CardHeader>
 
