@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
 import UpvoteBtn from "./upvote-btn";
-import { auth, clerkClient } from "@clerk/nextjs/server";
+import { auth } from "@clerk/nextjs/server";
 import { Question } from "@prisma/client";
 import prisma from "@/lib/prisma";
 import ProfileImgCard from "@/components/profile-img-card";
