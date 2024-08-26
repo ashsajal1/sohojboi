@@ -4,14 +4,13 @@ import prisma from "@/lib/prisma"
 import { isValidObjectId } from "@/lib/validate";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
 import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
 import { clerkClient, currentUser } from '@clerk/nextjs/server';
 import { Answers } from "./answers";
 import { type Question } from "@prisma/client";
 import UpvoteBtn from "../upvote-btn";
 import ProfileImgCard from "@/components/profile-img-card";
 import { chekcIsQuestionUpvoted } from "@/lib/utils";
-import { CaretUpIcon, DotsHorizontalIcon, EyeOpenIcon, Pencil1Icon, TrashIcon } from "@radix-ui/react-icons";
+import {  DotsHorizontalIcon, Pencil1Icon, TrashIcon } from "@radix-ui/react-icons";
 // import dropdown component
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import AnswerForm from "./answer-form";
