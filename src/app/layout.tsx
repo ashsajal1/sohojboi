@@ -6,7 +6,7 @@ import { ClerkProvider } from '@clerk/nextjs'
 import Navbar from "@/components/navbar";
 import Questions from "./@questions/questions";
 import Nprogress from "@/components/nprogress";
-
+import { Toaster } from "@/components/ui/sonner"
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -32,6 +32,7 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
+            <Toaster />
             <Nprogress />
             <Navbar />
             <main className="p-2">
