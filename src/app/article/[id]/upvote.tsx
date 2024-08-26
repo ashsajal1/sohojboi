@@ -1,38 +1,40 @@
 'use client'
 
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button'
+import React from 'react'
 import { handleUpvote } from "./actions";
-import { useOptimistic, useTransition } from "react";
 import { Article } from "@prisma/client";
-import { getStatusText } from "@/lib/utils";
+import { ChevronUp } from 'lucide-react'
 
-interface AnswersParams {
-    article: Article;
-    isUpvoted: boolean;
+export default function UpvoteArticle({ article, isUpvoted, upvoteCount }: {
+    article: Article,
+    isUpvoted: boolean,
     upvoteCount: number
-}
+}) {
+    const [upvoteCounts, setUpvoteCounts] = React.useState(upvoteCount);
+    const [upvoted, setUpvoted] = React.useState(isUpvoted);
 
-export default function UpvoteArticle({ article, isUpvoted, upvoteCount }: AnswersParams) {
-
-    const [optimisticUpvotes, addOptimisticUpvote] = useOptimistic(
-        { upvoteCount, upvoting: false },
-        (state, newUpvoteCount: number) => ({
-            ...state,
-            upvoteCount: newUpvoteCount,
-            upvoting: true
-        })
-
-    )
-
-    const statusText = getStatusText(isUpvoted)
-
-    let [_, startTransition] = useTransition();
     return (
         <Button size={'sm'} onClick={async () => {
-            startTransition(async () => {
-                addOptimisticUpvote(optimisticUpvotes.upvoteCount + 1);
-                await handleUpvote(article)
-            })
-        }} variant={isUpvoted? 'secondary':'outline'}>{upvoteCount} {optimisticUpvotes.upvoting ? 'Progressing' : [statusText]}</Button>
+            // if (optimisticUpvotes.upvoting) return;
+            if (upvoted) {
+                setUpvoted(false);
+                setUpvoteCounts(upvoteCounts - 1); // Optimistically update the count
+                await handleUpvote(article);
+                return;
+            } else {
+                setUpvoted(true);
+                setUpvoteCounts(upvoteCount + 1); // Optimistically update the count
+                await handleUpvote(article);
+                return;
+            }
+        }} 
+        className={`transition-colors duration-300 ${upvoted ? 'text-green-600' : ''}`}
+        variant={'ghost'}
+        >
+            <ChevronUp className='w-4 h-4 mr-2' />
+            {upvoteCounts}
+        </Button>
     )
 }
+
