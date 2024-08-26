@@ -10,7 +10,8 @@ export default async function QuestionsSlot() {
     user = await currentUser();
     articles = await prisma.article.findMany({
       where: {
-        authorId: user?.id!
+        authorId: user?.id!,
+        deletedAt: null
       }
     });
   } catch (err) {
