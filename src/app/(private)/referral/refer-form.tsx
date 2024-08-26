@@ -30,12 +30,8 @@ export default function ReferForm({ userId }: { userId: string }) {
 
   const onSubmit = async (data: ReferralCodeFormData) => {
     if (data.referralCode === userId) {
-      await toast("You cannot refer yourself!", {
+      await toast.error("You cannot refer yourself!", {
         description: "Use other's refer id.",
-        action: {
-          label: "Got it",
-          onClick: () => {},
-        },
       });
 
       return;
@@ -44,7 +40,7 @@ export default function ReferForm({ userId }: { userId: string }) {
     await startTransition(async () => {
       // Handle form submission
       const res = await claimReferBonus(data.referralCode);
-      if(res?.error) {
+      if (res?.error) {
         toast.error(res.error)
         return;
       }
@@ -53,7 +49,7 @@ export default function ReferForm({ userId }: { userId: string }) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-2">
-       <Toaster />
+      <Toaster />
       <Input
         placeholder="Enter referral code.."
         {...register("referralCode")}
