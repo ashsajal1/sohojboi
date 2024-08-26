@@ -13,19 +13,10 @@ export default function UpvoteBtn({ question, actorId, isUpvotedQuestion }: {
 }) {
     const [upvoteCount, setUpvoteCount] = React.useState(question.upvoteCount);
     const [isUpvoted, setIsUpvoted] = React.useState(isUpvotedQuestion);
-    const currentUpvoteCount = question.upvoteCount;
-    const [optimisticUpvotes, addOptimisticUpvote] = useOptimistic(
-        { currentUpvoteCount, upvoting: false },
-        (state, newUpvoteCount: number) => ({
-            ...state,
-            upvoteCount: newUpvoteCount,
-            upvoting: true
-        })
-    );
 
     return (
         <Button size={'sm'} onClick={async () => {
-            if (optimisticUpvotes.upvoting) return;
+            // if (optimisticUpvotes.upvoting) return;
             if (isUpvoted) {
                 setIsUpvoted(false);
                 setUpvoteCount(upvoteCount - 1); // Optimistically update the count
