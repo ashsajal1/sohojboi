@@ -1,4 +1,3 @@
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import CreateQuestion from "./create-question";
 import prisma from "@/lib/prisma";
 import { Metadata } from "next";
