@@ -153,9 +153,6 @@ export default async function Question({ params }: Params) {
                         <Badge variant={'secondary'}>
                             <EyeOpenIcon className="mr-2" />{viewCount._sum.count}
                         </Badge>
-                        <Badge variant={'secondary'}>
-                            <CaretUpIcon className="mr-2" />{question?.upvoteCount!}
-                        </Badge>
                         <Badge>{question?.topic?.name}</Badge>
                     </div>
                 </CardHeader>
