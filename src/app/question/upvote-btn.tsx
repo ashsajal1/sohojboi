@@ -37,7 +37,10 @@ export default function UpvoteBtn({ question, actorId, isUpvotedQuestion }: {
                 await handleQuestionUpvote(question, actorId);
                 return;
             }
-        }} variant={'ghost'}>
+        }} 
+        className={`transition-colors duration-300 ${isUpvoted ? 'text-green-600' : ''}`}
+        variant={'ghost'}
+        >
             <ChevronUp className='w-4 h-4 mr-2' />
             {upvoteCount}
         </Button>
