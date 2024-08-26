@@ -34,32 +34,31 @@ export default async function QuestionCard({ question }: QuestionProps) {
 
         <Card className="z-10">
             <BlurFade delay={0.25} inView>
-            <CardHeader>
-                <CardTitle>{question.questionTitle}</CardTitle>
-                <div className="text-sm text-muted-foreground flex items-center gap-2">
-                    <span>Upvoted by {question.upvoteCount} people</span>
-                    <Separator orientation="vertical" />
+                <CardHeader>
+                    <CardTitle>{question.questionTitle}</CardTitle>
+                    <div className="text-sm text-muted-foreground flex items-center gap-2">
+                        <span>Upvoted by {question.upvoteCount} people</span>
+                        <Separator orientation="vertical" />
 
-                    <div className="flex items-center gap-1">
-                        <EyeOpenIcon className="mr-1" />
-                        {viewCount._sum.count || 0}
+                        <div className="flex items-center gap-1">
+                            <EyeOpenIcon className="mr-1" />
+                            {viewCount._sum.count || 0}
+                        </div>
                     </div>
-                </div>
-            </CardHeader>
+                </CardHeader>
 
-            <CardFooter className="flex items-center justify-between">
+                <CardFooter className="flex items-center justify-between">
 
-                <ProfileImgCard type="question" createdAt={question.createdAt} userId={question.userId} />
+                    <ProfileImgCard type="question" createdAt={question.createdAt} userId={question.userId} />
 
-                <div className="flex items-center gap-2">
-                    <Link href={`/question/${question.id}`}>
-                        <Button variant={'link'} size={'sm'}><CornerDownRightIcon className="mr-2 h-4 w-4" />Answer</Button>
-                    </Link>
-                    <UpvoteBtn isUpvotedQuestion={isUpvotedQuestion} question={question} actorId={actorId || ''} />
-                </div>
-            </CardFooter>
-        </BlurFade>
-            </Card >
-        
+                    <div className="flex items-center gap-2">
+                        <Link href={`/question/${question.id}`}>
+                            <Button variant={'link'} size={'sm'}><CornerDownRightIcon className="mr-2 h-4 w-4" />Answer</Button>
+                        </Link>
+                        <UpvoteBtn isUpvotedQuestion={isUpvotedQuestion} question={question} actorId={actorId || ''} />
+                    </div>
+                </CardFooter>
+            </BlurFade>
+        </Card >
     )
 }
