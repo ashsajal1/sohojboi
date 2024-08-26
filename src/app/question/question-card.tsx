@@ -4,11 +4,8 @@ import Link from "next/link";
 import UpvoteBtn from "./upvote-btn";
 import { auth } from "@clerk/nextjs/server";
 import { Question } from "@prisma/client";
-import prisma from "@/lib/prisma";
 import ProfileImgCard from "@/components/profile-img-card";
 import { chekcIsQuestionUpvoted } from "@/lib/utils";
-import { EyeOpenIcon } from "@radix-ui/react-icons";
-import { Separator } from "@/components/ui/separator";
 import { CornerDownRightIcon } from "lucide-react";
 import BlurFade from "@/components/magicui/blur-fade";
 
@@ -19,31 +16,14 @@ export default async function QuestionCard({ question }: QuestionProps) {
     const actorId = await auth().userId;
     let isUpvotedQuestion = await chekcIsQuestionUpvoted(actorId || '', question.id);
 
-    const viewCount = await prisma.view.aggregate({
-        _sum: {
-            count: true,
-        },
-        where: {
-            questionId: {
-                in: [question?.id!]
-            }
-        }
-    })
-
     return (
 
         <Card className="z-10">
             <BlurFade delay={0.25} inView>
                 <CardHeader>
                     <CardTitle>{question.questionTitle}</CardTitle>
+                    <p className="text-sm text-muted-foreground">{question.questionDescription.slice(0, 120)}...</p>
                     <div className="text-sm text-muted-foreground flex items-center gap-2">
-                        <span>Upvoted by {question.upvoteCount} people</span>
-                        <Separator orientation="vertical" />
-
-                        <div className="flex items-center gap-1">
-                            <EyeOpenIcon className="mr-1" />
-                            {viewCount._sum.count || 0}
-                        </div>
                     </div>
                 </CardHeader>
 
