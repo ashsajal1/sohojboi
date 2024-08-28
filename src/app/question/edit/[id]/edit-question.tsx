@@ -46,8 +46,8 @@ const EditQuestion = ({ question, topics }: { question: Question; topics: Topic[
   const formMethods = useForm({
     resolver: zodResolver(questionSchema),
     defaultValues: {
-      title: question.questionTitle,
-      content: question.questionDescription,
+      title: question.content,
+      content: question.description,
       topicId: question.topicId,
     },
   });

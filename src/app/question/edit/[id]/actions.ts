@@ -33,8 +33,8 @@ export const updateQuestion = async (_: any, formData: FormData) => {
       id: questionId,
     },
     data: {
-      questionTitle: title as string,
-      questionDescription: description as string,
+      content: title as string,
+      description: description as string,
     },
   });
 
@@ -54,8 +54,8 @@ export const editQuestion = async (
       id: questionId,
     },
     data: {
-      questionTitle: title,
-      questionDescription: content,
+      content: title,
+      description: content,
       topicId: topicId,
     },
   });

@@ -71,7 +71,7 @@ export const handleQuestionUpvote = async (
       },
     });
 
-    const message = `${actorName} upvoted your question "${question?.questionTitle}"`;
+    const message = `${actorName} upvoted your question "${question?.content}"`;
 
     if (actorId !== question.userId) {
       const notif = await prisma.notification.create({
