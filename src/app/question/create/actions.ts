@@ -22,11 +22,8 @@ export const createQuestion = async (
     newQuestion = await prisma.question.create({
       data: {
         userId: user?.id as string,
-        questionTitle: title as string,
-        questionDescription: content,
-        userFirstName: user?.firstName as string,
-        userLastName: user?.lastName as string,
-        userFullName: user?.fullName as string,
+        content: title as string,
+        description: content,
         topicId: topicId as string,
         deletedAt: null,
       },
