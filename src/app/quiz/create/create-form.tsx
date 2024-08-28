@@ -117,16 +117,16 @@ export default function CreateForm({ topics }: { topics: Topic[] }) {
                                             topics.map((topic) => (
                                                 <CommandItem
                                                     key={topic.id}
-                                                    value={topic.id}
-                                                    onSelect={(currentValue) => {
-                                                        field.onChange(currentValue);
+                                                    value={topic.name}
+                                                    onSelect={(currentValue: string) => {
+                                                        field.onChange(topics.find((t) => t.name === currentValue)?.id!);
                                                         setOpen(false);
                                                     }}
                                                 >
                                                     <CheckIcon
                                                         className={cn(
                                                             "mr-2 h-4 w-4",
-                                                            field.value === topic.name ? "opacity-100" : "opacity-0"
+                                                            field.value === topic.id ? "opacity-100" : "opacity-0"
                                                         )}
                                                     />
                                                     {topic.name}
