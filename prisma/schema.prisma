@@ -14,20 +14,20 @@ datasource db {
 }
 
 model Question {
-  id                  String    @id @default(auto()) @map("_id") @db.ObjectId
-  userId              String
-  questionTitle       String
-  questionDescription String
-  upvoteCount         Int       @default(0)
-  answers             Answer[]
-  userFirstName       String
-  userLastName        String
-  userFullName        String
-  topicId             String?   @db.ObjectId
-  topic               Topic?    @relation(fields: [topicId], references: [id])
-  createdAt           DateTime  @default(now())
-  updatedAt           DateTime  @updatedAt
-  deletedAt           DateTime?
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  userId        String
+  content       String
+  description   String
+  upvoteCount   Int       @default(0)
+  answers       Answer[]
+  userFirstName String
+  userLastName  String
+  userFullName  String
+  topicId       String?   @db.ObjectId
+  topic         Topic?    @relation(fields: [topicId], references: [id])
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  deletedAt     DateTime?
 }
 
 model Answer {
