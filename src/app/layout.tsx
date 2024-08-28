@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Ubuntu } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider"
 import { ClerkProvider } from '@clerk/nextjs'
@@ -7,7 +7,7 @@ import Navbar from "@/components/navbar";
 import Questions from "./@questions/questions";
 import Nprogress from "@/components/nprogress";
 import { Toaster } from "@/components/ui/sonner"
-const inter = Inter({ subsets: ["latin"] });
+const font = Ubuntu({ subsets: ["latin"], weight: ["400", "700"] });
 
 export const metadata: Metadata = {
   title: "Sohojboi: Learn Something with Fun",
@@ -25,7 +25,7 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
-        <body className={inter.className}>
+        <body className={font.className}>
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
@@ -38,9 +38,9 @@ export default function RootLayout({
             <main className="p-2">
               {children}
               <Questions>
-              {questions}
+                {questions}
               </Questions>
-        
+
             </main>
           </ThemeProvider>
         </body>
