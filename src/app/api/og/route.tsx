@@ -10,8 +10,6 @@ export async function GET(request: NextRequest) {
     const profileImg = searchParams.get("profileImg");
     const date = searchParams.get("date");
 
-    // console.log(title, profileImg, date);
-
     return new ImageResponse(
         (
             <div
