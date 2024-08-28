@@ -20,9 +20,6 @@ model Question {
   description   String
   upvoteCount   Int       @default(0)
   answers       Answer[]
-  userFirstName String
-  userLastName  String
-  userFullName  String
   topicId       String?   @db.ObjectId
   topic         Topic?    @relation(fields: [topicId], references: [id])
   createdAt     DateTime  @default(now())
