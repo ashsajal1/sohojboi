@@ -10,15 +10,11 @@ import {
     TabsTrigger,
 } from "@/components/ui/tabs"
 import QuestionCard from "@/app/question/question-card";
-import { Answers } from "@/app/question/[id]/answers";
 import { clerkClient, currentUser, User } from '@clerk/nextjs/server';
-import { Competition } from "@prisma/client";
 import { getUserWinLoseStats } from "@/lib/db-query";
 import { formatDate } from "@/lib/date-format";
 import { Winner } from "./winner";
-import { Names } from "./names";
-import ProfileImgCard from "@/components/profile-img-card";
-import { calculateWinPercentage, getWinnerLoser } from "./lib/utils";
+import { calculateWinPercentage } from "./lib/utils";
 import ProfileData from "./profile-data";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";

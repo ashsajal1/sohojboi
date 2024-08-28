@@ -5,7 +5,7 @@ import { CardContent } from "@/components/ui/card";
 import { Competition } from "@prisma/client";
 
 const ProfileData = ({ challenge }: { challenge: Competition }) => {
-    const { winnerId, loserId } = getWinnerLoser(challenge)
+    const { winnerId } = getWinnerLoser(challenge)
     const isDraw = challenge.challengerScore === challenge.challengeeScore;
 
     return <CardContent>
