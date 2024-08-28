@@ -57,11 +57,11 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
         month: 'short',
     });
 
-    const ogImage = `/api/og?title=${question?.questionTitle}&profileImg=${profileImg}&date=${formattedDate}&authorName=${authorName}`
+    const ogImage = `/api/og?title=${question?.content}&profileImg=${profileImg}&date=${formattedDate}&authorName=${authorName}`
 
     return {
-        title: question?.questionTitle,
-        description: question?.questionDescription.slice(1, 150),
+        title: question?.content,
+        description: question?.description.slice(1, 150),
         openGraph: {
             images: [ogImage]
         }
@@ -118,7 +118,7 @@ export default async function Question({ params }: Params) {
                     <div className="flex justify-between items-start">
                         <BoxReveal>
                             <CardTitle className="py-2 text-xl">
-                                {question?.questionTitle}
+                                {question?.content}
                             </CardTitle>
                         </BoxReveal>
                         {user?.id === question?.userId && <DropdownMenu>
@@ -144,7 +144,7 @@ export default async function Question({ params }: Params) {
 
                     <CardDescription>
                         <ReactMarkDown>
-                            {question?.questionDescription}
+                            {question?.description}
                         </ReactMarkDown>
                     </CardDescription>
 
@@ -160,7 +160,7 @@ export default async function Question({ params }: Params) {
 
                         <div className="flex items-center gap-2">
                             <UpvoteBtn isUpvotedQuestion={isUpvotedQuestion} question={question || {} as Question} actorId={user?.id || ''} />
-                            <ShareBtn title={question?.questionTitle!} description={question?.questionDescription.slice(0, 100)!} />
+                            <ShareBtn title={question?.content!} description={question?.description.slice(0, 100)!} />
                         </div>
                     </div>
 
