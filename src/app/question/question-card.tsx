@@ -21,8 +21,8 @@ export default async function QuestionCard({ question }: QuestionProps) {
         <Card className="z-10">
             <BlurFade delay={0.25} inView>
                 <CardHeader>
-                    <CardTitle>{question.questionTitle}</CardTitle>
-                    <p className="text-sm text-muted-foreground">{question.questionDescription.slice(0, 120)}...</p>
+                    <CardTitle>{question.content}</CardTitle>
+                    <p className="text-sm text-muted-foreground">{question.description.slice(0, 120)}...</p>
                     <div className="text-sm text-muted-foreground flex items-center gap-2">
                     </div>
                 </CardHeader>
