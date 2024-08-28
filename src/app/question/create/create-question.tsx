@@ -23,6 +23,7 @@ import { questionSchema } from "./schema";
 import { useForm, Controller } from 'react-hook-form';
 import { cn } from "@/lib/utils";
 import { ArrowUpIcon, CheckIcon } from "lucide-react";
+import LoaderIcon from "@/components/loader-icon";
 
 const CreateQuestion = ({ topics }: { topics: Topic[] }) => {
   const [pending, startTransition] = useTransition();
@@ -134,7 +135,7 @@ const CreateQuestion = ({ topics }: { topics: Topic[] }) => {
             )}
           </div>
           <Button disabled={pending} className="w-full" type="submit">
-            {pending ? "Creating..." : "Create"}
+            {pending ? <LoaderIcon /> : "Create"}
           </Button>
         </div>
       </form>
