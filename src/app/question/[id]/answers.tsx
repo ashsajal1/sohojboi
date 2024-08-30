@@ -15,6 +15,7 @@ import {
 import DeleteAnswer from "./delete-answer";
 import EditAnswer from "./edit-answer";
 import ReactMarkdown from 'react-markdown';
+import { Separator } from "@/components/ui/separator";
 
 interface AnswersProps {
     answers: Answer[];
@@ -72,13 +73,30 @@ const Answer = async ({ answer, question }: { answer: Answer, question: Question
         </CardHeader>
 
         <CardFooter>
-            <div className="flex items-center justify-between w-full">
-                <ProfileImgCard type={"answer"} userId={answer.userId} createdAt={answer.createdAt || new Date()} />
+            <section className="flex flex-col w-full">
+                <div className="flex items-center justify-between w-full">
+                    <ProfileImgCard type={"answer"} userId={answer.userId} createdAt={answer.createdAt || new Date()} />
 
-                <div className="flex items-center gap-2">
-                    <Upvote isUpvotedAnswer={isUpvotedAnswer || false} question={question} userId={currentUser?.userId || ''} answer={answer} />
+                    <div className="flex items-center gap-2">
+                        <Upvote isUpvotedAnswer={isUpvotedAnswer || false} question={question} userId={currentUser?.userId || ''} answer={answer} />
+                    </div>
                 </div>
-            </div>
+
+                <div className="w-full">
+                    <Separator className="mt-2 w-full" />
+                    <Button className="p-0" variant="link">Add comment</Button>
+
+                    <div className="text-sm text-muted-foreground/60">
+                        <div className="flex items-center gap-2">
+                            <p>This is my comment</p>
+                            <p className="font-semibold">- Ashfiquzzaman Sajal</p>
+                            <p className="text-blue-600 cursor-pointer">Edit</p>
+                            <p className="text-red-600 cursor-pointer">Delete</p>
+                        </div>
+                        <Separator className="mt-2 w-full" />
+                    </div>
+                </div>
+            </section>
 
         </CardFooter>
     </Card>
