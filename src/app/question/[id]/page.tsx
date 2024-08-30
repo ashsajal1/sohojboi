@@ -10,7 +10,7 @@ import { type Question } from "@prisma/client";
 import UpvoteBtn from "../upvote-btn";
 import ProfileImgCard from "@/components/profile-img-card";
 import { chekcIsQuestionUpvoted } from "@/lib/utils";
-import {  DotsHorizontalIcon, Pencil1Icon, TrashIcon } from "@radix-ui/react-icons";
+import { DotsHorizontalIcon, Pencil1Icon, TrashIcon } from "@radix-ui/react-icons";
 // import dropdown component
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import AnswerForm from "./answer-form";
@@ -94,6 +94,14 @@ export default async function Question({ params }: Params) {
         throw new Error('Invalid ObjectId');
     }
 
+    const isAnswered = await prisma.answer.findFirst({
+        where: {
+            questionId: question?.id!,
+            userId: user?.id!,
+            deletedAt: null,
+        }
+    });
+
     if (user?.id) {
         increaseView(user?.id!, question?.id!)
     }
@@ -165,7 +173,7 @@ export default async function Question({ params }: Params) {
                     </div>
 
                     <SignedIn>
-                        <AnswerForm question={question} />
+                        {isAnswered === null && <AnswerForm question={question} />}
                     </SignedIn>
                     <SignedOut>
                         <h3 className="font-bold text-muted-foreground text-xl"><Link className="text-primary border-b" href={'/login'}>Login</Link> to post your answer</h3>
