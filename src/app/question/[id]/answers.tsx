@@ -16,6 +16,7 @@ import DeleteAnswer from "./delete-answer";
 import EditAnswer from "./edit-answer";
 import ReactMarkdown from 'react-markdown';
 import { Separator } from "@/components/ui/separator";
+import Comment from "./comment/comment";
 
 interface AnswersProps {
     answers: Answer[];
@@ -86,15 +87,7 @@ const Answer = async ({ answer, question }: { answer: Answer, question: Question
                     <Separator className="mt-2 w-full" />
                     <Button className="p-0" variant="link">Add comment</Button>
 
-                    <div className="text-sm text-muted-foreground/60">
-                        <div className="flex items-center gap-2">
-                            <p>This is my comment</p>
-                            <p className="font-semibold">- Ashfiquzzaman Sajal</p>
-                            <p className="text-blue-600 cursor-pointer">Edit</p>
-                            <p className="text-red-600 cursor-pointer">Delete</p>
-                        </div>
-                        <Separator className="mt-2 w-full" />
-                    </div>
+                    <Comment />
                 </div>
             </section>
 
