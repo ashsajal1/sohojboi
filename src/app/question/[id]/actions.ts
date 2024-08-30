@@ -95,7 +95,7 @@ export const deleteAnswer = async (answerId: string, questionId: string) => {
       },
       data: {
         deletedAt: new Date(),
-      }
+      },
     });
   } catch (error) {}
 
@@ -138,15 +138,33 @@ export const createAnswer = async (_: any, formData: FormData) => {
       });
 
       if (user?.id !== questionUserId) {
-        const notif = await prisma.notification.create({
-          data: {
-            userId: (questionUserId as string) || "",
-            message: `${user?.fullName} has answered your questions.`,
-            type: NotificationType.ANSWER,
-            answerId: answer.id,
-            questionId: answer.questionId,
-          },
-        });
+        await Promise.all([
+          await prisma.notification.create({
+            data: {
+              userId: (questionUserId as string) || "",
+              message: `${user?.fullName} has answered your questions.`,
+              type: NotificationType.ANSWER,
+              answerId: answer.id,
+              questionId: answer.questionId,
+            },
+          }),
+  
+          await prisma.profile.upsert({
+            where: {
+              clerkUserId: user?.id!,
+            },
+            update: {
+              rewardCount: {
+                increment: 50,
+              },
+            },
+            create: {
+              clerkUserId: user?.id!,
+              rewardCount: 150,
+              bio: "",
+            }
+          }) 
+        ])
       }
 
       revalidatePath(`/question/${questionId}`);
