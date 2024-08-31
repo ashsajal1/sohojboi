@@ -7,9 +7,11 @@ import { AnswerComment } from '@prisma/client'
 import { useEffect, useState } from 'react'
 import { getName } from './actions'
 import Link from 'next/link'
+import { useUser } from '@clerk/nextjs'
 
 export default function Comment({ comment }: { comment: AnswerComment }) {
     const [name, setName] = useState<any>('');
+    const user = useUser()
 
     useEffect(() => {
         const fetchName = async () => {
@@ -26,8 +28,10 @@ export default function Comment({ comment }: { comment: AnswerComment }) {
                 <p>{comment.content}</p>
                 <p className="font-semibold">- <Link href={`/profile?id=${comment.userId}`}>
                     {name}</Link></p>
-                <EditComment />
-                <DeleteComment />
+                {user.user?.id === comment.userId && <>
+                    <EditComment />
+                    <DeleteComment />
+                </>}
             </div>
             <Separator className="mt-2 w-full" />
         </div>
