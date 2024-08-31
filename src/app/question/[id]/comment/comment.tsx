@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react'
 import { getName } from './actions'
 import Link from 'next/link'
 import { useUser } from '@clerk/nextjs'
+import { formatDate } from '@/lib/date-format'
 
 export default function Comment({ comment }: { comment: AnswerComment }) {
     const [name, setName] = useState<any>('');
@@ -25,7 +26,9 @@ export default function Comment({ comment }: { comment: AnswerComment }) {
     return (
         <div className="text-sm text-muted-foreground/60 py-3">
             <div className="flex items-center gap-2">
-                <p>{comment.content}</p>
+                <p className='text-muted-foreground'>{comment.content}</p>
+                -
+                <p>{formatDate(comment.createdAt)}</p>
                 <p className="font-semibold">- <Link href={`/profile?id=${comment.userId}`}>
                     {name}</Link></p>
                 {user.user?.id === comment.userId && <>
