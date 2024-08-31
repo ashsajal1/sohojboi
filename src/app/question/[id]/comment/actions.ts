@@ -3,6 +3,7 @@
 import prisma from "@/lib/prisma";
 import { CommentFormData, commentSchema } from "./type";
 import { auth, clerkClient } from "@clerk/nextjs/server";
+import { revalidatePath } from "next/cache";
 
 export const createComment = async (data: CommentFormData, answerId: string) => {
   // Validate the data using Zod
@@ -23,6 +24,8 @@ export const createComment = async (data: CommentFormData, answerId: string) => 
   } catch (error) {
     return error;
   }
+
+  revalidatePath('/')
 };
 
 export const getName = async (userId: string) => {
