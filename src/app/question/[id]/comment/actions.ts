@@ -55,6 +55,22 @@ export const deleteAnsComment = async (commentId: string) => {
     revalidatePath("/");
   } catch (errors: any) {
     return errors.message;
-    //  { error : {message: "Cannot delete comment!"}}
+  }
+};
+
+export const editAnsComment = async (data: CommentFormData, commentId: string) => {
+  try {
+    await prisma.answerComment.update({
+      where: {
+        id: commentId,
+      },
+      data: {
+        content: data.content,
+      },
+    })
+
+    revalidatePath("/");
+  } catch (error:any) {
+    return error;
   }
 };
