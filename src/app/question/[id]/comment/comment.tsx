@@ -6,6 +6,7 @@ import DeleteComment from './delete-comment'
 import { AnswerComment } from '@prisma/client'
 import { useEffect, useState } from 'react'
 import { getName } from './actions'
+import Link from 'next/link'
 
 export default function Comment({ comment }: { comment: AnswerComment }) {
     const [name, setName] = useState<any>('');
@@ -23,7 +24,8 @@ export default function Comment({ comment }: { comment: AnswerComment }) {
         <div className="text-sm text-muted-foreground/60 py-3">
             <div className="flex items-center gap-2">
                 <p>{comment.content}</p>
-                <p className="font-semibold">- {name}</p>
+                <p className="font-semibold">- <Link href={`/profile?id=${comment.userId}`}>
+                    {name}</Link></p>
                 <EditComment />
                 <DeleteComment />
             </div>
