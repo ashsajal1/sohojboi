@@ -11,15 +11,17 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog";
 import { DialogClose } from '@radix-ui/react-dialog';
-import { useTransition } from 'react';
+import { useState, useTransition } from 'react';
 import { deleteAnsComment } from './actions';
 import LoaderIcon from '@/components/loader-icon';
+import { toast } from "sonner"
 
 export default function DeleteComment({ commentId }: { commentId: string }) {
     const [pending, startTransition] = useTransition()
 
+    const [open, setOpen] = useState(false)
     return (
-        <Dialog>
+        <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
                 <p className="text-red-500 cursor-pointer">Delete</p>
             </DialogTrigger>
@@ -37,10 +39,18 @@ export default function DeleteComment({ commentId }: { commentId: string }) {
                     </DialogClose>
                     <Button onClick={(async () => {
                         await startTransition(async () => {
-                            await deleteAnsComment(commentId);
+                            const error = await deleteAnsComment(commentId);
+                            if (error) {
+                                // alert("Error")
+                                setOpen(false);
+                                toast.error("Cannot delete comment!", {
+                                    description: "An error occurred while deleting the comment.",
+                                })
+                            }
                         })
                     })
                     } disabled={pending} variant={'destructive'} type="submit">{pending ? <LoaderIcon /> : 'Yes'}</Button>
+
                 </DialogFooter>
             </DialogContent>
         </Dialog >
