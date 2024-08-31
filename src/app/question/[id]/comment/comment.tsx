@@ -33,7 +33,7 @@ export default function Comment({ comment }: { comment: AnswerComment }) {
                     {name}</Link></p>
                 {user.user?.id === comment.userId && <>
                     <EditComment />
-                    <DeleteComment />
+                    <DeleteComment commentId={comment.id} />
                 </>}
             </div>
             <Separator className="mt-2 w-full" />
