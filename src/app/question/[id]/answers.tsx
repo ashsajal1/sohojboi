@@ -17,6 +17,7 @@ import EditAnswer from "./edit-answer";
 import ReactMarkdown from 'react-markdown';
 import { Separator } from "@/components/ui/separator";
 import Comment from "./comment/comment";
+import CommentSection from "./comment/comment-section";
 
 interface AnswersProps {
     answers: Answer[];
@@ -83,12 +84,7 @@ const Answer = async ({ answer, question }: { answer: Answer, question: Question
                     </div>
                 </div>
 
-                <div className="w-full">
-                    <Separator className="mt-2 w-full" />
-                    <Button className="p-0" variant="link">Add comment</Button>
-
-                    <Comment />
-                </div>
+                <CommentSection />
             </section>
 
         </CardFooter>
