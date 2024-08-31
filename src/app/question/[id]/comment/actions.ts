@@ -22,6 +22,7 @@ export const createComment = async (
         content: validatedData.content,
         answerId: answerId,
         userId: user.userId!,
+        deletedAt: null,
       },
     });
   } catch (error) {
