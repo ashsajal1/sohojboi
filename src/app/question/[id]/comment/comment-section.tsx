@@ -5,7 +5,7 @@ import { Separator } from "@/components/ui/separator"
 import Comment from "./comment"
 import { useState } from "react"
 import CommentForm from "./comment-form"
-import { Answer } from "@prisma/client"
+import { Answer, AnswerComment } from "@prisma/client"
 
 export default function CommentSection({ answer }: { answer: Answer }) {
     const [open, setOpen] = useState(false)
@@ -13,7 +13,13 @@ export default function CommentSection({ answer }: { answer: Answer }) {
         <div className="w-full">
             <Separator className="mt-2 w-full" />
 
-            <Comment />
+            {answer.comments.length === 0 ? <p
+            >No comments yet</p> : <div>
+                {answer.comments.map((comment: AnswerComment) => (
+                    <Comment key={comment.id} comment={comment} />
+                ))}
+            </div>}
+
             {
                 open && <CommentForm answerId={answer.id} />
             }
