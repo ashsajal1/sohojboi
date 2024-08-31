@@ -32,7 +32,7 @@ export default function Comment({ comment }: { comment: AnswerComment }) {
                 <p className="font-semibold">- <Link href={`/profile?id=${comment.userId}`}>
                     {name}</Link></p>
                 {user.user?.id === comment.userId && <>
-                    <EditComment />
+                    <EditComment comment={comment} />
                     <DeleteComment commentId={comment.id} />
                 </>}
             </div>

@@ -10,8 +10,9 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
+import { AnswerComment } from '@prisma/client';
 
-export default function EditComment() {
+export default function EditComment({ comment }: { comment: AnswerComment }) {
     return (
         <Dialog>
             <DialogTrigger asChild>
@@ -25,7 +26,7 @@ export default function EditComment() {
                     </DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
-                    <Textarea id="comment" className="col-span-3" />
+                    <Textarea defaultValue={comment.content} id="comment" className="col-span-3" />
                 </div>
                 <DialogFooter>
                     <Button type="submit">Save changes</Button>
