@@ -250,11 +250,12 @@ model Refer {
 }
 
 model AnswerComment {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
   userId    String
-  answerId  String?  @db.ObjectId
+  answerId  String?   @db.ObjectId
   content   String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  Answer    Answer?  @relation(fields: [answerId], references: [id])
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+  Answer    Answer?   @relation(fields: [answerId], references: [id])
 }
