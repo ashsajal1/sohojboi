@@ -56,10 +56,10 @@ export default function EditComment({ comment }: { comment: AnswerComment }) {
                         Make changes to your comment here. Click save when you&apos;re done.
                     </DialogDescription>
                 </DialogHeader>
-                <form className="grid gap-4 py-4" onSubmit={handleSubmit(onSubmit)}>
+                <form onSubmit={handleSubmit(onSubmit)}>
                     <Textarea disabled={pending} {...register('content')} id="comment" className="col-span-3" />
                     {errors.content && <span className="text-red-600 text-sm">{errors.content.message}</span>}
-                    <DialogFooter>
+                    <DialogFooter className="justify-end pt-2">
                         <Button disabled={pending} type="submit">
                             {pending ? <LoaderIcon /> : 'Save'}
                         </Button>
