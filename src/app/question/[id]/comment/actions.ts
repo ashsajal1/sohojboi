@@ -5,12 +5,15 @@ import { CommentFormData, commentSchema } from "./type";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 
-export const createComment = async (data: CommentFormData, answerId: string) => {
+export const createComment = async (
+  data: CommentFormData,
+  answerId: string
+) => {
   // Validate the data using Zod
   try {
     const user = await auth();
-    if(user.userId === null) {
-        throw new Error("Unauthorized access");
+    if (user.userId === null) {
+      throw new Error("Unauthorized access");
     }
     const validatedData = commentSchema.parse(data);
     // Proceed with the validated data (e.g., saving to the database)
@@ -20,20 +23,37 @@ export const createComment = async (data: CommentFormData, answerId: string) => 
         answerId: answerId,
         userId: user.userId!,
       },
-    })
+    });
   } catch (error) {
     return error;
   }
 
-  revalidatePath('/')
+  revalidatePath("/");
 };
 
 export const getName = async (userId: string) => {
-  try{
+  try {
     const user = await clerkClient().users.getUser(userId);
     return user.fullName;
-  } catch(err) {
-    return {error: {message: "Cannot get user name"}}
+  } catch (err) {
+    return { error: { message: "Cannot get user name" } };
   }
+};
 
-}
+export const deleteAnsComment = async (commentId: string) => {
+  try {
+    await prisma.answerComment.update({
+      where: {
+        id: commentId,
+      },
+      data: {
+        deletedAt: new Date(),
+      },
+    });
+
+    revalidatePath("/");
+  } catch (errors: any) {
+    return errors.message;
+    //  { error : {message: "Cannot delete comment!"}}
+  }
+};
