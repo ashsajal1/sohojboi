@@ -1,5 +1,5 @@
+"use client"
 import { Button } from '@/components/ui/button'
-import { Textarea } from '@/components/ui/textarea'
 
 import {
     Dialog,
@@ -11,9 +11,13 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog";
 import { DialogClose } from '@radix-ui/react-dialog';
+import { useTransition } from 'react';
+import { deleteAnsComment } from './actions';
+import LoaderIcon from '@/components/loader-icon';
 
+export default function DeleteComment({ commentId }: { commentId: string }) {
+    const [pending, startTransition] = useTransition()
 
-export default function DeleteComment() {
     return (
         <Dialog>
             <DialogTrigger asChild>
@@ -26,14 +30,19 @@ export default function DeleteComment() {
                         Are you sure to delete the comment?
                     </DialogDescription>
                 </DialogHeader>
-                
+
                 <DialogFooter>
                     <DialogClose asChild>
-                        <Button variant={'ghost'} type="submit">Cancle</Button>
+                        <Button disabled={pending} variant={'ghost'} type="submit">Cancle</Button>
                     </DialogClose>
-                    <Button variant={'destructive'} type="submit">Yes</Button>
+                    <Button onClick={(async () => {
+                        await startTransition(async () => {
+                            await deleteAnsComment(commentId);
+                        })
+                    })
+                    } disabled={pending} variant={'destructive'} type="submit">{pending ? <LoaderIcon /> : 'Yes'}</Button>
                 </DialogFooter>
             </DialogContent>
-        </Dialog>
+        </Dialog >
     )
 }
