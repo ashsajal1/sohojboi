@@ -1,6 +1,9 @@
+"use client"
+
+import { useForm, SubmitHandler } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
-
 import {
     Dialog,
     DialogContent,
@@ -11,8 +14,34 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog";
 import { AnswerComment } from '@prisma/client';
+import { useTransition } from 'react';
+import { editAnsComment } from './actions';
+import LoaderIcon from '@/components/loader-icon';
+import { z } from 'zod';
+
+// Define the Zod schema for comment editing
+const editCommentSchema = z.object({
+    content: z.string().min(1, 'Content is required').max(500, 'Content must be less than 500 characters'),
+});
+
+type EditCommentFormData = z.infer<typeof editCommentSchema>;
 
 export default function EditComment({ comment }: { comment: AnswerComment }) {
+    const [pending, startTransition] = useTransition();
+    
+    const { register, handleSubmit, formState: { errors } } = useForm<EditCommentFormData>({
+        resolver: zodResolver(editCommentSchema),
+        defaultValues: {
+            content: comment.content, // Set default value for the textarea
+        },
+    });
+
+    const onSubmit: SubmitHandler<EditCommentFormData> = async (data) => {
+        await startTransition(async () => {
+            await editAnsComment({ content: data.content }, comment.id);
+        });
+    };
+
     return (
         <Dialog>
             <DialogTrigger asChild>
@@ -25,13 +54,16 @@ export default function EditComment({ comment }: { comment: AnswerComment }) {
                         Make changes to your comment here. Click save when you&apos;re done.
                     </DialogDescription>
                 </DialogHeader>
-                <div className="grid gap-4 py-4">
-                    <Textarea defaultValue={comment.content} id="comment" className="col-span-3" />
-                </div>
-                <DialogFooter>
-                    <Button type="submit">Save changes</Button>
-                </DialogFooter>
+                <form className="grid gap-4 py-4" onSubmit={handleSubmit(onSubmit)}>
+                    <Textarea disabled={pending} {...register('content')} id="comment" className="col-span-3" />
+                    {errors.content && <span className="text-red-600 text-sm">{errors.content.message}</span>}
+                    <DialogFooter>
+                        <Button disabled={pending} type="submit">
+                            {pending ? <LoaderIcon /> : 'Save'}
+                        </Button>
+                    </DialogFooter>
+                </form>
             </DialogContent>
         </Dialog>
-    )
+    );
 }
