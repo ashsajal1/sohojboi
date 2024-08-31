@@ -8,7 +8,7 @@ import { useTransition } from 'react'
 import { createComment } from './actions'
 import LoaderIcon from '@/components/loader-icon'
 
-export default function CommentForm() {
+export default function CommentForm({answerId}: {answerId: string}) {
     const { register, handleSubmit, formState: { errors } } = useForm<CommentFormData>({
         resolver: zodResolver(commentSchema),
     })
@@ -17,7 +17,7 @@ export default function CommentForm() {
 
     const onSubmit: SubmitHandler<CommentFormData> = async (data) => {
         await startTransition(async () => {
-            await createComment(data)
+            await createComment(data, answerId)
         })
     }
 

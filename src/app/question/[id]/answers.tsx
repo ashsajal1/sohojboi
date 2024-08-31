@@ -84,7 +84,7 @@ const Answer = async ({ answer, question }: { answer: Answer, question: Question
                     </div>
                 </div>
 
-                <CommentSection />
+                <CommentSection answer={answer} />
             </section>
 
         </CardFooter>
