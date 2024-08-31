@@ -9,7 +9,7 @@ import { createComment } from './actions'
 import LoaderIcon from '@/components/loader-icon'
 
 export default function CommentForm({answerId}: {answerId: string}) {
-    const { register, handleSubmit, formState: { errors } } = useForm<CommentFormData>({
+    const { register, handleSubmit, formState: { errors }, reset } = useForm<CommentFormData>({
         resolver: zodResolver(commentSchema),
     })
 
@@ -17,7 +17,8 @@ export default function CommentForm({answerId}: {answerId: string}) {
 
     const onSubmit: SubmitHandler<CommentFormData> = async (data) => {
         await startTransition(async () => {
-            await createComment(data, answerId)
+            await createComment(data, answerId);
+            reset();
         })
     }
 
