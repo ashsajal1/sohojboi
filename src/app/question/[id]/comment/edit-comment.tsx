@@ -14,7 +14,7 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog";
 import { AnswerComment } from '@prisma/client';
-import { useTransition } from 'react';
+import { useState, useTransition } from 'react';
 import { editAnsComment } from './actions';
 import LoaderIcon from '@/components/loader-icon';
 import { z } from 'zod';
@@ -28,6 +28,7 @@ type EditCommentFormData = z.infer<typeof editCommentSchema>;
 
 export default function EditComment({ comment }: { comment: AnswerComment }) {
     const [pending, startTransition] = useTransition();
+    const [open, setOpen] = useState(false);
     
     const { register, handleSubmit, formState: { errors } } = useForm<EditCommentFormData>({
         resolver: zodResolver(editCommentSchema),
@@ -39,11 +40,12 @@ export default function EditComment({ comment }: { comment: AnswerComment }) {
     const onSubmit: SubmitHandler<EditCommentFormData> = async (data) => {
         await startTransition(async () => {
             await editAnsComment({ content: data.content }, comment.id);
+            setOpen(false);
         });
     };
 
     return (
-        <Dialog>
+        <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
                 <p className="text-blue-500 cursor-pointer">Edit</p>
             </DialogTrigger>
