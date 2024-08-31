@@ -2,7 +2,7 @@
 
 import prisma from "@/lib/prisma";
 import { CommentFormData, commentSchema } from "./type";
-import { auth } from "@clerk/nextjs/server";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 
 export const createComment = async (data: CommentFormData, answerId: string) => {
   // Validate the data using Zod
@@ -24,3 +24,13 @@ export const createComment = async (data: CommentFormData, answerId: string) => 
     return error;
   }
 };
+
+export const getName = async (userId: string) => {
+  try{
+    const user = await clerkClient().users.getUser(userId);
+    return user.fullName;
+  } catch(err) {
+    return {error: {message: "Cannot get user name"}}
+  }
+
+}
