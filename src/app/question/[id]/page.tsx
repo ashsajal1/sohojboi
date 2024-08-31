@@ -81,6 +81,9 @@ export default async function Question({ params }: Params) {
                     answers: {
                         where: {
                             deletedAt: null,
+                        },
+                        include: {
+                            comments: true,
                         }
                     },
                     topic: true,

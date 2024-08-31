@@ -15,6 +15,9 @@ import {
 import DeleteAnswer from "./delete-answer";
 import EditAnswer from "./edit-answer";
 import ReactMarkdown from 'react-markdown';
+import { Separator } from "@/components/ui/separator";
+import Comment from "./comment/comment";
+import CommentSection from "./comment/comment-section";
 
 interface AnswersProps {
     answers: Answer[];
@@ -72,13 +75,17 @@ const Answer = async ({ answer, question }: { answer: Answer, question: Question
         </CardHeader>
 
         <CardFooter>
-            <div className="flex items-center justify-between w-full">
-                <ProfileImgCard type={"answer"} userId={answer.userId} createdAt={answer.createdAt || new Date()} />
+            <section className="flex flex-col w-full">
+                <div className="flex items-center justify-between w-full">
+                    <ProfileImgCard type={"answer"} userId={answer.userId} createdAt={answer.createdAt || new Date()} />
 
-                <div className="flex items-center gap-2">
-                    <Upvote isUpvotedAnswer={isUpvotedAnswer || false} question={question} userId={currentUser?.userId || ''} answer={answer} />
+                    <div className="flex items-center gap-2">
+                        <Upvote isUpvotedAnswer={isUpvotedAnswer || false} question={question} userId={currentUser?.userId || ''} answer={answer} />
+                    </div>
                 </div>
-            </div>
+
+                <CommentSection answer={answer} />
+            </section>
 
         </CardFooter>
     </Card>

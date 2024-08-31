@@ -14,33 +14,34 @@ datasource db {
 }
 
 model Question {
-  id            String    @id @default(auto()) @map("_id") @db.ObjectId
-  userId        String
-  content       String
-  description   String
-  upvoteCount   Int       @default(0)
-  answers       Answer[]
-  topicId       String?   @db.ObjectId
-  topic         Topic?    @relation(fields: [topicId], references: [id])
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  deletedAt     DateTime?
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String
+  content     String
+  description String
+  upvoteCount Int       @default(0)
+  answers     Answer[]
+  topicId     String?   @db.ObjectId
+  topic       Topic?    @relation(fields: [topicId], references: [id])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
 }
 
 model Answer {
-  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  id            String          @id @default(auto()) @map("_id") @db.ObjectId
   userId        String
-  questionId    String    @db.ObjectId
+  questionId    String          @db.ObjectId
   answer        String
-  upvoteCount   Int       @default(0)
-  question      Question  @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  upvoteCount   Int             @default(0)
+  question      Question        @relation(fields: [questionId], references: [id], onDelete: Cascade)
   userFirstName String
   userLastName  String
   userFullName  String
-  topicId       String?   @db.ObjectId
-  topic         Topic?    @relation(fields: [topicId], references: [id])
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  topicId       String?         @db.ObjectId
+  topic         Topic?          @relation(fields: [topicId], references: [id])
+  comments      AnswerComment[]
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
   deletedAt     DateTime?
 }
 
@@ -246,4 +247,14 @@ model Refer {
   referredAt DateTime @default(now())
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+}
+
+model AnswerComment {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String
+  answerId  String?  @db.ObjectId
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Answer    Answer?  @relation(fields: [answerId], references: [id])
 }
