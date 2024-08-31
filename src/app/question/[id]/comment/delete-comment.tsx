@@ -17,7 +17,7 @@ export default function DeleteComment() {
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <p className="text-red-600 cursor-pointer">Delete</p>
+                <p className="text-red-500 cursor-pointer">Delete</p>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>

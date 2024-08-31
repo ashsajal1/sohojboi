@@ -17,7 +17,7 @@ export default function EditComment() {
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <p className="text-blue-600 cursor-pointer">Edit</p>
+                <p className="text-blue-500 cursor-pointer">Edit</p>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
