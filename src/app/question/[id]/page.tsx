@@ -83,7 +83,11 @@ export default async function Question({ params }: Params) {
                             deletedAt: null,
                         },
                         include: {
-                            comments: true,
+                            comments: {
+                                where: {
+                                    deletedAt: null
+                                }
+                            },
                         }
                     },
                     topic: true,
