@@ -5,9 +5,9 @@ import { Separator } from "@/components/ui/separator"
 import Comment from "./comment"
 import { useState } from "react"
 import CommentForm from "./comment-form"
-import { Answer, AnswerComment } from "@prisma/client"
+import { AnswerComment } from "@prisma/client";
 
-export default function CommentSection({ answer }: { answer: Answer }) {
+export default function CommentSection({ answer }: { answer: any }) {
     const [open, setOpen] = useState(false)
     return (
         <div className="w-full">
