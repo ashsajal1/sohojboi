@@ -27,7 +27,6 @@ interface AnswersProps {
 }
 
 export const Answers = async ({ answers, question }: AnswersProps) => {
-    const user = await currentUser();
     if (answers.length === 0) {
         return null;
     }
