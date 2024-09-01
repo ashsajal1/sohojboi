@@ -135,7 +135,7 @@ const Answer = async ({ answer, question }: { answer: Answer, question: Question
                             /**
                              * If the answer is not the solution, display a button to mark it as the solution
                              */
-                            !answer.isSolution && <MarkSolution answerId={answer.id} questionId={question?.id!} />
+                           ( !answer.isSolution && question?.userId === user.userId) && <MarkSolution answerId={answer.id} questionId={question?.id!} />
                         }
                         <Upvote isUpvotedAnswer={isUpvotedAnswer || false} question={question} userId={currentUser?.userId || ''} answer={answer} />
                     </div>
