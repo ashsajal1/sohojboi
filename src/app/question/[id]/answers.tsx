@@ -14,13 +14,9 @@ import {
 } from "@/components/ui/hover-card"
 import DeleteAnswer from "./delete-answer";
 import EditAnswer from "./edit-answer";
-import ReactMarkdown from 'react-markdown';
-import { Separator } from "@/components/ui/separator";
-import Comment from "./comment/comment";
+import ReactMarkdown from 'react-markdown';;
 import CommentSection from "./comment/comment-section";
-import { BookOpenCheck } from "lucide-react";
 import MarkSolution from "./mark-solution";
-import { ArrowRightIcon } from "@radix-ui/react-icons";
 
 import { cn } from "@/lib/utils";
 import AnimatedShinyText from "@/components/magicui/animated-shiny-text";
