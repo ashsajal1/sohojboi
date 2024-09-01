@@ -6,47 +6,63 @@ import { Answer, NotificationType, Question } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
+const getActorName = async (actorId: string): Promise<string> => {
+  try {
+    const actor = await clerkClient().users.getUser(actorId);
+    return actor.fullName || `${actor.firstName} ${actor.lastName}`;
+  } catch {
+    redirect("/login");
+  }
+};
+
+const findExistingUpvote = async (actorId: string, answerId: string) => {
+  return await prisma.upvote.findUnique({
+    where: {
+      userId_answerId: {
+        userId: actorId,
+        answerId: answerId,
+      },
+    },
+  });
+};
+
+const updateAnswerUpvoteCount = async (answerId: string, increment: boolean) => {
+  await prisma.answer.update({
+    where: { id: answerId },
+    data: {
+      upvoteCount: increment ? { increment: 1 } : { decrement: 1 },
+    },
+  });
+};
+
+const createNotification = async (userId: string, message: string, questionId?: string) => {
+  await prisma.notification.create({
+    data: {
+      userId: userId,
+      type: NotificationType.UPVOTE_ANSWER,
+      message: message,
+      questionId: questionId,
+    },
+  });
+};
+
 export const handleUpvote = async (
   answer: Answer,
   actorId: string,
   question: Question | null
 ) => {
-  let actor;
-  let actorName;
-
-  try {
-    actor = await clerkClient().users.getUser(actorId);
-    actorName = actor.fullName || `${actor.firstName} ${actor.lastName}`;
-  } catch (error) {
-    redirect("/login");
-  }
-
-  const existingUpvote = await prisma.upvote.findUnique({
-    where: {
-      userId_answerId: {
-        userId: actorId,
-        answerId: answer.id,
-      },
-    },
-  });
+  const actorName = await getActorName(actorId);
+  const existingUpvote = await findExistingUpvote(actorId, answer.id);
 
   if (existingUpvote) {
-    await prisma.answer.update({
-      where: {
-        id: answer.id,
-      },
-      data: {
-        upvoteCount: { decrement: 1 },
-      },
-    });
-
+    // Remove upvote
+    await updateAnswerUpvoteCount(answer.id, false);
     await prisma.notification.deleteMany({
       where: {
         answerId: answer.id,
         type: NotificationType.UPVOTE_ANSWER,
       },
     });
-
     await prisma.upvote.delete({
       where: {
         userId_answerId: {
@@ -56,15 +72,8 @@ export const handleUpvote = async (
       },
     });
   } else {
-    await prisma.answer.update({
-      where: {
-        id: answer.id,
-      },
-      data: {
-        upvoteCount: { increment: 1 },
-      },
-    });
-
+    // Add upvote
+    await updateAnswerUpvoteCount(answer.id, true);
     await prisma.upvote.create({
       data: {
         userId: actorId,
@@ -72,17 +81,9 @@ export const handleUpvote = async (
       },
     });
 
-    const message = `${actorName} upvoted your answer to question "${question?.content}"`;
-
     if (actorId !== answer.userId) {
-      const notif = await prisma.notification.create({
-        data: {
-          userId: answer.userId,
-          type: NotificationType.UPVOTE_ANSWER,
-          message: message,
-          questionId: question?.id,
-        },
-      });
+      const message = `${actorName} upvoted your answer to question "${question?.content}"`;
+      await createNotification(answer.userId, message, question?.id);
     }
   }
 };
