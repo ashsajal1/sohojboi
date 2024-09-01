@@ -44,16 +44,47 @@ export const Answers = async ({ answers, question }: AnswersProps) => {
     </div>
 }
 
+/**
+ * Displays a single answer to a question.
+ * 
+ * @param {Object} answer The answer to display.
+ * @param {Object} question The question that the answer belongs to.
+ * @returns A JSX element representing the answer.
+ */
 const Answer = async ({ answer, question }: { answer: Answer, question: Question | null }) => {
+    /**
+     * Get the user who answered the question
+     */
     let answeredUser;
+    /**
+     * Get the current user
+     */
     let currentUser;
+    /**
+     * The profile image URL for the answered user
+     */
     let profileImageSrc;
-    const user = await auth()
+    /**
+     * Get the current user
+     */
+    const user = await auth();
+    /**
+     * Check if the current user has upvoted the answer
+     */
     let isUpvotedAnswer = await chekcIsAnswerUpvoted(user.userId || '', answer.id);
 
     try {
+        /**
+         * Get the user who answered the question
+         */
         answeredUser = await clerkClient().users.getUser(answer.userId);
+        /**
+         * Get the profile image URL for the answered user
+         */
         profileImageSrc = answeredUser.imageUrl;
+        /**
+         * Get the current user
+         */
         currentUser = await auth();
     } catch (error: any) {
         // throw new Error(error.message)
@@ -61,6 +92,8 @@ const Answer = async ({ answer, question }: { answer: Answer, question: Question
 
     return <Card>
         <CardHeader>
+            {/* If the answer is the solution, display a badge indicating as such */}
+
             {answer.isSolution && <div className="z-10 flex items-center justify-start">
                 <div
                     className={cn(
@@ -69,7 +102,7 @@ const Answer = async ({ answer, question }: { answer: Answer, question: Question
                 >
                     <AnimatedShinyText className="inline-flex items-center justify-center px-4 py-1 transition ease-out hover:text-neutral-600 hover:duration-300 hover:dark:text-neutral-400">
                         <span>✅ Solution</span>
-                        
+
                     </AnimatedShinyText>
                 </div>
             </div>}
@@ -77,17 +110,22 @@ const Answer = async ({ answer, question }: { answer: Answer, question: Question
                 <CardDescription>
                     <ReactMarkdown>{answer.answer}</ReactMarkdown>
                 </CardDescription>
-                {user.userId === answer?.userId && <HoverCard>
-                    <HoverCardTrigger>
-                        <Button size='sm' variant='ghost'><DotsHorizontalIcon /></Button>
-                    </HoverCardTrigger>
-                    <HoverCardContent>
-                        <div className="flex items-center gap-2 justify-between">
-                            <EditAnswer answerId={answer.id} answerText={answer.answer} questionId={question?.id || ''} />
-                            <DeleteAnswer questionId={answer.questionId} answerId={answer.id} />
-                        </div>
-                    </HoverCardContent>
-                </HoverCard>}
+                {
+                    /**
+                     * If the current user is the same as the answered user, display a dropdown menu with edit and delete options
+                     */
+                    user.userId === answer?.userId && <HoverCard>
+                        <HoverCardTrigger>
+                            <Button size='sm' variant='ghost'><DotsHorizontalIcon /></Button>
+                        </HoverCardTrigger>
+                        <HoverCardContent>
+                            <div className="flex items-center gap-2 justify-between">
+                                <EditAnswer answerId={answer.id} answerText={answer.answer} questionId={question?.id || ''} />
+                                <DeleteAnswer questionId={answer.questionId} answerId={answer.id} />
+                            </div>
+                        </HoverCardContent>
+                    </HoverCard>
+                }
             </div>
 
         </CardHeader>
@@ -98,7 +136,12 @@ const Answer = async ({ answer, question }: { answer: Answer, question: Question
                     <ProfileImgCard type={"answer"} userId={answer.userId} createdAt={answer.createdAt || new Date()} />
 
                     <div className="flex items-center gap-2">
-                        {!answer.isSolution && <MarkSolution answerId={answer.id} questionId={question?.id!} />}
+                        {
+                            /**
+                             * If the answer is not the solution, display a button to mark it as the solution
+                             */
+                            !answer.isSolution && <MarkSolution answerId={answer.id} questionId={question?.id!} />
+                        }
                         <Upvote isUpvotedAnswer={isUpvotedAnswer || false} question={question} userId={currentUser?.userId || ''} answer={answer} />
                     </div>
                 </div>
