@@ -19,6 +19,7 @@ import { Separator } from "@/components/ui/separator";
 import Comment from "./comment/comment";
 import CommentSection from "./comment/comment-section";
 import { BookOpenCheck } from "lucide-react";
+import MarkSolution from "./mark-solution";
 
 interface AnswersProps {
     answers: Answer[];
@@ -81,7 +82,7 @@ const Answer = async ({ answer, question }: { answer: Answer, question: Question
                     <ProfileImgCard type={"answer"} userId={answer.userId} createdAt={answer.createdAt || new Date()} />
 
                     <div className="flex items-center gap-2">
-                        <Button size='sm' variant={'outline'}><BookOpenCheck className="mr-2 h-4 w-4" /> Mark as solution</Button>
+                        {!answer.isSolution && <MarkSolution answerId={answer.id} questionId={question?.id!} />}
                         <Upvote isUpvotedAnswer={isUpvotedAnswer || false} question={question} userId={currentUser?.userId || ''} answer={answer} />
                     </div>
                 </div>
