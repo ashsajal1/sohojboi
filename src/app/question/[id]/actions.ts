@@ -148,7 +148,7 @@ export const createAnswer = async (_: any, formData: FormData) => {
               questionId: answer.questionId,
             },
           }),
-  
+
           await prisma.profile.upsert({
             where: {
               clerkUserId: user?.id!,
@@ -162,9 +162,9 @@ export const createAnswer = async (_: any, formData: FormData) => {
               clerkUserId: user?.id!,
               rewardCount: 150,
               bio: "",
-            }
-          }) 
-        ])
+            },
+          }),
+        ]);
       }
 
       revalidatePath(`/question/${questionId}`);
@@ -214,4 +214,40 @@ export const increaseView = async (userId: string, questionId: string) => {
       questionId: questionId,
     },
   });
+};
+
+export const markSolution = async (questionId: string, answerId: string) => {
+  try {
+    // Step 1: Find the current solution for the question
+    const currentSolution = await prisma.answer.findFirst({
+      where: {
+        questionId: questionId,
+        isSolution: true,
+      },
+    });
+
+    // Step 2: If a solution exists, update it to not be the solution
+    if (currentSolution) {
+      await prisma.answer.update({
+        where: {
+          id: currentSolution.id,
+        },
+        data: {
+          isSolution: false,
+        },
+      });
+    }
+
+    // Step 3: Mark the new answer as the solution
+    await prisma.answer.update({
+      where: {
+        id: answerId,
+      },
+      data: {
+        isSolution: true,
+      },
+    });
+  } catch (error) {
+    return error;
+  }
 };
