@@ -18,6 +18,12 @@ import ReactMarkdown from 'react-markdown';
 import { Separator } from "@/components/ui/separator";
 import Comment from "./comment/comment";
 import CommentSection from "./comment/comment-section";
+import { BookOpenCheck } from "lucide-react";
+import MarkSolution from "./mark-solution";
+import { ArrowRightIcon } from "@radix-ui/react-icons";
+
+import { cn } from "@/lib/utils";
+import AnimatedShinyText from "@/components/magicui/animated-shiny-text";
 
 interface AnswersProps {
     answers: Answer[];
@@ -55,6 +61,18 @@ const Answer = async ({ answer, question }: { answer: Answer, question: Question
 
     return <Card>
         <CardHeader>
+            {answer.isSolution && <div className="z-10 flex items-center justify-start">
+                <div
+                    className={cn(
+                        "group rounded-full border border-black/5 bg-neutral-100 text-base text-white transition-all ease-in hover:cursor-pointer hover:bg-neutral-200 dark:border-white/5 dark:bg-neutral-900 dark:hover:bg-neutral-800",
+                    )}
+                >
+                    <AnimatedShinyText className="inline-flex items-center justify-center px-4 py-1 transition ease-out hover:text-neutral-600 hover:duration-300 hover:dark:text-neutral-400">
+                        <span>✅ Solution</span>
+                        
+                    </AnimatedShinyText>
+                </div>
+            </div>}
             <div className="flex justify-between items-start">
                 <CardDescription>
                     <ReactMarkdown>{answer.answer}</ReactMarkdown>
@@ -80,6 +98,7 @@ const Answer = async ({ answer, question }: { answer: Answer, question: Question
                     <ProfileImgCard type={"answer"} userId={answer.userId} createdAt={answer.createdAt || new Date()} />
 
                     <div className="flex items-center gap-2">
+                        {!answer.isSolution && <MarkSolution answerId={answer.id} questionId={question?.id!} />}
                         <Upvote isUpvotedAnswer={isUpvotedAnswer || false} question={question} userId={currentUser?.userId || ''} answer={answer} />
                     </div>
                 </div>
