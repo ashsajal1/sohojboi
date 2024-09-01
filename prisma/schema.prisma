@@ -40,9 +40,12 @@ model Answer {
   topicId       String?         @db.ObjectId
   topic         Topic?          @relation(fields: [topicId], references: [id])
   comments      AnswerComment[]
+  isSolution    Boolean         @default(false)
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
   deletedAt     DateTime?
+
+  @@unique([questionId, isSolution]) // Unique constraint to ensure only one solution per question
 }
 
 enum ChallengeQuestionStatus {
