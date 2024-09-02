@@ -20,6 +20,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Answer from "./answer";
 import ReferId from "../referral/refer-id";
+import { Coins } from "lucide-react";
 
 export async function generateMetadata({ searchParams }: { searchParams: { id: string } }) {
     let user: User | null;
@@ -99,20 +100,31 @@ export default async function Page({ searchParams }: { searchParams: { id: strin
                             <Button size={'sm'} variant={'outline'}>Edit profile</Button></Link>}
                     </div>
                 </CardHeader>
-                <CardContent className="flex items-center justify-between">
-                    <div>
-                        <Image className="rounded-ull" width={100} height={100} alt="user image" src={user?.imageUrl || ''} />
-                        <p>{user?.fullName}</p>
-                        <ReferId referId={user?.id!} />
-                    </div>
+                <CardContent>
+                    <section className="flex flex-col gap-2 md:flex-row items-center justify-between">
+                        <div>
+                            <div className="flex items-center md:items-start flex-col">
+                                <Image className="rounded-full" width={100} height={100} alt="user image" src={user?.imageUrl || ''} />
 
-                    <div className="flex flex-col gap-2">
-                        <Label>User stats : </Label>
-                        <Badge>Points : {profile?.rewardCount}</Badge>
-                        <Badge>Total questions : {questions.length}</Badge>
-                        <Badge>Total answers : {answers.length}</Badge>
-                        <Badge>Challenge win percentage : {calculateWinPercentage(challangeStats.wins, challangeStats.losses)}%</Badge>
-                    </div>
+                                <p className="text-center md:text-start">{user?.fullName}</p>
+
+                                <Badge className="w-[150px] text-center mt-2" variant={'secondary'}>
+                                    <Coins className='h-3 w-3 mr-2 text-yellow-600' />
+                                    {profile?.rewardCount} | {(user?.publicMetadata.role as string).toUpperCase()}
+                                    </Badge>
+                            </div>
+                            
+                            <ReferId referId={user?.id!} />
+                        </div>
+
+                        <div className="flex flex-col gap-2">
+                            <Label>User stats : </Label>
+                            <Badge>Total questions : {questions.length}</Badge>
+                            <Badge>Total answers : {answers.length}</Badge>
+                            <Badge>Challenge win percentage : {calculateWinPercentage(challangeStats.wins, challangeStats.losses)}%</Badge>
+                        </div>
+                    </section>
+
                 </CardContent>
             </Card>
 
