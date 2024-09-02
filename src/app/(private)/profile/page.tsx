@@ -120,7 +120,7 @@ export default async function Page({ searchParams }: { searchParams: { id: strin
                             <ReferId referId={user?.id!} />
                         </div>
 
-                        <Separator />
+                        <Separator className="md:hidden" />
 
                         <div className="flex flex-col gap-2">
                             <Label className="text-center md:text-start">User stats : </Label>
