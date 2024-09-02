@@ -21,6 +21,7 @@ import Link from "next/link";
 import Answer from "./answer";
 import ReferId from "../referral/refer-id";
 import { Coins } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
 
 export async function generateMetadata({ searchParams }: { searchParams: { id: string } }) {
     let user: User | null;
@@ -119,8 +120,10 @@ export default async function Page({ searchParams }: { searchParams: { id: strin
                             <ReferId referId={user?.id!} />
                         </div>
 
+                        <Separator />
+
                         <div className="flex flex-col gap-2">
-                            <Label>User stats : </Label>
+                            <Label className="text-center md:text-start">User stats : </Label>
                             <Badge>Total questions : {questions.length}</Badge>
                             <Badge>Total answers : {answers.length}</Badge>
                             <Badge>Challenge win percentage : {calculateWinPercentage(challangeStats.wins, challangeStats.losses)}%</Badge>
