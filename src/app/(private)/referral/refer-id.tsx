@@ -18,7 +18,7 @@ export default function ReferId({ referId }: { referId: string }) {
 
     return (
         <div className="flex items-center gap-2">
-            <p>Referral code: <code>{referId.slice(0,20)}...</code> <Button
+            <p className="text-sm">Referral code: <code>{referId.slice(0,10)}...</code> <Button
                 variant={'ghost'}
                 className="transition-colors duration-300"
                 onClick={copyReferralCode}
