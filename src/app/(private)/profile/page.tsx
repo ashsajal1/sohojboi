@@ -108,12 +108,14 @@ export default async function Page({ searchParams }: { searchParams: { id: strin
 
                                 <p className="text-center md:text-start">{user?.fullName}</p>
 
-                                <Badge className="w-[150px] text-center mt-2" variant={'secondary'}>
+                                <Badge className="w-[150px] text-center mt-2 flex items-center justify-center" variant={'secondary'}>
                                     <Coins className='h-3 w-3 mr-2 text-yellow-600' />
-                                    {profile?.rewardCount} | {(user?.publicMetadata.role as string).toUpperCase()}
-                                    </Badge>
+                                    <span>
+                                        {profile?.rewardCount} | {(user?.publicMetadata.role as string).toUpperCase()}
+                                    </span>
+                                </Badge>
                             </div>
-                            
+
                             <ReferId referId={user?.id!} />
                         </div>
 
