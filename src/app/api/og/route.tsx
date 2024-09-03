@@ -45,6 +45,7 @@ export async function GET(request: NextRequest) {
                 </div>
 
                 <div tw="flex items-center">
+                    {/* eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text */}
                     <img tw="rounded-full" src={profileImg!} width='90' height='90' />
                     <div tw='flex flex-col items-start ml-4'>
                         <p tw='font-bold text-3xl mb-0'>{authorName}</p>
