@@ -25,7 +25,7 @@ export default function Comment({ comment }: { comment: AnswerComment }) {
 
     return (
         <div className="text-sm text-muted-foreground/60 py-3">
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
                 <p className='text-muted-foreground'>{comment.content}</p>
                 -
                 <p>{formatDate(comment.createdAt)}</p>
