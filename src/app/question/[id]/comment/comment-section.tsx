@@ -13,8 +13,7 @@ export default function CommentSection({ answer }: { answer: any }) {
         <div className="w-full">
             <Separator className="mt-2 w-full" />
 
-            {answer.comments.length === 0 ? <p
-            >No comments yet</p> : <div>
+            {answer.comments.length > 0 && <div>
                 {answer.comments.map((comment: AnswerComment) => (
                     <Comment key={comment.id} comment={comment} />
                 ))}
