@@ -226,6 +226,7 @@ enum Badge {
   ENTHUSIAST
   PIONEER
   MENTOR
+  VERIFIED
 }
 
 model Profile {
