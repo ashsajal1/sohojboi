@@ -83,7 +83,7 @@ export default async function Page({ searchParams }: { searchParams: { id: strin
 
     const profile = await prisma.profile.findFirst({
         where: {
-            clerkUserId: searchParams.id as string,
+            clerkUserId: user?.id,
         }
     })
 
