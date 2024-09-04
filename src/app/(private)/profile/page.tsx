@@ -22,6 +22,7 @@ import Answer from "./answer";
 import ReferId from "../referral/refer-id";
 import { Coins } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import { Badge as ProfileBadge } from '@prisma/client'
 
 export async function generateMetadata({ searchParams }: { searchParams: { id: string } }) {
     let user: User | null;
@@ -107,7 +108,10 @@ export default async function Page({ searchParams }: { searchParams: { id: strin
                             <div className="flex items-center md:items-start flex-col">
                                 <Image className="rounded-full" width={100} height={100} alt="user image" src={user?.imageUrl || ''} />
 
-                                <p className="text-center md:text-start">{user?.fullName}</p>
+                                <div className="flex items-center gap-1">
+                                    <p className="text-center md:text-start">{user?.fullName}</p>
+                                    {profile?.badge.includes("VERIFIED") && <Image src="/verified.svg" height={20} width={20} alt="Verified tick" />}
+                                </div>
 
                                 <Badge className="w-[150px] text-center mt-2 flex items-center justify-center" variant={'secondary'}>
                                     <Coins className='h-3 w-3 mr-2 text-yellow-600' />
