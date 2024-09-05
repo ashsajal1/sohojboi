@@ -248,6 +248,8 @@ export const markSolution = async (questionId: string, answerId: string) => {
         isSolution: true,
       },
     });
+
+    revalidatePath("/")
   } catch (error) {
     return error;
   }
