@@ -40,6 +40,7 @@ const QuizPlayer: React.FC<QuizPlayerProps> = ({ questions }) => {
                 <CardContent>
                     {currentQuestion.options.map(option => (
                         <Button
+                            variant={'secondary'}
                             className='mr-2'
                             key={option.id}
                             onClick={() => handleOptionClick(option)}
