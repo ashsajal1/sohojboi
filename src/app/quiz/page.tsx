@@ -12,8 +12,6 @@ export default async function page() {
                 options: true,
             },
         });
-
-        console.log("Questions:", questions);
     } catch (error) {
         console.error("Error fetching questions:", error);
     }
