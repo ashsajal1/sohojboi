@@ -38,23 +38,29 @@ const QuizPlayer: React.FC<QuizPlayerProps> = ({ questions }) => {
                     <CardTitle>{currentQuestion.content}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    {currentQuestion.options.map(option => (
-                        <Button
-                            variant={'secondary'}
-                            className='mr-2'
-                            key={option.id}
-                            onClick={() => handleOptionClick(option)}
-                            disabled={isAnswered}
-                        >
-                            {option.content}
-                        </Button>
-                    ))}
+                    {currentQuestion.options.map(option => {
+                        // Determine if the option is the selected one or the correct one
+                        const isSelected = selectedOption?.id === option.id;
+                        const isCorrect = correctOption?.id === option.id;
+
+                        return (
+                            <Button
+                                variant={isSelected ? (isCorrect ? 'outline' : 'destructive') : 'secondary'}
+                                className={`mr-2 ${isSelected ? 'ring-2 ring-blue-500' : ''}`}
+                                key={option.id}
+                                onClick={() => handleOptionClick(option)}
+                                disabled={isAnswered}
+                            >
+                                {option.content}
+                            </Button>
+                        );
+                    })}
                     {isAnswered && (
                         <div>
                             <p>
                                 {selectedOption && selectedOption.id === correctOption?.id
                                     ? 'Correct!'
-                                    : 'Incorrect!'}
+                                    : 'Incorrect! The correct answer was: ' + (correctOption?.content)}
                             </p>
                             <Button onClick={handleNextQuestion}>
                                 Next Question
