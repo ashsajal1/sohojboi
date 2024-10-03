@@ -103,12 +103,17 @@ export default async function Page({ params }: { params: { id: string } }) {
         await increaseView(userId, article?.id!, "article")
     }
 
+    const timeToRead = (article?.content.split(" ").length! / 200).toFixed(0);
+
     return (
         <div>
             <Card>
                 <CardHeader>
                     <div className='flex items-center justify-between'>
-                        <CardTitle>{article?.title}</CardTitle>
+                        <div className='flex flex-col gap-2'>
+                            <CardTitle>{article?.title}</CardTitle>
+                            <span className="text-sm font-light text-muted-foreground/70">{timeToRead} mins read</span>
+                        </div>
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                                 <Button size='sm' variant='ghost'><DotsHorizontalIcon /></Button>
