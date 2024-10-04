@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,11 +7,13 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { seriesSchema } from "./validation"; // Import your Zod schema
 import { createSeries } from "./actions";
+import { useTransition } from "react";
+import LoaderIcon from "@/components/loader-icon";
 
 // Define the form data type using Zod's inference
 type SeriesFormData = z.infer<typeof seriesSchema>;
 
-export default function SeriesForm({userId}:{userId: string}) {
+export default function SeriesForm({ userId }: { userId: string }) {
   // Initialize the form with react-hook-form and Zod validation
   const {
     register,
@@ -21,8 +23,13 @@ export default function SeriesForm({userId}:{userId: string}) {
     resolver: zodResolver(seriesSchema), // Zod validation
   });
 
+  // Use useTransition to manage the loading state
+  const [isPending, startTransition] = useTransition();
+
   const onSubmit = (data: SeriesFormData) => {
-    createSeries(data.title, userId);
+    startTransition(() => {
+      createSeries(data.title, userId);
+    });
   };
 
   return (
@@ -31,12 +38,15 @@ export default function SeriesForm({userId}:{userId: string}) {
         <Input
           placeholder="Series name eg. Javascript tutorials, Biology chapter 1"
           {...register("title")} // Register the input with react-hook-form
+          disabled={isPending} // Disable input while pending
         />
-        {errors.title && <p className="text-red-500">{errors.title.message}</p>} {/* Display validation errors */}
+        {errors.title && (
+          <p className="text-red-500">{errors.title.message}</p>
+        )} {/* Display validation errors */}
       </div>
 
-      <Button className="mt-2" type="submit">
-        Create
+      <Button className="mt-2" type="submit" disabled={isPending}>
+        {isPending ? <LoaderIcon /> : "Create"} {/* Button text changes based on state */}
       </Button>
     </form>
   );
