@@ -1,6 +1,7 @@
 import prisma from "@/lib/prisma"
 import { auth } from "@clerk/nextjs/server"
 import SeriesForm from "./form"
+import Link from "next/link"
 
 export default async function SeriesPage() {
     const user = auth()
@@ -15,7 +16,7 @@ export default async function SeriesPage() {
             {series.length === 0 && <p>No Series Found!</p>}
 
             {series.map((series) => (
-                <p key={series.id}>{series.title}</p>
+                <Link href={`/series/${series.id}`} key={series.id}>{series.title}</Link>
             ))}
 
             <h1 className="font-bold text-lg">Create series</h1>
