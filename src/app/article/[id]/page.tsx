@@ -161,7 +161,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                         <ProfileImgCard createdAt={article?.createdAt} type={'article'} userId={article?.authorId!} />
 
                         <div className='flex items-center gap-2'>
-                            <UpvoteArticle upvoteCount={article?.upvotes.length!} article={article!} isUpvoted={!!isUpvoted ?? false} />
+                            <UpvoteArticle upvoteCount={article?.upvotes.length!} article={article!} isUpvoted={!!isUpvoted} />
                             <ShareBtn title={article?.title!} description={article?.content.slice(0, 150)!} />
                         </div>
                     </div>
