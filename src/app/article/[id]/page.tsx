@@ -70,6 +70,11 @@ export default async function Page({ params }: { params: { id: string } }) {
                     },
                 },
                 upvotes: true,
+                blogSeries: {
+                    include: {
+                        articles: true
+                    }
+                }
             }
         })
     } catch (err) {
@@ -104,6 +109,8 @@ export default async function Page({ params }: { params: { id: string } }) {
     }
 
     const timeToRead = (article?.content.split(" ").length! / 200).toFixed(0);
+
+    const isInSeries = article?.blogSeriesId !== null
 
     return (
         <div>
@@ -153,6 +160,15 @@ export default async function Page({ params }: { params: { id: string } }) {
                     </div>
 
                     <CardDescription>
+                        {isInSeries && (
+                            <div className='flex flex-col gap-2 py-2'>
+                                <p>This is a part of <Link className='text-blue-500 underline' href={`/series/${article?.blogSeriesId}`}>{article?.blogSeries?.title}</Link> series.</p>
+                                {article?.blogSeries?.articles.map((article, index) => (
+                                    <Button variant={article.id === params.id ? 'secondary' : 'outline'} key={article.id}>#{index + 1} {article.title}</Button>
+                                ))}
+
+                            </div>
+                        )}
                         <Content content={article?.content!} />
                         <p className='mt-2'> {viewCount._sum.count || 0} views </p>
                     </CardDescription>
