@@ -1,7 +1,6 @@
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import prisma from "@/lib/prisma"
 import { auth } from "@clerk/nextjs/server"
+import SeriesForm from "./form"
 
 export default async function SeriesPage() {
     const user = auth()
@@ -21,10 +20,7 @@ export default async function SeriesPage() {
 
             <h1 className="font-bold text-lg">Create series</h1>
 
-            <form>
-                <Input placeholder="Series name eg. Javascript tutorials, Biolgy chapter 1" />
-                <Button className="mt-2">Create</Button>
-            </form>
+            <SeriesForm userId={user.userId!} />
         </div>
     )
 }
