@@ -185,18 +185,20 @@ model View {
 }
 
 model Article {
-  id        String    @id @default(auto()) @map("_id") @db.ObjectId
-  title     String
-  content   String
-  authorId  String
-  comments  Comment[] @relation("ArticleComments")
-  upvotes   Upvote[]  @relation("ArticleUpvotes")
-  tags      Tag[]     @relation("ArticleTags")
-  topicId   String    @db.ObjectId
-  topic     Topic     @relation(fields: [topicId], references: [id])
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deletedAt DateTime?
+  id           String      @id @default(auto()) @map("_id") @db.ObjectId
+  title        String
+  content      String
+  authorId     String
+  comments     Comment[]   @relation("ArticleComments")
+  upvotes      Upvote[]    @relation("ArticleUpvotes")
+  tags         Tag[]       @relation("ArticleTags")
+  topicId      String      @db.ObjectId
+  topic        Topic       @relation(fields: [topicId], references: [id])
+  blogSeriesId String?     @db.ObjectId
+  blogSeries   BlogSeries? @relation(fields: [blogSeriesId], references: [id])
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  deletedAt    DateTime?
 }
 
 model Comment {
@@ -262,4 +264,15 @@ model AnswerComment {
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
   Answer    Answer?   @relation(fields: [answerId], references: [id])
+}
+
+model BlogSeries {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String
+  title       String
+  description String?
+  articles    Article[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
 }
