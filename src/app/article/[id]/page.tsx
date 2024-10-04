@@ -162,9 +162,11 @@ export default async function Page({ params }: { params: { id: string } }) {
                     <CardDescription>
                         {isInSeries && (
                             <div className='flex flex-col gap-2 py-2'>
-                                <p>This is a part of <Link className='text-blue-500 underline' href={`/series/${article?.blogSeriesId}`}>{article?.blogSeries?.title}</Link> series.</p>
+                                <p>This article is a part of <Link className='text-blue-500 underline' href={`/series/${article?.blogSeriesId}`}>{article?.blogSeries?.title}</Link> series.</p>
                                 {article?.blogSeries?.articles.map((article, index) => (
-                                    <Button variant={article.id === params.id ? 'secondary' : 'outline'} key={article.id}>#{index + 1} {article.title}</Button>
+                                    <Link className="w-full" href={`/article/${article.id}`} key={article.id}>
+                                        <Button className="w-full" variant={article.id === params.id ? 'secondary' : 'outline'}>#{index + 1} {article.title}</Button>
+                                    </Link>
                                 ))}
 
                             </div>
