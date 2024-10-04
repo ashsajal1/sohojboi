@@ -165,7 +165,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                                 <p>This article is a part of <Link className='text-blue-500 underline' href={`/series/${article?.blogSeriesId}`}>{article?.blogSeries?.title}</Link> series.</p>
                                 {article?.blogSeries?.articles.map((article, index) => (
                                     <Link className="w-full" href={`/article/${article.id}`} key={article.id}>
-                                        <Button className="w-full" variant={article.id === params.id ? 'secondary' : 'outline'}>#{index + 1} {article.title}</Button>
+                                        <Button className="w-full text-start" variant={article.id === params.id ? 'secondary' : 'outline'}>#{index + 1} {article.title.slice(0,40)}...</Button>
                                     </Link>
                                 ))}
 
