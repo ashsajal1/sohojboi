@@ -3,6 +3,7 @@ import prisma from "@/lib/prisma"
 import { auth } from "@clerk/nextjs/server";
 import { EditIcon } from "lucide-react";
 import Link from "next/link"
+import AddArticle from "./add-article";
 
 export default async function Series({ params }: { params: { id: string } }) {
     const series = await prisma.blogSeries.findUnique({
@@ -30,7 +31,7 @@ export default async function Series({ params }: { params: { id: string } }) {
             {series?.articles.map((article) => (
                 <Link href={`/article/${article.id}`} key={article.id}>{article.title}</Link>
             ))}
-            {isAuthor && <Button>Add Article</Button>}
+            {isAuthor && <AddArticle userId={user.userId} seriesId={params.id} />}
         </div>
     )
 }
