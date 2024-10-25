@@ -244,6 +244,8 @@ model Profile {
   grade         Int?
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+
+  CheckIn CheckIn[]
 }
 
 model Refer {
@@ -275,4 +277,14 @@ model BlogSeries {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   deletedAt   DateTime?
+}
+
+model CheckIn {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @unique
+  createdAt DateTime @default(now())
+  bonus     Int
+  user      Profile  @relation(fields: [userId], references: [clerkUserId])
+
+  @@index([userId, createdAt])
 }
