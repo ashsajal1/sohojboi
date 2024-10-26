@@ -19,6 +19,7 @@ export default async function QuestionsSlot() {
   }
   return (
     <div className="container mx-auto py-10">
+      <h1 className='font-bold text-lg'>Question List</h1>
       <DataTable columns={columns} data={questions!} />
     </div>
   )
