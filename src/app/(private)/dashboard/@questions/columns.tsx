@@ -44,9 +44,9 @@ export const columns: ColumnDef<Question>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "questionTitle",
+    accessorKey: "content",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Question" />,
-    // cell: ({row}) => <div></div>,
+    cell: ({row}) => <div>{(row.getValue("content") as string).slice(0, 120)}...</div>,
     enableSorting: true,
     enableHiding: true,
   },
