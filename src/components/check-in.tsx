@@ -13,6 +13,7 @@ import {
 import confetti from "canvas-confetti";
 import { Button } from "./ui/button";
 import { useEffect, useState } from "react";
+import { Coins } from "lucide-react";
 
 function CheckInConfirmationDialog() {
     const [open, setOpen] = useState(true)
@@ -54,7 +55,11 @@ function CheckInConfirmationDialog() {
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Check-In Complete</DialogTitle>
+                    <DialogTitle>
+                        <div className="flex items-center gap-1">
+                            +1000  <Coins className='h-5 w-5 mr-2 text-yellow-600' /> Check-In Bonus Added!
+                        </div>
+                    </DialogTitle>
                 </DialogHeader>
                 <DialogDescription>
                     You have successfully checked in for the day and received your bonus!
