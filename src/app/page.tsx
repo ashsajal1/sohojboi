@@ -8,10 +8,10 @@ export default async function Home() {
   let checkInStatus;
   if (user) {
     checkInStatus = await doCheckIn(user.id);
-    console.log("Check-in status:", checkInStatus);
-    if(checkInStatus) {
-      console.log("Checked in added bonus.")
-    }
+    // console.log("Check-in status:", checkInStatus);
+    // if(checkInStatus) {
+    //   console.log("Checked in added bonus.")
+    // }
   }
   return (
     <>
