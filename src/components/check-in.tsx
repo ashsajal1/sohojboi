@@ -47,6 +47,13 @@ function CheckInConfirmationDialog() {
         }, 250);
     };
 
+    const doCongrass = () => {
+        triggerConfetti();
+        setTimeout(() => {
+            triggerConfetti();
+        }, 300)
+    }
+
     useEffect(() => {
         triggerConfetti()
     }, [])
@@ -66,7 +73,7 @@ function CheckInConfirmationDialog() {
                 </DialogDescription>
                 <DialogFooter>
                     <DialogClose asChild>
-                        <Button>
+                        <Button onClick={doCongrass}>
                             Continue
                         </Button>
                     </DialogClose>
