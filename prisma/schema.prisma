@@ -62,6 +62,8 @@ model ChallengeQuestion {
   status      ChallengeQuestionStatus? @default(PENDING)
   options     AnswerOption[]
   topic       Topic?                   @relation(fields: [topicId], references: [id])
+  articleId   String?                  @db.ObjectId
+  article     Article?                 @relation(fields: [articleId], references: [id])
   topicId     String?                  @db.ObjectId
   chapter     Chapter?                 @relation(fields: [chapterId], references: [id])
   chapterId   String?                  @db.ObjectId
@@ -199,6 +201,8 @@ model Article {
   createdAt    DateTime    @default(now())
   updatedAt    DateTime    @updatedAt
   deletedAt    DateTime?
+
+  ChallengeQuestion ChallengeQuestion[]
 }
 
 model Comment {
