@@ -135,7 +135,16 @@ export default async function Page({ params }: { params: { id: string } }) {
         await increaseView(userId, article?.id!, "article")
     }
 
-    const timeToRead = (article?.content?.split(" ").length! / 200).toFixed(0);
+   const wordsPerMinute = 200;
+
+const timeToRead = article?.content
+    ? (article.content.split(" ").length / wordsPerMinute).toFixed(0)
+    : (
+        (article?.sections || [])
+            .map(section => section.content || "")
+            .join(" ")
+            .split(" ").length / wordsPerMinute
+    ).toFixed(0);
 
     const isInSeries = article?.blogSeriesId !== null
 
@@ -204,7 +213,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                                 content={`## **${section.title}**\n\n${section.content}`}
                             />
                         ))}
-                       {article?.content &&  <Content content={article?.content!} />}
+                        {article?.content && <Content content={article?.content!} />}
 
                         {quiz.length > 0 && <div>
                             <ArticleQuestion showConfetti question={quiz[0]} />
