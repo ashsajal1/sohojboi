@@ -187,22 +187,35 @@ model View {
 }
 
 model Article {
-  id           String      @id @default(auto()) @map("_id") @db.ObjectId
+  id           String           @id @default(auto()) @map("_id") @db.ObjectId
   title        String
   content      String
   authorId     String
-  comments     Comment[]   @relation("ArticleComments")
-  upvotes      Upvote[]    @relation("ArticleUpvotes")
-  tags         Tag[]       @relation("ArticleTags")
-  topicId      String      @db.ObjectId
-  topic        Topic       @relation(fields: [topicId], references: [id])
-  blogSeriesId String?     @db.ObjectId
-  blogSeries   BlogSeries? @relation(fields: [blogSeriesId], references: [id])
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
+  comments     Comment[]        @relation("ArticleComments")
+  upvotes      Upvote[]         @relation("ArticleUpvotes")
+  tags         Tag[]            @relation("ArticleTags")
+  topicId      String           @db.ObjectId
+  topic        Topic            @relation(fields: [topicId], references: [id])
+  blogSeriesId String?          @db.ObjectId
+  blogSeries   BlogSeries?      @relation(fields: [blogSeriesId], references: [id])
+  sections     ArticleSection[]
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
   deletedAt    DateTime?
 
   ChallengeQuestion ChallengeQuestion[]
+}
+
+model ArticleSection {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  title     String
+  content   String
+  authorId  String
+  articleId String    @db.ObjectId
+  article   Article   @relation(fields: [articleId], references: [id])
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
 }
 
 model Comment {
