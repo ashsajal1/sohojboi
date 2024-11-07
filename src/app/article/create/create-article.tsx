@@ -47,7 +47,7 @@ const CreateArticleForm = ({ topics }: { topics: Topic[] }) => {
         }
     });
 
-    const { fields: sections, append, remove } = useFieldArray({
+    const { fields: sections, fields, append, remove, insert } = useFieldArray({
         control,
         name: 'sections'
     });
@@ -61,8 +61,12 @@ const CreateArticleForm = ({ topics }: { topics: Topic[] }) => {
         });
     };
 
+    // Function to add a section before the last one (before 'Conclusion')
     const addSection = () => {
-        append({ title: '', content: '' });
+        const newSection = { title: '', content: '' };
+
+        // Insert the new section before the last section (Conclusion)
+        insert(fields.length - 1, newSection); // Insert at second last position
     };
 
     return (
