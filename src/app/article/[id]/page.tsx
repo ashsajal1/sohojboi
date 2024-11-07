@@ -202,7 +202,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                             <ArticleQuestion question={quiz[0]} />
                         </div>
 
-                        <div className="p-2">
+                        <div className="py-2">
                             <Link href={`/quiz/create?articleId=${article?.id}`}>
                                 <Button
                                     variant={'outline'}
