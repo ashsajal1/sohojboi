@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { ChallengeQuestion as ChallengeQuestionProps, AnswerOption } from '@prisma/client';
+import { triggerStarConfetti } from './star-confetti';
 
 interface ChallengeQuestionType extends ChallengeQuestionProps {
     options: AnswerOption[];
@@ -32,6 +33,11 @@ const ArticleQuestion: React.FC<ArticleQuestionProps> = ({ question, showConfett
     const handleSubmit = () => {
         if (selectedOption !== null) {
             setSubmitted(true);
+           if(showConfetti) {
+            if(selectedOption === question?.options.find((option) => option.isCorrect)?.id) {
+                triggerStarConfetti();
+            }
+           }
         }
     };
 
@@ -84,6 +90,7 @@ const ArticleQuestion: React.FC<ArticleQuestionProps> = ({ question, showConfett
                     )}
                 </div>
             )}
+            
         </div>
     );
 };

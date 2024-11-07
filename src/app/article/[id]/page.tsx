@@ -200,7 +200,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                         <Content content={article?.content!} />
 
                        {quiz.length > 0 &&  <div>
-                            <ArticleQuestion question={quiz[0]} />
+                            <ArticleQuestion showConfetti question={quiz[0]} />
                         </div> }
 
                         <div className="py-2">
