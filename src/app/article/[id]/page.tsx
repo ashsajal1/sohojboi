@@ -199,13 +199,16 @@ export default async function Page({ params }: { params: { id: string } }) {
                             </div>
                         )}
                         {article?.sections.map(section => (
-                            <Content key={section.id} content={section?.content!} />
+                            <Content
+                                key={section.id}
+                                content={`## **${section.title}**\n\n${section.content}`}
+                            />
                         ))}
                         <Content content={article?.content!} />
 
-                       {quiz.length > 0 &&  <div>
+                        {quiz.length > 0 && <div>
                             <ArticleQuestion showConfetti question={quiz[0]} />
-                        </div> }
+                        </div>}
 
                         <div className="py-2">
                             <Link href={`/quiz/create?articleId=${article?.id}`}>
