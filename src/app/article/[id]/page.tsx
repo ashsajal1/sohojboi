@@ -43,7 +43,7 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
 
     return {
         title: article?.title,
-        description: article?.content.slice(1, 150),
+        description: article?.content?.slice(1, 150),
         openGraph: {
             images: [ogImage]
         }
@@ -134,7 +134,7 @@ export default async function Page({ params }: { params: { id: string } }) {
         await increaseView(userId, article?.id!, "article")
     }
 
-    const timeToRead = (article?.content.split(" ").length! / 200).toFixed(0);
+    const timeToRead = (article?.content?.split(" ").length! / 200).toFixed(0);
 
     const isInSeries = article?.blogSeriesId !== null
 
@@ -219,7 +219,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 
                         <div className='flex items-center gap-2'>
                             <UpvoteArticle upvoteCount={article?.upvotes.length!} article={article!} isUpvoted={!!isUpvoted} />
-                            <ShareBtn title={article?.title!} description={article?.content.slice(0, 150)!} />
+                            <ShareBtn title={article?.title!} description={article?.content?.slice(0, 150)!} />
                         </div>
                     </div>
 
