@@ -46,7 +46,7 @@ const CreateArticleForm = ({ topics }: { topics: Topic[] }) => {
 
     const onSubmit = async (data: FormData) => {
         await startTransition(async () => {
-            await createArticle(data.title, "data", data.topic);
+            await createArticle(data.title, data.sections, data.topic);
         });
     };
 
