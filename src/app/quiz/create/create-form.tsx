@@ -90,7 +90,7 @@ export default function CreateForm({ topics, articles }: { topics: Topic[], arti
         if (topicId) {
             setValue('topic', topicId); 
         }
-    }, [articleId, setValue]);
+    }, [articleId, setValue, topicId]);
 
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
