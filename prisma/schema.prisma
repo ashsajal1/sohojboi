@@ -189,7 +189,7 @@ model View {
 model Article {
   id           String           @id @default(auto()) @map("_id") @db.ObjectId
   title        String
-  content      String
+  content      String?
   authorId     String
   comments     Comment[]        @relation("ArticleComments")
   upvotes      Upvote[]         @relation("ArticleUpvotes")
