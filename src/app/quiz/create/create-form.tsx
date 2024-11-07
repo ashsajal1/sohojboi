@@ -46,7 +46,6 @@ export default function CreateForm({ topics, articles }: { topics: Topic[], arti
     const [isArticleOpen, setIsArticleOpen] = React.useState(false)
     const [formData, setFormData] = React.useState<QuestionFormData | null>(null)
     const [isDialogOpen, setIsDialogOpen] = React.useState(false)
-    const [value, setValue] = React.useState("")
     const { register, handleSubmit, formState: { errors }, control } = useForm<QuestionFormData>({
         resolver: zodResolver(questionSchema)
     });
