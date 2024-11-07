@@ -232,7 +232,7 @@ export default function CreateForm({ topics, articles }: { topics: Topic[], arti
                 {options.length > 0 && options.length < 3 && 'Add Another Option'}
                 {options.length === 0 && 'Add Option'}
             </Button>
-            <Button className='w-full' type="submit">Submit</Button>
+            <Button className='w-full' type="submit">Create MCQ</Button>
            {formData &&  <ConfirmDialog formData={formData!} isDialogOpen={isDialogOpen} />}
         </form>
     );
