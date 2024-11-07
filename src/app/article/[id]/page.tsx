@@ -78,7 +78,8 @@ export default async function Page({ params }: { params: { id: string } }) {
                     include: {
                         articles: true
                     }
-                }
+                },
+                sections: true
             }
         })
 
@@ -197,6 +198,9 @@ export default async function Page({ params }: { params: { id: string } }) {
 
                             </div>
                         )}
+                        {article?.sections.map(section => (
+                            <Content key={section.id} content={section?.content!} />
+                        ))}
                         <Content content={article?.content!} />
 
                        {quiz.length > 0 &&  <div>
