@@ -15,6 +15,7 @@ import ShareBtn from '@/components/share-btn';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { DotsHorizontalIcon, Pencil1Icon, TrashIcon } from '@radix-ui/react-icons';
 import ArticleQuestion from './quiz';
+import QuizComponent from '@/app/quiz/quizzes';
 
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
     const articleId = params.id;
@@ -198,9 +199,9 @@ export default async function Page({ params }: { params: { id: string } }) {
                         )}
                         <Content content={article?.content!} />
 
-                        <div>
+                       {quiz.length > 0 &&  <div>
                             <ArticleQuestion question={quiz[0]} />
-                        </div>
+                        </div> }
 
                         <div className="py-2">
                             <Link href={`/quiz/create?articleId=${article?.id}`}>
