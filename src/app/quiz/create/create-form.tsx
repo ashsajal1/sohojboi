@@ -22,7 +22,6 @@ import {
 } from "@/components/ui/popover"
 import { cn } from '@/lib/utils';
 import { CommandList } from 'cmdk';
-import { createChallengeQuestion } from './actions';
 import { Separator } from '@/components/ui/separator';
 import ErrorText from './error-text';
 import ConfirmDialog from './confirm-dialog';
