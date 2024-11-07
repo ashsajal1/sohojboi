@@ -53,6 +53,7 @@ export default async function Page({ params }: { params: { id: string } }) {
     const userId = await auth().userId;
     let isUpvoted;
     let article;
+    let relatedArticles;
 
     try {
         article = await prisma.article.findUnique({
@@ -75,6 +76,19 @@ export default async function Page({ params }: { params: { id: string } }) {
                         articles: true
                     }
                 }
+            }
+        })
+
+        relatedArticles = await prisma.article.findMany({
+            where: {
+                topicId: article?.topicId,
+                id: {
+                    not: article?.id
+                }
+            },
+            take: 3,
+            orderBy: {
+                createdAt: 'desc'
             }
         })
     } catch (err) {
@@ -165,7 +179,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                                 <p>This article is a part of <Link className='text-blue-500 underline' href={`/series/${article?.blogSeriesId}`}>{article?.blogSeries?.title}</Link> series.</p>
                                 {article?.blogSeries?.articles.map((article, index) => (
                                     <Link className="w-full" href={`/article/${article.id}`} key={article.id}>
-                                        <Button className="w-full text-start" variant={article.id === params.id ? 'secondary' : 'outline'}>#{index + 1} {article.title.slice(0,40)}...</Button>
+                                        <Button className="w-full text-start" variant={article.id === params.id ? 'secondary' : 'outline'}>#{index + 1} {article.title.slice(0, 40)}...</Button>
                                     </Link>
                                 ))}
 
@@ -186,6 +200,16 @@ export default async function Page({ params }: { params: { id: string } }) {
 
                     <h1 className='font-bold mt-3'>Enter comments  :</h1>
                     {userId ? <CommentForm articleId={articleId} /> : <p>Please <Link className="border-b" href='/login'>Login</Link> to comment</p>}
+
+                    <div>
+                        <p>Read more</p>
+                        <div className="flex flex-col gap-2">
+                            {relatedArticles.map(article => (
+                                <Link className='text-blue-500 hover:underline' href={`/article/${article.id}`} key={article.id}>{article.title}</Link>
+                            ))}
+                        </div>
+
+                    </div>
                 </CardHeader>
                 <CardContent>
                     {article?.comments.map(comment => (
