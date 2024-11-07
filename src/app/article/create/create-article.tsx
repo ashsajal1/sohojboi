@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import React, { useState, useTransition } from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, Controller, useFieldArray } from 'react-hook-form';
 import { z } from 'zod';
 import { PopoverTrigger, Popover, PopoverContent } from "@/components/ui/popover";
 import { Command, CommandEmpty, CommandItem, CommandInput, CommandList } from "@/components/ui/command";
@@ -33,15 +33,19 @@ type FormData = z.infer<typeof articleSchema>;
 const CreateArticleForm = ({ topics }: { topics: Topic[] }) => {
     const [open, setOpen] = useState(false);
     const [pending, startTransition] = useTransition();
-    const [sections, setSections] = useState([
-        { id: 'intro', title: 'Introduction', content: '', isFixed: true },
-        { id: 'main', title: 'Main Body', content: '', isFixed: false },
-        { id: 'conclusion', title: 'Conclusion', content: '', isFixed: true }
-    ]);
 
     const { control, register, handleSubmit, formState: { errors } } = useForm<FormData>({
         resolver: zodResolver(articleSchema),
-        defaultValues: { sections }
+        defaultValues: { sections: [
+            { title: 'Introduction', content: '' },
+            { title: 'Main Body', content: '' },
+            { title: 'Conclusion', content: '' }
+        ]}
+    });
+
+    const { fields: sections, append, remove } = useFieldArray({
+        control,
+        name: 'sections'
     });
 
     const onSubmit = async (data: FormData) => {
@@ -51,18 +55,7 @@ const CreateArticleForm = ({ topics }: { topics: Topic[] }) => {
     };
 
     const addSection = () => {
-        const newSection = { id: Date.now().toString(), title: '', content: '', isFixed: false };
-        setSections([...sections.slice(0, sections.length - 1), newSection, sections[sections.length - 1]]);
-    };
-
-    const deleteSection = (id: string) => {
-        setSections(sections.filter(section => section.id !== id || section.isFixed));
-    };
-
-    const handleSectionChange = (id: string, field: 'title' | 'content', value: string) => {
-        setSections(sections.map(section => 
-            section.id === id ? { ...section, [field]: value } : section
-        ));
+        append({ title: '', content: '' });
     };
 
     return (
@@ -124,33 +117,42 @@ const CreateArticleForm = ({ topics }: { topics: Topic[] }) => {
                 <div className="mt-6">
                     <h2 className="text-lg font-medium">Sections</h2>
 
-                    {sections.map((section, index) => (
-                        <div key={section.id} className="border rounded-md p-4 mb-4 shadow-sm">
-                            <Input
-                                disabled={section.isFixed || pending}
-                                value={section.title}
-                                placeholder={`Section ${index + 1} Title`}
-                                onChange={(e) => handleSectionChange(section.id, 'title', e.target.value)}
-                                className="mb-2"
-                            />
-                            {errors.sections?.[index]?.title && (
-                                <span className="text-red-500">{errors.sections[index].title?.message}</span>
-                            )}
-                            <MDEditor
-                                previewOptions={{ rehypePlugins: [[rehypeSanitize]] }}
-                                value={section.content}
-                                onChange={(value) => handleSectionChange(section.id, 'content', value || '')}
-                            />
-                            {errors.sections?.[index]?.content && (
-                                <span className="text-red-500">{errors.sections[index].content?.message}</span>
-                            )}
-                            {!section.isFixed && (
-                                <Button onClick={() => deleteSection(section.id)} variant="destructive" className="mt-2 w-full">
-                                    Delete Section
-                                </Button>
-                            )}
-                        </div>
-                    ))}
+                    {sections.map((section, index) => {
+                        const isFixed = section.title === 'Introduction' || section.title === 'Conclusion';
+                        return (
+                            <div key={section.id} className="border rounded-md p-4 mb-4 shadow-sm">
+                                <Input
+                                    disabled={isFixed || pending}
+                                    // value={section.title}
+                                    placeholder={`Section ${index + 1} Title`}
+                                    {...register(`sections.${index}.title`)}
+                                    className="mb-2"
+                                />
+                                {errors.sections?.[index]?.title && (
+                                    <span className="text-red-500">{errors.sections[index].title?.message}</span>
+                                )}
+                                <Controller
+                                    control={control}
+                                    name={`sections.${index}.content`}
+                                    render={({ field }) => (
+                                        <MDEditor
+                                            previewOptions={{ rehypePlugins: [[rehypeSanitize]] }}
+                                            value={field.value}
+                                            onChange={(value) => field.onChange(value || '')}
+                                        />
+                                    )}
+                                />
+                                {errors.sections?.[index]?.content && (
+                                    <span className="text-red-500">{errors.sections[index].content?.message}</span>
+                                )}
+                                {!isFixed && (
+                                    <Button onClick={() => remove(index)} variant="destructive" className="mt-2 w-full">
+                                        Delete Section
+                                    </Button>
+                                )}
+                            </div>
+                        );
+                    })}
 
                     <Button onClick={addSection} className="w-full mt-4">
                         Add Section
