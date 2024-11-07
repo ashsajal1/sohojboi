@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { Topic } from '@prisma/client';
+import { Topic, Article } from '@prisma/client';
 import { ArrowUpIcon, CheckIcon, PlusCircledIcon, TrashIcon } from "@radix-ui/react-icons"
 import {
     Command,
@@ -31,6 +31,7 @@ const questionSchema = z.object({
     content: z.string().nonempty({ message: 'Content is required' }),
     correctOption: z.string().nonempty({ message: 'Correct option is required' }),
     topic: z.string().nonempty({ message: 'Topic is required' }),
+    article: z.string(),
     tags: z.string().optional(),
     options: z.array(z.object({
         content: z.string().nonempty({ message: 'Option content is required' })
@@ -40,8 +41,9 @@ const questionSchema = z.object({
 
 export type QuestionFormData = z.infer<typeof questionSchema>;
 
-export default function CreateForm({ topics }: { topics: Topic[] }) {
-    const [open, setOpen] = React.useState(false)
+export default function CreateForm({ topics, articles }: { topics: Topic[], articles: Article[] }) {
+    const [isTopicOpen, setIsTopicOpen] = React.useState(false)
+    const [isArticleOpen, setIsArticleOpen] = React.useState(false)
     const [formData, setFormData] = React.useState<QuestionFormData | null>(null)
     const [isDialogOpen, setIsDialogOpen] = React.useState(false)
     const [value, setValue] = React.useState("")
@@ -92,14 +94,14 @@ export default function CreateForm({ topics }: { topics: Topic[] }) {
                 control={control}
                 name="topic"
                 render={({ field }) => (
-                    <Popover open={open} onOpenChange={setOpen}>
+                    <Popover open={isTopicOpen} onOpenChange={setIsTopicOpen}>
                         <PopoverTrigger className='w-full' asChild>
                             <Button
                                 variant="outline"
                                 role="combobox"
                                 aria-expanded={open}
                                 className="w-full justify-between"
-                                onClick={() => setOpen(true)}
+                                onClick={() => setIsTopicOpen(true)}
                             >
                                 {field.value
                                     ? topics.find((topic) => topic.id === field.value)?.name
@@ -120,7 +122,7 @@ export default function CreateForm({ topics }: { topics: Topic[] }) {
                                                     value={topic.name}
                                                     onSelect={(currentValue: string) => {
                                                         field.onChange(topics.find((t) => t.name === currentValue)?.id!);
-                                                        setOpen(false);
+                                                        setIsTopicOpen(false);
                                                     }}
                                                 >
                                                     <CheckIcon
@@ -134,6 +136,63 @@ export default function CreateForm({ topics }: { topics: Topic[] }) {
                                             ))
                                         ) : (
                                             <CommandEmpty>No topics available</CommandEmpty>
+                                        )}
+                                    </CommandList>
+                                </CommandGroup>
+                            </Command>
+                        </PopoverContent>
+                    </Popover>
+                )}
+            />
+            {errors.topic && <ErrorText text={errors.topic.message!} />}
+             <Label className='my-2 block'>Select Article (Optional)</Label>
+
+            <Controller
+                control={control}
+                name="article"
+                render={({ field }) => (
+                    <Popover open={isArticleOpen} onOpenChange={setIsArticleOpen}>
+                        <PopoverTrigger className='w-full' asChild>
+                            <Button
+                                variant="outline"
+                                role="combobox"
+                                aria-expanded={open}
+                                className="w-full justify-between"
+                                onClick={() => setIsArticleOpen(true)}
+                            >
+                                {field.value
+                                    ? articles.find((article) => article.id === field.value)?.title
+                                    : "Select article..."}
+                                <ArrowUpIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                            </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-[200px] p-0">
+                            <Command>
+                                <CommandInput placeholder="Search topic..." />
+                                <CommandEmpty>No article found.</CommandEmpty>
+                                <CommandGroup>
+                                    <CommandList>
+                                        {Array.isArray(articles) && articles.length > 0 ? (
+                                            articles.map((article) => (
+                                                <CommandItem
+                                                    key={article.id}
+                                                    value={article.title}
+                                                    onSelect={(currentValue: string) => {
+                                                        field.onChange(articles.find((t) => t.title === currentValue)?.id!);
+                                                        setIsArticleOpen(false);
+                                                    }}
+                                                >
+                                                    <CheckIcon
+                                                        className={cn(
+                                                            "mr-2 h-4 w-4",
+                                                            field.value === article.id ? "opacity-100" : "opacity-0"
+                                                        )}
+                                                    />
+                                                    {article.title}
+                                                </CommandItem>
+                                            ))
+                                        ) : (
+                                            <CommandEmpty>No article available</CommandEmpty>
                                         )}
                                     </CommandList>
                                 </CommandGroup>
