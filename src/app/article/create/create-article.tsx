@@ -28,7 +28,6 @@ const articleSchema = z.object({
     sections: z.array(sectionSchema)
 });
 
-// TypeScript types for form data
 type FormData = z.infer<typeof articleSchema>;
 
 const CreateArticleForm = ({ topics }: { topics: Topic[] }) => {
@@ -47,14 +46,18 @@ const CreateArticleForm = ({ topics }: { topics: Topic[] }) => {
 
     const onSubmit = async (data: FormData) => {
         await startTransition(async () => {
-            await createArticle(data.title, "data.sections", data.topic);
+            await createArticle(data.title, "data", data.topic);
         });
     };
 
-    // Section management functions
-    const addSection = () => setSections([...sections, { id: Date.now().toString(), title: '', content: '', isFixed: false }]);
+    const addSection = () => {
+        const newSection = { id: Date.now().toString(), title: '', content: '', isFixed: false };
+        setSections([...sections.slice(0, sections.length - 1), newSection, sections[sections.length - 1]]);
+    };
 
-    const deleteSection = (id: string) => setSections(sections.filter(section => section.id !== id || section.isFixed));
+    const deleteSection = (id: string) => {
+        setSections(sections.filter(section => section.id !== id || section.isFixed));
+    };
 
     const handleSectionChange = (id: string, field: 'title' | 'content', value: string) => {
         setSections(sections.map(section => 
@@ -120,6 +123,7 @@ const CreateArticleForm = ({ topics }: { topics: Topic[] }) => {
 
                 <div className="mt-6">
                     <h2 className="text-lg font-medium">Sections</h2>
+
                     {sections.map((section, index) => (
                         <div key={section.id} className="border rounded-md p-4 mb-4 shadow-sm">
                             <Input
@@ -147,6 +151,7 @@ const CreateArticleForm = ({ topics }: { topics: Topic[] }) => {
                             )}
                         </div>
                     ))}
+
                     <Button onClick={addSection} className="w-full mt-4">
                         Add Section
                     </Button>
