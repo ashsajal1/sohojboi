@@ -14,6 +14,7 @@ import Link from 'next/link';
 import ShareBtn from '@/components/share-btn';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { DotsHorizontalIcon, Pencil1Icon, TrashIcon } from '@radix-ui/react-icons';
+import ArticleQuestion from './quiz';
 
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
     const articleId = params.id;
@@ -54,6 +55,7 @@ export default async function Page({ params }: { params: { id: string } }) {
     let isUpvoted;
     let article;
     let relatedArticles;
+    let quiz;
 
     try {
         article = await prisma.article.findUnique({
@@ -89,6 +91,15 @@ export default async function Page({ params }: { params: { id: string } }) {
             take: 3,
             orderBy: {
                 createdAt: 'desc'
+            }
+        });
+
+        quiz = await prisma.challengeQuestion.findMany({
+            where: {
+                articleId: articleId
+            },
+            include: {
+                options: true
             }
         })
     } catch (err) {
@@ -187,11 +198,15 @@ export default async function Page({ params }: { params: { id: string } }) {
                         )}
                         <Content content={article?.content!} />
 
+                        <div>
+                            <ArticleQuestion question={quiz[0]} />
+                        </div>
+
                         <div className="p-2">
                             <Link href={`/quiz/create?articleId=${article?.id}`}>
-                                <Button 
-                                variant={'outline'}
-                                className="w-full">Create quiz on this article</Button>
+                                <Button
+                                    variant={'outline'}
+                                    className="w-full">Create quiz on this article</Button>
                             </Link>
 
                         </div>
