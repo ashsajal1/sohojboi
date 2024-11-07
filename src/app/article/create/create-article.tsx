@@ -165,7 +165,7 @@ const CreateArticleForm = ({ topics }: { topics: Topic[] }) => {
                         );
                     })}
 
-                    <Button onClick={addSection} className="w-full mt-4">
+                    <Button disabled={pending} onClick={addSection} className="w-full mt-4">
                         Add Section
                     </Button>
                 </div>
