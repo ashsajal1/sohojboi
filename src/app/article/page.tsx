@@ -24,7 +24,8 @@ export default async function Page({ searchParams }: { searchParams: { page: str
             deletedAt: null
         },
         include: {
-            comments: true
+            comments: true,
+            sections: true,
         },
         orderBy: {
             createdAt: 'desc'
@@ -57,7 +58,12 @@ export default async function Page({ searchParams }: { searchParams: { page: str
                     <CardHeader>
                         <CardTitle>{article.title}</CardTitle>
                         <Markdown className={'text-sm text-muted-foreground'}>
-                            {article.content.replace(/\n/g, ' ').slice(0, 260)}
+                            {article?.content && article?.content?.replace(/\n/g, ' ').slice(0, 260)}
+
+                        </Markdown>
+                        <Markdown className={'text-sm text-muted-foreground'}>
+                            {article?.sections[0]?.content?.replace(/\n/g, ' ').slice(0, 260)}
+
                         </Markdown>
                     </CardHeader>
                     <CardFooter>
