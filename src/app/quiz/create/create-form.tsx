@@ -110,7 +110,7 @@ export default function CreateForm({ topics, articles }: { topics: Topic[], arti
                             <Button
                                 variant="outline"
                                 role="combobox"
-                                aria-expanded={open}
+                                aria-expanded={isTopicOpen}
                                 className="w-full justify-between"
                                 onClick={() => setIsTopicOpen(true)}
                             >
@@ -167,7 +167,7 @@ export default function CreateForm({ topics, articles }: { topics: Topic[], arti
                             <Button
                                 variant="outline"
                                 role="combobox"
-                                aria-expanded={open}
+                                aria-expanded={isArticleOpen}
                                 className="w-full justify-between"
                                 onClick={() => setIsArticleOpen(true)}
                             >
