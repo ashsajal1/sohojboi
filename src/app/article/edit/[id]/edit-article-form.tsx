@@ -119,9 +119,9 @@ const EditArticleForm = ({ topics, article }: { topics: Topic[], article: Articl
                     <Controller
                         name="content"
                         control={control}
-                        render={({ field }) => <MDEditor defaultValue={article.content} previewOptions={{
+                        render={({ field }) => <MDEditor defaultValue={article?.content!} previewOptions={{
                             rehypePlugins: [[rehypeSanitize]],
-                        }} value={content} onChange={(value) => {
+                        }} value={content!} onChange={(value) => {
                             field.onChange(value);
                             setContent(value!);
                         }} />}
