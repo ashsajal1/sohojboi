@@ -70,7 +70,6 @@ export default function CreateForm({ topics, articles }: { topics: Topic[], arti
     };
 
     const onSubmit = async (data: QuestionFormData) => {
-        createChallengeQuestion(data)
         setFormData(data)
     };
 
