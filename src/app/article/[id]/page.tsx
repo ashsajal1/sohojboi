@@ -43,7 +43,7 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
 
     return {
         title: article?.title,
-        description: article?.content.slice(1, 150),
+        description: article?.content?.slice(1, 150),
         openGraph: {
             images: [ogImage]
         }
@@ -78,7 +78,8 @@ export default async function Page({ params }: { params: { id: string } }) {
                     include: {
                         articles: true
                     }
-                }
+                },
+                sections: true
             }
         })
 
@@ -134,7 +135,16 @@ export default async function Page({ params }: { params: { id: string } }) {
         await increaseView(userId, article?.id!, "article")
     }
 
-    const timeToRead = (article?.content.split(" ").length! / 200).toFixed(0);
+   const wordsPerMinute = 200;
+
+const timeToRead = article?.content
+    ? (article.content.split(" ").length / wordsPerMinute).toFixed(0)
+    : (
+        (article?.sections || [])
+            .map(section => section.content || "")
+            .join(" ")
+            .split(" ").length / wordsPerMinute
+    ).toFixed(0);
 
     const isInSeries = article?.blogSeriesId !== null
 
@@ -197,11 +207,17 @@ export default async function Page({ params }: { params: { id: string } }) {
 
                             </div>
                         )}
-                        <Content content={article?.content!} />
+                        {article?.sections.map(section => (
+                            <Content
+                                key={section.id}
+                                content={`## **${section.title}**\n\n${section.content}`}
+                            />
+                        ))}
+                        {article?.content && <Content content={article?.content!} />}
 
-                       {quiz.length > 0 &&  <div>
+                        {quiz.length > 0 && <div>
                             <ArticleQuestion showConfetti question={quiz[0]} />
-                        </div> }
+                        </div>}
 
                         <div className="py-2">
                             <Link href={`/quiz/create?articleId=${article?.id}`}>
@@ -219,7 +235,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 
                         <div className='flex items-center gap-2'>
                             <UpvoteArticle upvoteCount={article?.upvotes.length!} article={article!} isUpvoted={!!isUpvoted} />
-                            <ShareBtn title={article?.title!} description={article?.content.slice(0, 150)!} />
+                            <ShareBtn title={article?.title!} description={article?.content?.slice(0, 150)!} />
                         </div>
                     </div>
 
