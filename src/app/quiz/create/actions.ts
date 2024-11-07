@@ -15,6 +15,7 @@ export const createChallengeQuestion = async (formData: QuestionFormData) => {
       data: {
         content: formData.content,
         topic: { connect: { id: formData.topic } },
+        article: { connect: { id: formData.article } },
         options: {
           create: [
             { content: formData.correctOption, isCorrect: true },
@@ -27,5 +28,5 @@ export const createChallengeQuestion = async (formData: QuestionFormData) => {
     return error;
   }
 
-  revalidatePath('/')
+  revalidatePath("/");
 };
