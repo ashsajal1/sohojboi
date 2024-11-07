@@ -211,6 +211,7 @@ model ArticleSection {
   title     String
   content   String
   authorId  String
+  position  Int
   articleId String    @db.ObjectId
   article   Article   @relation(fields: [articleId], references: [id])
   createdAt DateTime  @default(now())
