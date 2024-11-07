@@ -15,6 +15,7 @@ import { createArticle } from './actions';
 import LoaderIcon from '@/components/loader-icon';
 import MDEditor from '@uiw/react-md-editor';
 import rehypeSanitize from "rehype-sanitize";
+import { useRouter } from "next/navigation"
 
 // Define validation schema using zod
 const sectionSchema = z.object({
@@ -33,14 +34,17 @@ type FormData = z.infer<typeof articleSchema>;
 const CreateArticleForm = ({ topics }: { topics: Topic[] }) => {
     const [open, setOpen] = useState(false);
     const [pending, startTransition] = useTransition();
+    const router = useRouter();
 
     const { control, register, handleSubmit, formState: { errors } } = useForm<FormData>({
         resolver: zodResolver(articleSchema),
-        defaultValues: { sections: [
-            { title: 'Introduction', content: '' },
-            { title: 'Main Body', content: '' },
-            { title: 'Conclusion', content: '' }
-        ]}
+        defaultValues: {
+            sections: [
+                { title: 'Introduction', content: '' },
+                { title: 'Main Body', content: '' },
+                { title: 'Conclusion', content: '' }
+            ]
+        }
     });
 
     const { fields: sections, append, remove } = useFieldArray({
@@ -50,7 +54,10 @@ const CreateArticleForm = ({ topics }: { topics: Topic[] }) => {
 
     const onSubmit = async (data: FormData) => {
         await startTransition(async () => {
-            await createArticle(data.title, data.sections, data.topic);
+            const articleId = await createArticle(data.title, data.sections, data.topic);
+            if (articleId) {
+                router.push(`/article/${articleId}`);
+            }
         });
     };
 

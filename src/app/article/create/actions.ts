@@ -31,7 +31,7 @@ export const createArticle = async (
       include: { sections: true }, // Optionally include sections in the response
     });
 
-    redirect(`/article/${newArticle.id}`);
+    return newArticle.id;
   } catch (error) {
     console.error("Error creating article:", error);
     throw new Error("Cannot create article with sections!");
