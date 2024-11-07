@@ -204,7 +204,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                                 content={`## **${section.title}**\n\n${section.content}`}
                             />
                         ))}
-                        <Content content={article?.content!} />
+                       {article?.content &&  <Content content={article?.content!} />}
 
                         {quiz.length > 0 && <div>
                             <ArticleQuestion showConfetti question={quiz[0]} />
