@@ -186,6 +186,15 @@ export default async function Page({ params }: { params: { id: string } }) {
                             </div>
                         )}
                         <Content content={article?.content!} />
+
+                        <div className="p-2">
+                            <Link href={`/quiz/create?articleId=${article?.id}`}>
+                                <Button 
+                                variant={'outline'}
+                                className="w-full">Create quiz on this article</Button>
+                            </Link>
+
+                        </div>
                         <p className='mt-2'> {viewCount._sum.count || 0} views </p>
                     </CardDescription>
 
