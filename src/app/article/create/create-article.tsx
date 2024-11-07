@@ -7,7 +7,7 @@ import React, { useState, useTransition } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { z } from 'zod';
 import { PopoverTrigger, Popover, PopoverContent } from "@/components/ui/popover";
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import { Command, CommandEmpty, CommandItem, CommandInput, CommandList } from "@/components/ui/command";
 import { Topic } from '@prisma/client';
 import { ArrowUpIcon, CheckIcon } from "@radix-ui/react-icons";
 import { cn } from '@/lib/utils';
@@ -34,7 +34,11 @@ type FormData = z.infer<typeof articleSchema>;
 const CreateArticleForm = ({ topics }: { topics: Topic[] }) => {
     const [open, setOpen] = useState(false);
     const [pending, startTransition] = useTransition();
-    const [sections, setSections] = useState([{ id: Date.now().toString(), title: '', content: '' }]);
+    const [sections, setSections] = useState([
+        { id: 'intro', title: 'Introduction', content: '', isFixed: true },
+        { id: 'main', title: 'Main Body', content: '', isFixed: false },
+        { id: 'conclusion', title: 'Conclusion', content: '', isFixed: true }
+    ]);
 
     const { control, register, handleSubmit, formState: { errors } } = useForm<FormData>({
         resolver: zodResolver(articleSchema),
@@ -43,17 +47,17 @@ const CreateArticleForm = ({ topics }: { topics: Topic[] }) => {
 
     const onSubmit = async (data: FormData) => {
         await startTransition(async () => {
-            await createArticle(data.title, "demo-content", data.topic);
+            await createArticle(data.title, "data.sections", data.topic);
         });
     };
 
     // Section management functions
-    const addSection = () => setSections([...sections, { id: Date.now().toString(), title: '', content: '' }]);
+    const addSection = () => setSections([...sections, { id: Date.now().toString(), title: '', content: '', isFixed: false }]);
 
-    const deleteSection = (id: string) => setSections(sections.filter(section => section.id !== id));
+    const deleteSection = (id: string) => setSections(sections.filter(section => section.id !== id || section.isFixed));
 
     const handleSectionChange = (id: string, field: 'title' | 'content', value: string) => {
-        setSections(sections.map(section =>
+        setSections(sections.map(section => 
             section.id === id ? { ...section, [field]: value } : section
         ));
     };
@@ -119,8 +123,9 @@ const CreateArticleForm = ({ topics }: { topics: Topic[] }) => {
                     {sections.map((section, index) => (
                         <div key={section.id} className="border rounded-md p-4 mb-4 shadow-sm">
                             <Input
-                                placeholder={`Section ${index + 1} Title`}
+                                disabled={section.isFixed || pending}
                                 value={section.title}
+                                placeholder={`Section ${index + 1} Title`}
                                 onChange={(e) => handleSectionChange(section.id, 'title', e.target.value)}
                                 className="mb-2"
                             />
@@ -135,9 +140,11 @@ const CreateArticleForm = ({ topics }: { topics: Topic[] }) => {
                             {errors.sections?.[index]?.content && (
                                 <span className="text-red-500">{errors.sections[index].content?.message}</span>
                             )}
-                            <Button onClick={() => deleteSection(section.id)} variant="destructive" className="mt-2 w-full">
-                                Delete Section
-                            </Button>
+                            {!section.isFixed && (
+                                <Button onClick={() => deleteSection(section.id)} variant="destructive" className="mt-2 w-full">
+                                    Delete Section
+                                </Button>
+                            )}
                         </div>
                     ))}
                     <Button onClick={addSection} className="w-full mt-4">
