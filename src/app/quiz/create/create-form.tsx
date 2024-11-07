@@ -7,7 +7,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Topic, Article } from '@prisma/client';
-import { ArrowUpIcon, CheckIcon, PlusCircledIcon, TrashIcon } from "@radix-ui/react-icons"
+import { ArrowUpIcon, CheckIcon, PlusCircledIcon, TrashIcon } from "@radix-ui/react-icons";
+import { useSearchParams } from 'next/navigation'
 import {
     Command,
     CommandEmpty,
@@ -41,11 +42,15 @@ const questionSchema = z.object({
 export type QuestionFormData = z.infer<typeof questionSchema>;
 
 export default function CreateForm({ topics, articles }: { topics: Topic[], articles: Article[] }) {
+    const searchParams = useSearchParams()
+    const articleId = searchParams.get('articleId'); 
+    const topicId = searchParams.get('topicId'); 
+
     const [isTopicOpen, setIsTopicOpen] = React.useState(false)
     const [isArticleOpen, setIsArticleOpen] = React.useState(false)
     const [formData, setFormData] = React.useState<QuestionFormData | null>(null)
     const [isDialogOpen, setIsDialogOpen] = React.useState(false)
-    const { register, handleSubmit, formState: { errors }, control } = useForm<QuestionFormData>({
+    const { register, handleSubmit, formState: { errors }, control, setValue } = useForm<QuestionFormData>({
         resolver: zodResolver(questionSchema)
     });
 
@@ -77,6 +82,15 @@ export default function CreateForm({ topics, articles }: { topics: Topic[], arti
             setIsDialogOpen(true)
         }
     }, [formData])
+
+    useEffect(() => {
+        if (articleId) {
+            setValue('article', articleId); 
+        }
+        if (topicId) {
+            setValue('topic', topicId); 
+        }
+    }, [articleId, setValue]);
 
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
