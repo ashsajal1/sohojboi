@@ -42,8 +42,11 @@ const ArticleQuestion: React.FC<ArticleQuestionProps> = ({ question }) => {
                     <div
                         key={option.id}
                         className={`p-2 border rounded cursor-pointer
-                            ${submitted && option.isCorrect ? 'bg-green-200' : ''}
-                            ${submitted && selectedOption === option.id && !option.isCorrect ? 'bg-red-200' : ''}
+                            ${submitted && option.isCorrect ? 'bg-green-200 text-muted' : ''}
+                            ${submitted && selectedOption === option.id && !option.isCorrect ? 'bg-red-200 text-muted' : ''}
+                            ${
+                                selectedOption === option.id
+                                    && 'border-blue-500'}
                         `}
                         onClick={() => handleOptionClick(option.id)}
                     >
