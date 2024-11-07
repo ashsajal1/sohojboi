@@ -12,10 +12,11 @@ interface ChallengeQuestionType extends ChallengeQuestionProps {
 
 interface ArticleQuestionProps {
     question: ChallengeQuestionType;
+    showConfetti?: boolean;
 }
 
 // ArticleQuestion component to display the question, options, and answer after submission
-const ArticleQuestion: React.FC<ArticleQuestionProps> = ({ question }) => {
+const ArticleQuestion: React.FC<ArticleQuestionProps> = ({ question, showConfetti = false }) => {
     // const { content, options, explanation } = question;
     const [selectedOption, setSelectedOption] = useState<string | null>(null);
     const [submitted, setSubmitted] = useState(false);
