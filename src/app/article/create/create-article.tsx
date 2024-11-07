@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,7 +9,7 @@ import { z } from 'zod';
 import { PopoverTrigger, Popover, PopoverContent } from "@/components/ui/popover";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Topic } from '@prisma/client';
-import { ArrowUpIcon, CheckIcon } from "@radix-ui/react-icons"
+import { ArrowUpIcon, CheckIcon } from "@radix-ui/react-icons";
 import { cn } from '@/lib/utils';
 import { createArticle } from './actions';
 import LoaderIcon from '@/components/loader-icon';
@@ -17,10 +17,15 @@ import MDEditor from '@uiw/react-md-editor';
 import rehypeSanitize from "rehype-sanitize";
 
 // Define validation schema using zod
+const sectionSchema = z.object({
+    title: z.string().min(3, 'Section title must be at least 3 characters'),
+    content: z.string().min(10, 'Section content must be at least 10 characters')
+});
+
 const articleSchema = z.object({
     title: z.string().min(5, 'Title must be at least 5 characters').max(100, 'Title must not exceed 100 characters').nonempty('Title is required'),
-    content: z.string().min(10, 'Content must be at least 10 characters').max(10000, 'Content must not exceed 10000 characters').nonempty('Content is required'),
-    topic: z.string({ required_error: 'Topic selection is required' }).nonempty('Topic selection is required'), // Add validation for selectedTopic
+    topic: z.string({ required_error: 'Topic selection is required' }).nonempty('Topic selection is required'),
+    sections: z.array(sectionSchema)
 });
 
 // TypeScript types for form data
@@ -29,14 +34,28 @@ type FormData = z.infer<typeof articleSchema>;
 const CreateArticleForm = ({ topics }: { topics: Topic[] }) => {
     const [open, setOpen] = useState(false);
     const [pending, startTransition] = useTransition();
+    const [sections, setSections] = useState([{ id: Date.now().toString(), title: '', content: '' }]);
+
     const { control, register, handleSubmit, formState: { errors } } = useForm<FormData>({
-        resolver: zodResolver(articleSchema)
+        resolver: zodResolver(articleSchema),
+        defaultValues: { sections }
     });
 
     const onSubmit = async (data: FormData) => {
         await startTransition(async () => {
-            await createArticle(data.title, data.content, data.topic)
-        })
+            await createArticle(data.title, "demo-content", data.topic);
+        });
+    };
+
+    // Section management functions
+    const addSection = () => setSections([...sections, { id: Date.now().toString(), title: '', content: '' }]);
+
+    const deleteSection = (id: string) => setSections(sections.filter(section => section.id !== id));
+
+    const handleSectionChange = (id: string, field: 'title' | 'content', value: string) => {
+        setSections(sections.map(section =>
+            section.id === id ? { ...section, [field]: value } : section
+        ));
     };
 
     return (
@@ -48,7 +67,6 @@ const CreateArticleForm = ({ topics }: { topics: Topic[] }) => {
                     name="topic"
                     render={({ field }) => (
                         <Popover open={open} onOpenChange={setOpen}>
-
                             <PopoverTrigger className='w-full' asChild>
                                 <Button
                                     disabled={pending}
@@ -68,66 +86,69 @@ const CreateArticleForm = ({ topics }: { topics: Topic[] }) => {
                                 <Command>
                                     <CommandInput placeholder="Search topic..." />
                                     <CommandEmpty>No topic found.</CommandEmpty>
-                                    {/* <CommandGroup> */}
-                                        <CommandList>
-                                            {Array.isArray(topics) && topics.length > 0 ? (
-                                                topics.map((topic) => (
-                                                    <CommandItem
-                                                        key={topic.id}
-                                                        value={topic.name}
-                                                        onSelect={(currentValue) => {
-                                                            field.onChange(topics.find((t) => t.name === currentValue)?.id);
-                                                            setOpen(false);
-                                                        }}
-                                                    >
-                                                        <CheckIcon
-                                                            className={cn(
-                                                                "mr-2 h-4 w-4",
-                                                                field.value === topic.name ? "opacity-100" : "opacity-0"
-                                                            )}
-                                                        />
-                                                        {topic.name}
-                                                    </CommandItem>
-                                                ))
-                                            ) : (
-                                                <CommandEmpty>No topics available</CommandEmpty>
-                                            )}
-                                        </CommandList>
-                                    {/* </CommandGroup> */}
+                                    <CommandList>
+                                        {topics.map((topic) => (
+                                            <CommandItem
+                                                key={topic.id}
+                                                value={topic.name}
+                                                onSelect={(currentValue) => {
+                                                    field.onChange(topics.find((t) => t.name === currentValue)?.id);
+                                                    setOpen(false);
+                                                }}
+                                            >
+                                                <CheckIcon className={cn("mr-2 h-4 w-4", field.value === topic.name ? "opacity-100" : "opacity-0")} />
+                                                {topic.name}
+                                            </CommandItem>
+                                        ))}
+                                    </CommandList>
                                 </Command>
                             </PopoverContent>
                         </Popover>
                     )}
                 />
-
                 {errors.topic && <span className="text-red-500">{errors.topic.message}</span>}
 
-                <div className='flex flex-col gap-2 mt-4'>
+                <div className="mt-4">
                     <h2 className="text-lg font-medium">Title</h2>
-                    <Input
-                        disabled={pending}
-                        {...register('title')}
-                        placeholder='Enter title...'
-                    />
+                    <Input disabled={pending} {...register('title')} placeholder="Enter article title..." />
                     {errors.title && <span className="text-red-500">{errors.title.message}</span>}
-                    <h2 className="text-lg font-medium">Content</h2>
-
-                    <Controller
-                        name="content"
-                        control={control}
-                        render={({ field }) => <MDEditor previewOptions={{
-                            rehypePlugins: [[rehypeSanitize]],
-                        }} value={field.value} onChange={field.onChange} />}
-                    />
-
-                    {errors.content && <span className="text-red-500">{errors.content.message}</span>}
                 </div>
 
-                <Button className='w-full mt-4' disabled={pending} type="submit">
+                <div className="mt-6">
+                    <h2 className="text-lg font-medium">Sections</h2>
+                    {sections.map((section, index) => (
+                        <div key={section.id} className="border rounded-md p-4 mb-4 shadow-sm">
+                            <Input
+                                placeholder={`Section ${index + 1} Title`}
+                                value={section.title}
+                                onChange={(e) => handleSectionChange(section.id, 'title', e.target.value)}
+                                className="mb-2"
+                            />
+                            {errors.sections?.[index]?.title && (
+                                <span className="text-red-500">{errors.sections[index].title?.message}</span>
+                            )}
+                            <MDEditor
+                                previewOptions={{ rehypePlugins: [[rehypeSanitize]] }}
+                                value={section.content}
+                                onChange={(value) => handleSectionChange(section.id, 'content', value || '')}
+                            />
+                            {errors.sections?.[index]?.content && (
+                                <span className="text-red-500">{errors.sections[index].content?.message}</span>
+                            )}
+                            <Button onClick={() => deleteSection(section.id)} variant="destructive" className="mt-2 w-full">
+                                Delete Section
+                            </Button>
+                        </div>
+                    ))}
+                    <Button onClick={addSection} className="w-full mt-4">
+                        Add Section
+                    </Button>
+                </div>
+
+                <Button className="w-full mt-6" disabled={pending} type="submit">
                     {pending ? <><LoaderIcon /> Creating</> : 'Create'}
                 </Button>
             </form>
-
         </div>
     );
 };
