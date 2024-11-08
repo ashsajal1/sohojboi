@@ -10,6 +10,9 @@ export default async function Page({ params }: { params: { id: string } }) {
     const article = await prisma.article.findUnique({
         where: {
             id: articleId
+        },
+        include: {
+            sections: true
         }
     });
     
