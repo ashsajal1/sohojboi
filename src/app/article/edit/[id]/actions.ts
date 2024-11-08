@@ -7,30 +7,55 @@ import { redirect } from "next/navigation";
 
 export const editArticle = async (
   title: string,
-  content: string,
+  sections: { id?: string; title: string; content: string }[],
   topicId: string,
   articleId: string
 ) => {
-  let editedArticle;
   try {
     const authorId = await auth().userId;
-    editedArticle = await prisma.article.update({
-      where: {
-        id: articleId,
-      },
+
+    // Update the article title and topic
+    const editedArticle = await prisma.article.update({
+      where: { id: articleId },
       data: {
-        title: title,
-        content: content,
+        title,
+        topicId,
         authorId: authorId!,
-        topicId: topicId,
       },
     });
-  } catch (error) {
-    throw new Error("Cannot edit article!");
-  }
 
-  redirect(`/article/${editedArticle.id}`);
+    // Process each section to update existing ones or create new ones
+    sections.forEach(async (section, index) => {
+      if (section.id) {
+        await prisma.articleSection.update({
+          where: { id: section.id },
+          data: {
+            title: section.title,
+            content: section.content,
+            position: index,
+          },
+        });
+      } else {
+        await prisma.articleSection.create({
+          data: {
+            title: section.title,
+            content: section.content,
+            position: index,
+            articleId: articleId,
+            authorId: authorId!,
+          },
+        });
+      }
+    });
+    
+
+    return editedArticle.id;
+  } catch (error) {
+    console.error("Error editing article:", error);
+    throw new Error("Cannot edit article with sections!");
+  }
 };
+
 
 export const deleteArticle = async (article: Article) => {
   try {
