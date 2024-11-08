@@ -16,6 +16,7 @@ import DeleteArticleBtn from './delete-btn';
 import LoaderIcon from '@/components/loader-icon';
 import MDEditor from '@uiw/react-md-editor';
 import rehypeSanitize from "rehype-sanitize";
+import {useRouter} from "next/navigation"
 
 // Define validation schema using zod
 const sectionSchema = z.object({
@@ -34,6 +35,7 @@ type FormData = z.infer<typeof articleSchema>;
 const EditArticleForm = ({ topics, article }: { topics: Topic[], article: Article & { sections: ArticleSection[] } }) => {
     const [open, setOpen] = useState(false);
     const [pending, startTransition] = useTransition();
+    const router = useRouter();
     const { control, register, handleSubmit, formState: { errors } } = useForm<FormData>({
         resolver: zodResolver(articleSchema),
         defaultValues: {
@@ -53,7 +55,8 @@ const EditArticleForm = ({ topics, article }: { topics: Topic[], article: Articl
 
     const onSubmit = async (data: FormData) => {
         await startTransition(async () => {
-            await editArticle(data.title, data.sections, data.topic, article.id);
+            const articleId = await editArticle(data.title, data.sections, data.topic, article.id);
+            if(articleId) router.push(`/article/${articleId}`)
         });
     };
 

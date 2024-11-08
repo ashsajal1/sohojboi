@@ -7,49 +7,35 @@ import { redirect } from "next/navigation";
 
 export const editArticle = async (
   title: string,
-  sections: { id?: string; title: string; content: string }[],
+  sections: { title: string; content: string }[],
   topicId: string,
   articleId: string
 ) => {
   try {
     const authorId = await auth().userId;
 
-    // Update the article title and topic
-    const editedArticle = await prisma.article.update({
+    // Begin a transaction to update article and sections
+    const updatedArticle = await prisma.article.update({
       where: { id: articleId },
       data: {
         title,
-        topicId,
         authorId: authorId!,
+        topicId,
+        deletedAt: null,
+        sections: {
+          deleteMany: {}, // Remove all previous sections
+          create: sections.map((section, index) => ({
+            title: section.title,
+            content: section.content,
+            position: index, // Keeps the new section order
+            authorId: authorId!
+          })),
+        },
       },
+      include: { sections: true }, // Optionally include sections in the response
     });
 
-    // Process each section to update existing ones or create new ones
-    sections.forEach(async (section, index) => {
-      if (section.id) {
-        await prisma.articleSection.update({
-          where: { id: section.id },
-          data: {
-            title: section.title,
-            content: section.content,
-            position: index,
-          },
-        });
-      } else {
-        await prisma.articleSection.create({
-          data: {
-            title: section.title,
-            content: section.content,
-            position: index,
-            articleId: articleId,
-            authorId: authorId!,
-          },
-        });
-      }
-    });
-    
-
-    return editedArticle.id;
+    return updatedArticle.id;
   } catch (error) {
     console.error("Error editing article:", error);
     throw new Error("Cannot edit article with sections!");
