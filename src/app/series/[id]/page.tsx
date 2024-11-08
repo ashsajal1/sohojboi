@@ -38,7 +38,7 @@ export default async function Series({ params }: { params: { id: string } }) {
                 <CardHeader>
                     <CardTitle>{article.title}</CardTitle>
                     <Markdown className={'text-sm text-muted-foreground'}>
-                        {article.content.replace(/\n/g, ' ').slice(0, 260)}
+                        {article?.content?.replace(/\n/g, ' ').slice(0, 260)}
                     </Markdown>
                 </CardHeader>
                 <CardFooter>
