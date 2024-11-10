@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { Topic, Article } from '@prisma/client';
+import { Topic, Article, ArticleSection } from '@prisma/client';
 import { ArrowUpIcon, CheckIcon, PlusCircledIcon, TrashIcon } from "@radix-ui/react-icons";
 import { useSearchParams } from 'next/navigation'
 import {
@@ -32,6 +32,7 @@ const questionSchema = z.object({
     correctOption: z.string().nonempty({ message: 'Correct option is required' }),
     topic: z.string().nonempty({ message: 'Topic is required' }),
     article: z.string(),
+    articleSection: z.string().optional(),
     tags: z.string().optional(),
     options: z.array(z.object({
         content: z.string().nonempty({ message: 'Option content is required' })
@@ -41,16 +42,18 @@ const questionSchema = z.object({
 
 export type QuestionFormData = z.infer<typeof questionSchema>;
 
-export default function CreateForm({ topics, articles }: { topics: Topic[], articles: Article[] }) {
+export default function CreateForm({ topics, articles, articleSections }: { topics: Topic[], articles: Article[], articleSections: ArticleSection[] }) {
     const searchParams = useSearchParams()
     const articleId = searchParams.get('articleId'); 
     const topicId = searchParams.get('topicId'); 
 
     const [isTopicOpen, setIsTopicOpen] = React.useState(false)
-    const [isArticleOpen, setIsArticleOpen] = React.useState(false)
+    const [isArticleOpen, setIsArticleOpen] = React.useState(false);
+    const [isSectionOpen, setIsSectionOpen] = React.useState(false)
+    const [sections, setSections] = React.useState<ArticleSection[]>([])
     const [formData, setFormData] = React.useState<QuestionFormData | null>(null)
     const [isDialogOpen, setIsDialogOpen] = React.useState(false)
-    const { register, handleSubmit, formState: { errors }, control, setValue } = useForm<QuestionFormData>({
+    const { register, handleSubmit, formState: { errors }, control, setValue, watch } = useForm<QuestionFormData>({
         resolver: zodResolver(questionSchema)
     });
 
@@ -91,6 +94,17 @@ export default function CreateForm({ topics, articles }: { topics: Topic[], arti
             setValue('topic', topicId); 
         }
     }, [articleId, setValue, topicId]);
+
+     // Update the sections based on the selected article
+     const selectedArticleId = watch("article");
+     useEffect(() => {
+         if (selectedArticleId) {
+             const filteredSections = articleSections.filter(section => section.articleId === selectedArticleId);
+             setSections(filteredSections);
+         } else {
+             setSections([]);
+         }
+     }, [selectedArticleId, articleSections]);
 
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -155,6 +169,7 @@ export default function CreateForm({ topics, articles }: { topics: Topic[], arti
                     </Popover>
                 )}
             />
+            
             {errors.topic && <ErrorText text={errors.topic.message!} />}
              <Label className='my-2 block'>Select Article (Optional)</Label>
 
@@ -204,6 +219,62 @@ export default function CreateForm({ topics, articles }: { topics: Topic[], arti
                                             ))
                                         ) : (
                                             <CommandEmpty>No article available</CommandEmpty>
+                                        )}
+                                    </CommandList>
+                                </CommandGroup>
+                            </Command>
+                        </PopoverContent>
+                    </Popover>
+                )}
+            />
+
+<Label className='my-2 block'>Select Article Section (Optional)</Label>
+            <Controller
+                control={control}
+                name="articleSection"
+                render={({ field }) => (
+                    <Popover open={isSectionOpen} onOpenChange={setIsSectionOpen}>
+                        <PopoverTrigger className='w-full' asChild>
+                            <Button
+                                variant="outline"
+                                role="combobox"
+                                aria-expanded={isSectionOpen}
+                                className="w-full justify-between"
+                                onClick={() => setIsSectionOpen(true)}
+                            >
+                                {field.value
+                                    ? sections.find((section) => section.id === field.value)?.title
+                                    : "Select article section..."}
+                                <ArrowUpIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                            </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-[200px] p-0">
+                            <Command>
+                                <CommandInput placeholder="Search section..." />
+                                <CommandEmpty>No section found.</CommandEmpty>
+                                <CommandGroup>
+                                    <CommandList>
+                                        {Array.isArray(sections) && sections.length > 0 ? (
+                                            sections.map((section) => (
+                                                <CommandItem
+                                                    key={section.id}
+                                                    value={section.title}
+                                                    onSelect={(currentValue: string) => {
+                                                        field.onChange(sections.find((s) => s.title === currentValue)?.id!);
+                                                        setIsSectionOpen(false);
+                                                    }}
+                                                >
+                                                    <CheckIcon
+                                                        className={cn(
+                                                            "mr-2 h-4 w-4",
+                                                            field.value === section.id ? "opacity-100" : "opacity-0"
+                                                        )}
+                                                    />
+                                                    {section.title}
+                                                </CommandItem>
+                                            ))
+                                        ) : (
+                                            <CommandEmpty>No sections available</CommandEmpty>
                                         )}
                                     </CommandList>
                                 </CommandGroup>
