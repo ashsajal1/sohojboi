@@ -109,6 +109,13 @@ export default async function Page({ params }: { params: { id: string } }) {
     }
 
 
+    // Create table of contents in Markdown format
+    const tableOfContentsMd = `## Table of Contents\n\n` +
+        (article?.sections
+            .map((section, index) => `- [${section.title}](#${section.title.replace(/\s+/g, '-').toLowerCase()})`)
+            .join('\n') || '');
+
+
     if (userId) {
         isUpvoted = await prisma.upvote.findUnique({
             where: {
@@ -135,16 +142,16 @@ export default async function Page({ params }: { params: { id: string } }) {
         await increaseView(userId, article?.id!, "article")
     }
 
-   const wordsPerMinute = 200;
+    const wordsPerMinute = 200;
 
-const timeToRead = article?.content
-    ? (article.content.split(" ").length / wordsPerMinute).toFixed(0)
-    : (
-        (article?.sections || [])
-            .map(section => section.content || "")
-            .join(" ")
-            .split(" ").length / wordsPerMinute
-    ).toFixed(0);
+    const timeToRead = article?.content
+        ? (article.content.split(" ").length / wordsPerMinute).toFixed(0)
+        : (
+            (article?.sections || [])
+                .map(section => section.content || "")
+                .join(" ")
+                .split(" ").length / wordsPerMinute
+        ).toFixed(0);
 
     const isInSeries = article?.blogSeriesId !== null
 
@@ -207,6 +214,7 @@ const timeToRead = article?.content
 
                             </div>
                         )}
+                        {tableOfContentsMd && <Content content={tableOfContentsMd} />}
                         {article?.sections.map(section => (
                             <Content
                                 key={section.id}
