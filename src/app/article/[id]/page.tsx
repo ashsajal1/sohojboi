@@ -216,10 +216,13 @@ export default async function Page({ params }: { params: { id: string } }) {
                         )}
                         {tableOfContentsMd && <Content content={tableOfContentsMd} />}
                         {article?.sections.map(section => (
-                            <Content
-                                key={section.id}
-                                content={`## **${section.title}**\n\n${section.content}`}
-                            />
+                            <div key={section.id} id={section.title.replace(/\s+/g, '-').toLowerCase()}>
+                                <Content
+                                    key={section.id}
+                                    content={`## **${section.title}**\n\n${section.content}`}
+                                />
+                            </div>
+
                         ))}
                         {article?.content && <Content content={article?.content!} />}
 
