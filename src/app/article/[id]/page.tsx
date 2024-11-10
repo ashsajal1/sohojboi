@@ -87,6 +87,7 @@ export default async function Page({ params }: { params: { id: string } }) {
         relatedArticles = await prisma.article.findMany({
             where: {
                 topicId: article?.topicId,
+                deletedAt: null,
                 id: {
                     not: article?.id
                 }
