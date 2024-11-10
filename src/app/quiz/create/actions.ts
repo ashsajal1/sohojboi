@@ -21,6 +21,7 @@ export const createChallengeQuestion = async (formData: QuestionFormData) => {
         content: formData.content,
         topic: { connect: { id: formData.topic } },
         article: { connect: { id: formData.article } },
+        deletedAt: null,
         options: {
           create: [
             { content: formData.correctOption, isCorrect: true },
