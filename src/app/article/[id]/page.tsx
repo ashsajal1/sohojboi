@@ -111,6 +111,7 @@ export default async function Page({ params }: { params: { id: string } }) {
     }
 
 
+    const randomQuiz = quiz[Math.floor(Math.random() * quiz.length)];
     // Create table of contents in Markdown format
     const tableOfContentsMd = `## Table of Contents\n\n` +
         (article?.sections
@@ -229,7 +230,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                         {article?.content && <Content content={article?.content!} />}
 
                         {quiz.length > 0 && <div>
-                            <ArticleQuestion showConfetti question={quiz[0]} />
+                            <ArticleQuestion showConfetti question={randomQuiz} />
                         </div>}
 
                         <div className="py-2">
