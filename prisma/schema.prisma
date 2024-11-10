@@ -71,7 +71,7 @@ model ChallengeQuestion {
   chapterId        String?                  @db.ObjectId
   hint             String?
   explanation      String?
-  deletedAt        DateTime
+  deletedAt        DateTime?
   createdAt        DateTime                 @default(now())
   updatedAt        DateTime                 @updatedAt
 }
