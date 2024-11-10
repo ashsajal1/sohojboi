@@ -116,7 +116,7 @@ export default async function Page({ searchParams }: { searchParams: { id: strin
                                 <Badge className="w-[150px] text-center mt-2 flex items-center justify-center" variant={'secondary'}>
                                     <Coins className='h-3 w-3 mr-2 text-yellow-600' />
                                     <span>
-                                        {profile?.rewardCount} | {(user?.publicMetadata.role as string).toUpperCase()}
+                                        {profile?.rewardCount} | {(user?.publicMetadata.role as string || 'USER').toUpperCase()}
                                     </span>
                                 </Badge>
                             </div>
