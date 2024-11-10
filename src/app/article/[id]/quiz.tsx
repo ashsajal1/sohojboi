@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
@@ -16,11 +16,20 @@ interface ArticleQuestionProps {
     showConfetti?: boolean;
 }
 
+// Shuffle function to randomize options
+const shuffleArray = (array: AnswerOption[]) => {
+    return array.sort(() => Math.random() - 0.5);
+};
+
 // ArticleQuestion component to display the question, options, and answer after submission
 const ArticleQuestion: React.FC<ArticleQuestionProps> = ({ question, showConfetti = false }) => {
-    // const { content, options, explanation } = question;
+    const [shuffledOptions, setShuffledOptions] = useState<AnswerOption[]>([]);
     const [selectedOption, setSelectedOption] = useState<string | null>(null);
     const [submitted, setSubmitted] = useState(false);
+
+    useEffect(() => {
+        setShuffledOptions(shuffleArray([...question.options]));
+    }, [question.options]);
 
     // Handle option selection
     const handleOptionClick = (optionId: string) => {
@@ -33,11 +42,9 @@ const ArticleQuestion: React.FC<ArticleQuestionProps> = ({ question, showConfett
     const handleSubmit = () => {
         if (selectedOption !== null) {
             setSubmitted(true);
-           if(showConfetti) {
-            if(selectedOption === question?.options.find((option) => option.isCorrect)?.id) {
+            if (showConfetti && selectedOption === shuffledOptions.find((option) => option.isCorrect)?.id) {
                 triggerStarConfetti();
             }
-           }
         }
     };
 
@@ -45,15 +52,13 @@ const ArticleQuestion: React.FC<ArticleQuestionProps> = ({ question, showConfett
         <div className="p-4 border rounded-md shadow-sm">
             <h2 className="text-lg font-semibold mb-4">{question?.content}</h2>
             <div className="space-y-2">
-                {question?.options.map((option) => (
+                {shuffledOptions.map((option) => (
                     <div
                         key={option.id}
                         className={`p-2 border rounded cursor-pointer
                             ${submitted && option.isCorrect ? 'bg-green-400 text-muted' : ''}
                             ${submitted && selectedOption === option.id && !option.isCorrect ? 'bg-red-400 text-muted' : ''}
-                            ${
-                                selectedOption === option.id
-                                    && 'border-blue-500'}
+                            ${selectedOption === option.id && 'border-blue-500'}
                         `}
                         onClick={() => handleOptionClick(option.id)}
                     >
@@ -75,7 +80,7 @@ const ArticleQuestion: React.FC<ArticleQuestionProps> = ({ question, showConfett
             {submitted && (
                 <div className="mt-4">
                     <h3 className="text-md font-semibold text-green-600">Correct Answer:</h3>
-                    {question.options
+                    {shuffledOptions
                         .filter(option => option.isCorrect)
                         .map(option => (
                             <p key={option.id} className="text-green-800">
