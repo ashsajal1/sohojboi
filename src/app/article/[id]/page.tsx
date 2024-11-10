@@ -112,8 +112,8 @@ export default async function Page({ params }: { params: { id: string } }) {
     // Create table of contents in Markdown format
     const tableOfContentsMd = `## Table of Contents\n\n` +
         (article?.sections
-            .map((section, index) => `- [${section.title}](#${section.title.replace(/\s+/g, '-').toLowerCase()})`)
-            .join('\n') || '');
+            .map((section, index) => `> [**${index + 1}.** ${section.title}](#${section.title.replace(/\s+/g, '-').toLowerCase()})`)
+            .join('\n\n') || '');
 
 
     if (userId) {
