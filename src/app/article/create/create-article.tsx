@@ -3,7 +3,7 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
-import React, { useState, useTransition } from 'react';
+import React, { useState, useTransition, useEffect } from 'react';
 import { useForm, Controller, useFieldArray } from 'react-hook-form';
 import { z } from 'zod';
 import { PopoverTrigger, Popover, PopoverContent } from "@/components/ui/popover";
@@ -34,18 +34,34 @@ type FormData = z.infer<typeof articleSchema>;
 const CreateArticleForm = ({ topics }: { topics: Topic[] }) => {
     const [open, setOpen] = useState(false);
     const [pending, startTransition] = useTransition();
+    const [initialized, setInitialized] = useState(false);
     const router = useRouter();
 
-    const { control, register, handleSubmit, formState: { errors } } = useForm<FormData>({
+    const { control, register, setValue, handleSubmit, formState: { errors } } = useForm<FormData>({
         resolver: zodResolver(articleSchema),
         defaultValues: {
             sections: [
-                { title: 'Introduction', content: '' },
-                { title: 'Main Body', content: '' },
-                { title: 'Conclusion', content: '' }
+                
             ]
         }
     });
+
+    useEffect(() => {
+        if (!initialized) {
+            setInitialized(true);
+        }
+    }, [initialized]);
+
+    useEffect(() => {
+        if (initialized) {
+            // Set initial sections only once
+            setValue('sections', [
+                { title: 'Introduction', content: '' },
+                { title: 'Main Body', content: '' },
+                { title: 'Conclusion', content: '' }
+            ]);
+        }
+    }, [initialized, setValue]);
 
     const { fields: sections, fields, append, remove, insert } = useFieldArray({
         control,
