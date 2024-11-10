@@ -212,7 +212,6 @@ export default function CreateForm({ topics, articles }: { topics: Topic[], arti
                     </Popover>
                 )}
             />
-            {errors.topic && <ErrorText text={errors.topic.message!} />}
 
             {/* <br />
             <Label>Tags</Label>
