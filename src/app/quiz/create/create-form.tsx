@@ -26,6 +26,7 @@ import { CommandList } from 'cmdk';
 import { Separator } from '@/components/ui/separator';
 import ErrorText from './error-text';
 import ConfirmDialog from './confirm-dialog';
+import { motion, AnimatePresence } from "framer-motion"
 
 const questionSchema = z.object({
     content: z.string().nonempty({ message: 'Content is required' }),
@@ -44,8 +45,8 @@ export type QuestionFormData = z.infer<typeof questionSchema>;
 
 export default function CreateForm({ topics, articles, articleSections }: { topics: Topic[], articles: Article[], articleSections: ArticleSection[] }) {
     const searchParams = useSearchParams()
-    const articleId = searchParams.get('articleId'); 
-    const topicId = searchParams.get('topicId'); 
+    const articleId = searchParams.get('articleId');
+    const topicId = searchParams.get('topicId');
 
     const [isTopicOpen, setIsTopicOpen] = React.useState(false)
     const [isArticleOpen, setIsArticleOpen] = React.useState(false);
@@ -88,23 +89,23 @@ export default function CreateForm({ topics, articles, articleSections }: { topi
 
     useEffect(() => {
         if (articleId) {
-            setValue('article', articleId); 
+            setValue('article', articleId);
         }
         if (topicId) {
-            setValue('topic', topicId); 
+            setValue('topic', topicId);
         }
     }, [articleId, setValue, topicId]);
 
-     // Update the sections based on the selected article
-     const selectedArticleId = watch("article");
-     useEffect(() => {
-         if (selectedArticleId) {
-             const filteredSections = articleSections.filter(section => section.articleId === selectedArticleId);
-             setSections(filteredSections);
-         } else {
-             setSections([]);
-         }
-     }, [selectedArticleId, articleSections]);
+    // Update the sections based on the selected article
+    const selectedArticleId = watch("article");
+    useEffect(() => {
+        if (selectedArticleId) {
+            const filteredSections = articleSections.filter(section => section.articleId === selectedArticleId);
+            setSections(filteredSections);
+        } else {
+            setSections([]);
+        }
+    }, [selectedArticleId, articleSections]);
 
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -169,9 +170,9 @@ export default function CreateForm({ topics, articles, articleSections }: { topi
                     </Popover>
                 )}
             />
-            
+
             {errors.topic && <ErrorText text={errors.topic.message!} />}
-             <Label className='my-2 block'>Select Article (Optional)</Label>
+            <Label className='my-2 block'>Select Article (Optional)</Label>
 
             <Controller
                 control={control}
@@ -228,61 +229,73 @@ export default function CreateForm({ topics, articles, articleSections }: { topi
                 )}
             />
 
-<Label className='my-2 block'>Select Article Section (Optional)</Label>
-            <Controller
-                control={control}
-                name="articleSection"
-                render={({ field }) => (
-                    <Popover open={isSectionOpen} onOpenChange={setIsSectionOpen}>
-                        <PopoverTrigger className='w-full' asChild>
-                            <Button
-                                variant="outline"
-                                role="combobox"
-                                aria-expanded={isSectionOpen}
-                                className="w-full justify-between"
-                                onClick={() => setIsSectionOpen(true)}
-                            >
-                                {field.value
-                                    ? sections.find((section) => section.id === field.value)?.title
-                                    : "Select article section..."}
-                                <ArrowUpIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                            </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-[200px] p-0">
-                            <Command>
-                                <CommandInput placeholder="Search section..." />
-                                <CommandEmpty>No section found.</CommandEmpty>
-                                <CommandGroup>
-                                    <CommandList>
-                                        {Array.isArray(sections) && sections.length > 0 ? (
-                                            sections.map((section) => (
-                                                <CommandItem
-                                                    key={section.id}
-                                                    value={section.title}
-                                                    onSelect={(currentValue: string) => {
-                                                        field.onChange(sections.find((s) => s.title === currentValue)?.id!);
-                                                        setIsSectionOpen(false);
-                                                    }}
-                                                >
-                                                    <CheckIcon
-                                                        className={cn(
-                                                            "mr-2 h-4 w-4",
-                                                            field.value === section.id ? "opacity-100" : "opacity-0"
-                                                        )}
-                                                    />
-                                                    {section.title}
-                                                </CommandItem>
-                                            ))
-                                        ) : (
-                                            <CommandEmpty>No sections available</CommandEmpty>
-                                        )}
-                                    </CommandList>
-                                </CommandGroup>
-                            </Command>
-                        </PopoverContent>
-                    </Popover>
+            <AnimatePresence>
+                {selectedArticleId && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                    >
+                        <Label className='my-2 block'>Select Article Section (Optional)</Label>
+                        <Controller
+                            control={control}
+                            name="articleSection"
+                            render={({ field }) => (
+                                <Popover open={isSectionOpen} onOpenChange={setIsSectionOpen}>
+                                    <PopoverTrigger className='w-full' asChild>
+                                        <Button
+                                            variant="outline"
+                                            role="combobox"
+                                            aria-expanded={isSectionOpen}
+                                            className="w-full justify-between"
+                                            onClick={() => setIsSectionOpen(true)}
+                                        >
+                                            {field.value
+                                                ? sections.find((section) => section.id === field.value)?.title
+                                                : "Select article section..."}
+                                            <ArrowUpIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                        </Button>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-[200px] p-0">
+                                        <Command>
+                                            <CommandInput placeholder="Search section..." />
+                                            <CommandEmpty>No section found.</CommandEmpty>
+                                            <CommandGroup>
+                                                <CommandList>
+                                                    {Array.isArray(sections) && sections.length > 0 ? (
+                                                        sections.map((section) => (
+                                                            <CommandItem
+                                                                key={section.id}
+                                                                value={section.title}
+                                                                onSelect={(currentValue: string) => {
+                                                                    field.onChange(sections.find((s) => s.title === currentValue)?.id!);
+                                                                    setIsSectionOpen(false);
+                                                                }}
+                                                            >
+                                                                <CheckIcon
+                                                                    className={cn(
+                                                                        "mr-2 h-4 w-4",
+                                                                        field.value === section.id ? "opacity-100" : "opacity-0"
+                                                                    )}
+                                                                />
+                                                                {section.title}
+                                                            </CommandItem>
+                                                        ))
+                                                    ) : (
+                                                        <CommandEmpty>No sections available</CommandEmpty>
+                                                    )}
+                                                </CommandList>
+                                            </CommandGroup>
+                                        </Command>
+                                    </PopoverContent>
+                                </Popover>
+                            )}
+                        />
+                    </motion.div>
                 )}
-            />
+            </AnimatePresence>
+
+
 
             {/* <br />
             <Label>Tags</Label>
@@ -315,7 +328,7 @@ export default function CreateForm({ topics, articles, articleSections }: { topi
                 {options.length === 0 && 'Add Option'}
             </Button>
             <Button className='w-full' type="submit">Create MCQ</Button>
-           {formData &&  <ConfirmDialog formData={formData!} isDialogOpen={isDialogOpen} />}
+            {formData && <ConfirmDialog formData={formData!} isDialogOpen={isDialogOpen} />}
         </form>
     );
 }
