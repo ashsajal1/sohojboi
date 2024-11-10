@@ -61,7 +61,8 @@ export default async function Page({ params }: { params: { id: string } }) {
     try {
         article = await prisma.article.findUnique({
             where: {
-                id: articleId
+                id: articleId,
+                deletedAt: null
             },
             include: {
                 comments: {
