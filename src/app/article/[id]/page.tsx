@@ -103,7 +103,8 @@ export default async function Page({ params }: { params: { id: string } }) {
                 articleId: articleId
             },
             include: {
-                options: true
+                options: true,
+                articleSection: true
             }
         })
     } catch (err) {
@@ -157,6 +158,9 @@ export default async function Page({ params }: { params: { id: string } }) {
         ).toFixed(0);
 
     const isInSeries = article?.blogSeriesId !== null
+    const quizBySection = (sectionId: string) => {
+        return quiz.find(q => q.articleSection?.id === sectionId);
+    }
 
     return (
         <div>
@@ -224,13 +228,17 @@ export default async function Page({ params }: { params: { id: string } }) {
                                     key={section.id}
                                     content={`## **${section.title}**\n\n${section.content}`}
                                 />
+
+                                {quizBySection(section.id) && <div>
+                                    <ArticleQuestion showConfetti question={quizBySection(section.id)!} />
+                                </div>}
                             </div>
 
                         ))}
                         {article?.content && <Content content={article?.content!} />}
 
                         {quiz.length > 0 && <div>
-                            <ArticleQuestion showConfetti question={randomQuiz} />
+                            <ArticleQuestion showConfetti question={randomQuiz!} />
                         </div>}
 
                         <div className="py-2">

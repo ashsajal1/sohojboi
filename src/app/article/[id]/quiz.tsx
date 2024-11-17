@@ -4,11 +4,12 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
-import { ChallengeQuestion as ChallengeQuestionProps, AnswerOption } from '@prisma/client';
+import { ChallengeQuestion as ChallengeQuestionProps, AnswerOption, ArticleSection } from '@prisma/client';
 import { triggerStarConfetti } from './star-confetti';
 
 interface ChallengeQuestionType extends ChallengeQuestionProps {
     options: AnswerOption[];
+    articleSection?: ArticleSection | null;
 }
 
 interface ArticleQuestionProps {
