@@ -229,7 +229,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                                     content={`## **${section.title}**\n\n${section.content}`}
                                 />
 
-                                {quizBySection(section.id) && <div>
+                                {quizBySection(section.id) && <div className="py-2">
                                     <ArticleQuestion showConfetti question={quizBySection(section.id)!} />
                                 </div>}
                             </div>
