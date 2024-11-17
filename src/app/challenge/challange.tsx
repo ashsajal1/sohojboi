@@ -22,7 +22,6 @@ const Challenge: React.FC<ChallengeProps> = ({ challengeeId, challengerId, quizI
     const questionsIds = quizQuestions.map(q => q.id)
 
     useEffect(() => {
-
         createCompetitionFunc();
 
         async function createCompetitionFunc() {
@@ -35,8 +34,6 @@ const Challenge: React.FC<ChallengeProps> = ({ challengeeId, challengerId, quizI
     const handleOptionSelect = (optionId: string) => {
         setSelectedOption(optionId);
     };
-
-
 
     const nextQuestion = async () => {
         const currentQuestion = quizQuestions[currentQuestionIndex];
