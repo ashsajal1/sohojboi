@@ -29,16 +29,20 @@ const doCheckIn = async (userId: string): Promise<boolean> => {
         bonus: dailyBonusAmount,
       },
     }),
-    prisma.profile.update({
+    await prisma.profile.upsert({
       where: {
         clerkUserId: userId,
       },
-      data: {
+      update: {
         rewardCount: {
           increment: dailyBonusAmount,
         },
       },
-    }),
+      create: {
+        clerkUserId: userId,
+        rewardCount: dailyBonusAmount, // Set the initial reward count
+      },
+    })
   ]);
 
   return true; // Bonus added
