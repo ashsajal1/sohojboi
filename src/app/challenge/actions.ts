@@ -71,3 +71,21 @@ export const declineChallange = async (competition: Competition) => {
 
   revalidatePath("/challenge");
 };
+
+const getQuestionsByTopic = async (topicId: string) => {
+  try {
+    return await prisma.challengeQuestion.findMany({
+      where: {
+        topicId: topicId,
+      },
+      include: {
+        topic: true,
+        chapter: true,
+        options: true,
+      },
+      take: 5,
+    });
+  } catch (error) {
+    throw error;
+  }
+}
