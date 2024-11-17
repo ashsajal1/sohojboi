@@ -32,7 +32,7 @@ const questionSchema = z.object({
     content: z.string().nonempty({ message: 'Content is required' }),
     correctOption: z.string().nonempty({ message: 'Correct option is required' }),
     topic: z.string().nonempty({ message: 'Topic is required' }),
-    article: z.string(),
+    article: z.string().optional(),
     articleSection: z.string().optional(),
     tags: z.string().optional(),
     options: z.array(z.object({
@@ -68,11 +68,11 @@ export default function CreateForm({ topics, articles, articleSections }: { topi
     const addOption = () => {
         if (fields.length < 3) {
             append({ content: '' });
-        }
+        };
     };
 
     const removeOption = (index: number) => {
-        if (fields.length > 0) {
+        if (fields.length > 1) {
             remove(index);
         }
     };
