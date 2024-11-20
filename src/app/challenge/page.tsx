@@ -56,6 +56,10 @@ export default async function page({ searchParams }: { searchParams: any }) {
     throw new Error("Error fetching questions:");
   }
 
+  if(questions.length === 0) {
+    return <div className='text-center p-2 font-bold'>There are no questions for this topic</div>
+  }
+
   // Retrieve a list of pending challenges for the authenticated user
   const competitions = await prisma.competition.findMany({
     where: {
