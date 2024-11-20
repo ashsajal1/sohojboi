@@ -2,7 +2,7 @@
 
 import prisma from "@/lib/prisma";
 import { clerkClient } from "@clerk/nextjs/server";
-import { Competition, NotificationType } from "@prisma/client";
+import { Competition, NotificationType, Topic } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 
 export const createCompetition = async (
@@ -50,11 +50,11 @@ export const declineChallange = async (competition: Competition) => {
     await Promise.all([
       await prisma.competition.update({
         where: {
-          id: competition.id
+          id: competition.id,
         },
         data: {
-          status: "declined"
-        }
+          status: "declined",
+        },
       }),
       await prisma.notification.create({
         data: {
@@ -63,7 +63,7 @@ export const declineChallange = async (competition: Competition) => {
           type: NotificationType.CHALLENGE,
           competitionId: competition.id,
         },
-      })
+      }),
     ]);
   } catch (error) {
     return { error };
@@ -88,4 +88,12 @@ const getQuestionsByTopic = async (topicId: string) => {
   } catch (error) {
     throw error;
   }
-}
+};
+
+export const getTopics = async (): Promise<Topic[]> => {
+  try {
+    return await prisma.topic.findMany();
+  } catch (err) {
+    throw err
+  }
+};
