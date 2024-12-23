@@ -230,7 +230,7 @@ export default function CreateForm({ topics, articles, articleSections }: { topi
             />
 
             <AnimatePresence>
-                {selectedArticleId && (
+                {(sections.length > 0) && (
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
