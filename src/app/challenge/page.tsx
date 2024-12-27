@@ -110,7 +110,7 @@ export default async function page({ searchParams }: { searchParams: any }) {
       </div>
 
       {/* Display the Challenge Quiz component if an opponent is selected */}
-      {showQuiz && <Challange quizId={questions![0].id} challengerId={user.userId as string} challengeeId={challengeeId} quizQuestions={questions!} />}
+      {showQuiz && <Challange topic={questions![0].topic?.name!} quizId={questions![0].id} challengerId={user.userId as string} challengeeId={challengeeId} quizQuestions={questions!} />}
     </div>
   )
 }

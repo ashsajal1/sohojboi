@@ -7,13 +7,14 @@ import { createCompetition } from './actions';
 import { AnswerOption, ChallengeQuestion } from '@prisma/client';
 
 interface ChallengeProps {
+    topic: string;
     challengeeId: string;
     challengerId: string;
     quizId: string;
     quizQuestions: (ChallengeQuestion & { options: AnswerOption[] })[];
 }
 
-const Challenge: React.FC<ChallengeProps> = ({ challengeeId, challengerId, quizId, quizQuestions }) => {
+const Challenge: React.FC<ChallengeProps> = ({ challengeeId, challengerId, quizId,topic, quizQuestions }) => {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [selectedOption, setSelectedOption] = useState<string | null>(null);
     const [score, setScore] = useState(0);
@@ -68,7 +69,10 @@ const Challenge: React.FC<ChallengeProps> = ({ challengeeId, challengerId, quizI
                     ) : (
                         <Card>
                             <CardHeader>
+                                <div className='flex justify-between'>
                                 <h3>Question {currentQuestionIndex + 1}</h3>
+                                <p>Topic : {topic}</p>
+                                </div>
                                 <CardTitle><p>{quizQuestions[currentQuestionIndex].content}</p></CardTitle>
                             </CardHeader>
                             <CardContent>
