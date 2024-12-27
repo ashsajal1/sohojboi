@@ -87,7 +87,6 @@ const Challenge: React.FC<ChallengeProps> = ({ challengeeId, challenger, quizId,
                                     <AvatarImage src={challenger?.imageUrl} />
                                     <AvatarFallback>{challenger?.firstName?.slice(0, 1)}</AvatarFallback>
                                 </Avatar>
-                                <h3>Question {currentQuestionIndex + 1}</h3>
                                 <p>Topic : {topic}</p>
 
                                 <Avatar className=''>
@@ -98,7 +97,8 @@ const Challenge: React.FC<ChallengeProps> = ({ challengeeId, challenger, quizId,
 
                                 <Separator className='py-1 mt-4'/>
 
-                                <CardTitle className='py-2'><p>{quizQuestions[currentQuestionIndex].content}</p></CardTitle>
+                                <CardTitle className='py-2'><p>
+                                {currentQuestionIndex + 1}. {quizQuestions[currentQuestionIndex].content}</p></CardTitle>
                             </CardHeader>
 
                             
