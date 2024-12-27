@@ -86,11 +86,13 @@ export default async function page({ searchParams }: { searchParams: any }) {
         <Select users={users} userId={user.userId as string} />
       </div>}
 
-      <Separator className='py-1' />
+      
 
       {/* Display a list of pending challenges */}
-
-      <h2 className='font-bold text-lg'>Here is the list of pending challenges!</h2>
+      {!showQuiz &&<>
+        <Separator className='py-1' />
+        <h2 className='font-bold text-lg'>Here is the list of pending challenges!</h2>
+        </> }
       <div className='grid grid-cols-1 w-full md:grid-cols-3 gap-2'>
         {(!showQuiz) && competitions.map(c => (
           <Card className='w-full' key={c.id}>
