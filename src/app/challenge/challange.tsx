@@ -12,12 +12,12 @@ import { Separator } from '@/components/ui/separator';
 interface ChallengeProps {
     topic: string;
     challengeeId: string;
-    challengerId: string;
+    challenger: User;
     quizId: string;
     quizQuestions: (ChallengeQuestion & { options: AnswerOption[] })[];
 }
 
-const Challenge: React.FC<ChallengeProps> = ({ challengeeId, challengerId, quizId,topic, quizQuestions }) => {
+const Challenge: React.FC<ChallengeProps> = ({ challengeeId, challenger, quizId,topic, quizQuestions }) => {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [selectedOption, setSelectedOption] = useState<string | null>(null);
     const [score, setScore] = useState(0);
@@ -40,10 +40,10 @@ const Challenge: React.FC<ChallengeProps> = ({ challengeeId, challengerId, quizI
 
         async function createCompetitionFunc() {
             if (showResults) {
-                await createCompetition(challengeeId, challengerId, questionsIds, score);
+                await createCompetition(challengeeId, challenger.id, questionsIds, score);
             }
         }
-    }, [challengeeId, challengerId, questionsIds, score, showResults])
+    }, [challengeeId, challenger, questionsIds, score, showResults])
 
     const handleOptionSelect = (optionId: string) => {
         setSelectedOption(optionId);
@@ -83,6 +83,10 @@ const Challenge: React.FC<ChallengeProps> = ({ challengeeId, challengerId, quizI
                         <Card>
                             <CardHeader>
                                 <div className='flex justify-between py-2'>
+                                <Avatar className=''>
+                                    <AvatarImage src={challenger?.imageUrl} />
+                                    <AvatarFallback>{challenger?.firstName?.slice(0, 1)}</AvatarFallback>
+                                </Avatar>
                                 <h3>Question {currentQuestionIndex + 1}</h3>
                                 <p>Topic : {topic}</p>
 

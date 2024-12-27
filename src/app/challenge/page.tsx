@@ -1,7 +1,7 @@
 import React from 'react'
 import Challange from './challange'
 import prisma from '@/lib/prisma';
-import { auth, clerkClient } from '@clerk/nextjs/server'
+import { auth, clerkClient, currentUser } from '@clerk/nextjs/server'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Select from './select';
 import { Metadata } from "next";
@@ -28,13 +28,14 @@ export const metadata: Metadata = {
  */
 export default async function page({ searchParams }: { searchParams: any }) {
   // Get the authenticated user
-  const user = auth();
+  let user = await currentUser();
+  user = JSON.parse(JSON.stringify(user))
   // Get the selected challengee ID from the URL parameters
   const challengeeId = searchParams.challengeeId;
   const topicId = searchParams.topicId;
   // Determine if the Challenge Quiz component should be displayed
   const showQuiz = challengeeId && topicId;
-  if (challengeeId === user.userId) {
+  if (challengeeId === user?.id) {
     throw new Error("You cannot challenge yourself!")
   }
 
@@ -65,9 +66,9 @@ export default async function page({ searchParams }: { searchParams: any }) {
   const competitions = await prisma.competition.findMany({
     where: {
       challengerId: {
-        not: user.userId as string || ''
+        not: user?.id as string || ''
       },
-      challengeeId: user.userId!,
+      challengeeId: user?.id!,
       status: { equals: "pending" }
     }
   });
@@ -83,7 +84,7 @@ export default async function page({ searchParams }: { searchParams: any }) {
       {/* Display the Select component if no opponent is selected */}
       {(!showQuiz) && <div className='mb-2 w-full'>
         <h1 className='p-4 text-center font-bold'>Select opponent</h1>
-        <Select users={users} userId={user.userId as string} />
+        <Select users={users} userId={user?.id as string} />
       </div>}
 
       
@@ -110,7 +111,7 @@ export default async function page({ searchParams }: { searchParams: any }) {
       </div>
 
       {/* Display the Challenge Quiz component if an opponent is selected */}
-      {showQuiz && <Challange topic={questions![0].topic?.name!} quizId={questions![0].id} challengerId={user.userId as string} challengeeId={challengeeId} quizQuestions={questions!} />}
+      {showQuiz && <Challange topic={questions![0].topic?.name!} quizId={questions![0].id} challenger={user!} challengeeId={challengeeId} quizQuestions={questions!} />}
     </div>
   )
 }
