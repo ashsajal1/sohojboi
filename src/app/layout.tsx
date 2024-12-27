@@ -7,6 +7,7 @@ import Navbar from "@/components/navbar";
 import Questions from "./@questions/questions";
 import Nprogress from "@/components/nprogress";
 import { Toaster } from "@/components/ui/sonner"
+import { Toaster as Toaster2 } from "@/components/ui/toaster"
 const font = Ubuntu({ subsets: ["latin"], weight: ["400", "700"] });
 
 export const metadata: Metadata = {
@@ -33,6 +34,7 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <Toaster />
+            <Toaster2 />
             <Nprogress />
             <Navbar />
             <main className="p-2">
