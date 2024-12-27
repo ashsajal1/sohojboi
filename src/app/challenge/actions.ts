@@ -97,3 +97,13 @@ export const getTopics = async (): Promise<Topic[]> => {
     throw err
   }
 };
+
+export const getChallengeData = async (challangeeId: string) => {
+  try {
+     let challengee = await clerkClient().users.getUser(challangeeId);
+     challengee = JSON.parse(JSON.stringify(challengee))
+     return challengee;
+  } catch (err) {
+    throw err;
+  }
+};
