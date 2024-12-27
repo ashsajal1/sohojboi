@@ -8,6 +8,7 @@ import { AnswerOption, ChallengeQuestion } from '@prisma/client';
 import { User } from '@clerk/nextjs/server';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
+import { Progress } from '@/components/ui/progress';
 
 interface ChallengeProps {
     topic: string;
@@ -95,7 +96,7 @@ const Challenge: React.FC<ChallengeProps> = ({ challengeeId, challenger, quizId,
                                 </Avatar>
                                 </div>
 
-                                <Separator className='py-1 mt-4'/>
+                                <Progress className='mt-2' value={((currentQuestionIndex + 1) / quizQuestions.length) * 100} />
 
                                 <CardTitle className='py-2'><p>
                                 {currentQuestionIndex + 1}. {quizQuestions[currentQuestionIndex].content}</p></CardTitle>
@@ -118,6 +119,8 @@ const Challenge: React.FC<ChallengeProps> = ({ challengeeId, challenger, quizId,
                                     ))}
                                 </ul>
                             </CardContent>
+
+                            
                             <CardFooter>
                                 {selectedOption !== null && (
                                     <Button className='w-full' onClick={nextQuestion}>Next</Button>
