@@ -7,6 +7,7 @@ import Select from './select';
 import { Metadata } from "next";
 import DeclineBtn from './decline-btn';
 import AcceptBtn from './accept-btn';
+import { Separator } from '@/components/ui/separator';
 
 /**
  * Component for the Challenge page.
@@ -85,7 +86,11 @@ export default async function page({ searchParams }: { searchParams: any }) {
         <Select users={users} userId={user.userId as string} />
       </div>}
 
+      <Separator className='py-1' />
+
       {/* Display a list of pending challenges */}
+
+      <h2 className='font-bold text-lg'>Here is the list of pending challenges!</h2>
       <div className='grid grid-cols-1 w-full md:grid-cols-3 gap-2'>
         {(!showQuiz) && competitions.map(c => (
           <Card className='w-full' key={c.id}>
