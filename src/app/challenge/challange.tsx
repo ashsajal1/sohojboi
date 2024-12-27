@@ -82,7 +82,7 @@ const Challenge: React.FC<ChallengeProps> = ({ challengeeId, challengerId, quizI
                     ) : (
                         <Card>
                             <CardHeader>
-                                <div className='flex justify-between'>
+                                <div className='flex justify-between py-2'>
                                 <h3>Question {currentQuestionIndex + 1}</h3>
                                 <p>Topic : {topic}</p>
 
