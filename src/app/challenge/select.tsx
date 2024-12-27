@@ -14,6 +14,7 @@ import { ArrowUpIcon, CheckIcon } from "@radix-ui/react-icons";
 import { cn } from "@/lib/utils";
 import { getTopics } from "./actions";
 import { Label } from "@/components/ui/label";
+import { useToast } from "@/components/ui/use-toast";
 
 export default function Select({ users, userId }: { users: User[], userId: string }) {
     const searchParams = useSearchParams();
@@ -24,6 +25,7 @@ export default function Select({ users, userId }: { users: User[], userId: strin
     const [open, setOpen] = useState(false);
     const [selectedTopicId, setSelectedTopicId] = useState<string | null>(null);
     const [topics, setTopics] = useState<Topic[] | null>(null);
+    const {toast} = useToast()
     useEffect(() => {
         const fetchTopics = async () => {
             const fetchedTopics: Topic[] = await getTopics(); // Fetch the topics
@@ -34,6 +36,12 @@ export default function Select({ users, userId }: { users: User[], userId: strin
     }, [])
 
     const handleSelect = (challengeeId: string) => {
+        if(!selectedTopicId) return toast({
+            variant: "destructive",
+            title: "Please select topic first!",
+            description: "There was a problem with your request.",
+          })
+;  
         if (selectedUserId) {
             handleSearchParms(challengeeId);
         } else {
