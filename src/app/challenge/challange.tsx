@@ -3,8 +3,11 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { createCompetition } from './actions';
+import { createCompetition, getChallengeData } from './actions';
 import { AnswerOption, ChallengeQuestion } from '@prisma/client';
+import { User } from '@clerk/nextjs/server';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Separator } from '@/components/ui/separator';
 
 interface ChallengeProps {
     topic: string;
@@ -19,8 +22,18 @@ const Challenge: React.FC<ChallengeProps> = ({ challengeeId, challengerId, quizI
     const [selectedOption, setSelectedOption] = useState<string | null>(null);
     const [score, setScore] = useState(0);
     const [showResults, setShowResults] = useState(false);
+    const [challengee, setChallenge] =  useState<User | null>()
 
-    const questionsIds = quizQuestions.map(q => q.id)
+    const questionsIds = quizQuestions.map(q => q.id);
+
+    useEffect(() => {
+        const fetchData = async () => {
+             let data = await getChallengeData(challengeeId)
+             setChallenge(data)
+          }
+        fetchData();
+        
+    },[challengeeId])
 
     useEffect(() => {
         createCompetitionFunc();
@@ -72,9 +85,19 @@ const Challenge: React.FC<ChallengeProps> = ({ challengeeId, challengerId, quizI
                                 <div className='flex justify-between'>
                                 <h3>Question {currentQuestionIndex + 1}</h3>
                                 <p>Topic : {topic}</p>
+
+                                <Avatar className=''>
+                                    <AvatarImage src={challengee?.imageUrl} />
+                                    <AvatarFallback>{challengee?.firstName?.slice(0, 1)}</AvatarFallback>
+                                </Avatar>
                                 </div>
-                                <CardTitle><p>{quizQuestions[currentQuestionIndex].content}</p></CardTitle>
+
+                                <Separator className='py-1 mt-4'/>
+
+                                <CardTitle className='py-2'><p>{quizQuestions[currentQuestionIndex].content}</p></CardTitle>
                             </CardHeader>
+
+                            
                             <CardContent>
                                 <ul>
                                     {quizQuestions[currentQuestionIndex].options.map((option) => (
