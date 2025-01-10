@@ -46,53 +46,39 @@ export const createChallengeQuestion = async (formData: QuestionFormData) => {
   revalidatePath("/");
 };
 
-export const createManyQuestions = async (
-  topic: string,
-  questions: {
-    content: string;
-    options: string[];
-    correctOption: string;
-    hint: string | null;
-    explanation: string | null;
-  }[],
-  article?: string
-) => {
+export async function createManyQuestions(topicId: string, questions: any[], articleId?: string) {
   try {
-    const user = await currentUser();
-    if (!user) {
-      throw new Error("User is not authorized!");
-    }
-
-    // Iterate and create each question individually
     for (const question of questions) {
+      // Create ChallengeQuestion first
+      const createdQuestion = await prisma.challengeQuestion.create({
+        data: {
+          content: question.content,
+          hint: question.hint,
+          explanation: question.explanation,
+          topic: { connect: { id: topicId } },
+          ...(articleId && { article: { connect: { id: articleId } } }),
+        },
+      });
+
+      // Create associated AnswerOptions
       const options = [
         { content: question.correctOption, isCorrect: true },
-        ...question.options.map((opt) => ({ content: opt, isCorrect: false })),
+        ...question.options.map((opt: string) => ({ content: opt, isCorrect: false })),
       ];
 
-      // Define question data with conditional article connection
-      const questionData: any = {
-        content: question.content,
-        options: { create: options },
-        hint: question.hint,
-        explanation: question.explanation,
-        topic: { connect: { id: topic } },
-      };
-
-      if (article) {
-        questionData.article = { connect: { id: article } };
+      for (const option of options) {
+        await prisma.answerOption.create({
+          data: {
+            content: option.content,
+            isCorrect: option.isCorrect,
+            challengeQuestionId: createdQuestion.id, // Associate with the created ChallengeQuestion
+          },
+        });
       }
-
-      // Create each question individually
-      await prisma.challengeQuestion.create({
-        data: questionData,
-      });
     }
 
-    // Optionally revalidate cache for updated data
-    revalidatePath("/");
+    console.log("Questions and options created successfully!");
   } catch (error) {
     console.error("Error creating questions:", error);
-    return error;
-  }
-};
+  } 
+}
