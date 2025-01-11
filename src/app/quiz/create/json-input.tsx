@@ -98,13 +98,18 @@ export default function CreateForm({
 
   const onSubmit = async (data: QuestionFormData) => {
     console.log("Submitting data...");
-    
+
     try {
       // Parse JSON input
-      let array: { content: string; options: { text: string; isCorrect: boolean }[]; hint?: string; explanation?: string }[];
+      let array: {
+        content: string;
+        options: { text: string; isCorrect: boolean }[];
+        hint?: string;
+        explanation?: string;
+      }[];
       try {
         array = JSON.parse(data.jsonData);
-        
+
         // Validate array format
         if (!Array.isArray(array) || array.length === 0) {
           throw new Error("Parsed data is not a valid array of questions.");
@@ -113,33 +118,28 @@ export default function CreateForm({
         console.error("Error parsing JSON input", parseError);
         setError("jsonData", {
           type: "manual",
-          message: "Invalid JSON input: Ensure the data is a valid JSON array of questions.",
+          message:
+            "Invalid JSON input: Ensure the data is a valid JSON array of questions.",
         });
         return;
       }
-  
+
       // Create questions
-      const questionIds = await createManyQuestions(data.topic, array, data.article);
-  
-      // Handle success or failure
-    //   if (questionIds && questionIds.length > 0) {
-    //     alert(`Questions created successfully: ${questionIds.join(", ")}`);
-    //   } else {
-    //     setError("jsonData", {
-    //       type: "manual",
-    //       message: "Question creation failed: No questions were created.",
-    //     });
-    //     console.error("Question creation failed: No questions were created.");
-    //   }
+      const questionIds = await createManyQuestions(
+        data.topic,
+        array,
+        data.article
+      );
+
     } catch (error) {
       console.error("An unexpected error occurred during submission", error);
       setError("jsonData", {
         type: "manual",
-        message: "An unexpected error occurred. Please check the console for details.",
+        message:
+          "An unexpected error occurred. Please check the console for details.",
       });
     }
   };
-  
 
   useEffect(() => {
     if (articleId) {

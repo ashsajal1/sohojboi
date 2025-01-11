@@ -61,15 +61,15 @@ export async function createManyQuestions(topicId: string, questions: any[], art
       });
 
       // Create associated AnswerOptions
-      const options = [
-        { content: question.correctOption, isCorrect: true },
-        ...question.options.map((opt: string) => ({ content: opt, isCorrect: false })),
-      ];
+      // const options = [
+      //   ...question.options.map((opt: {text:string, isCorrect: boolean}) => ({ content: opt.text, isCorrect: opt.isCorrect })),
+      // ];
 
-      for (const option of options) {
+      console.log(question.options)
+      for (const option of question.options) {
         await prisma.answerOption.create({
           data: {
-            content: option.content,
+            content: option.text,
             isCorrect: option.isCorrect,
             challengeQuestionId: createdQuestion.id, // Associate with the created ChallengeQuestion
           },
