@@ -9,6 +9,7 @@ import { User } from '@clerk/nextjs/server';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
 import { Progress } from '@/components/ui/progress';
+import { useRouter } from 'next/navigation';
 
 interface ChallengeProps {
     topic: string;
@@ -24,6 +25,7 @@ const Challenge: React.FC<ChallengeProps> = ({ challengeeId, challenger, quizId,
     const [score, setScore] = useState(0);
     const [showResults, setShowResults] = useState(false);
     const [challengee, setChallenge] =  useState<User | null>()
+    const router = useRouter()
 
     const questionsIds = quizQuestions.map(q => q.id);
 
@@ -36,15 +38,15 @@ const Challenge: React.FC<ChallengeProps> = ({ challengeeId, challenger, quizId,
         
     },[challengeeId])
 
-    useEffect(() => {
-        createCompetitionFunc();
+    // useEffect(() => {
+    //     createCompetitionFunc();
 
-        async function createCompetitionFunc() {
-            if (showResults) {
-                await createCompetition(challengeeId, challenger.id, questionsIds, score);
-            }
-        }
-    }, [challengeeId, challenger, questionsIds, score, showResults])
+    //     async function createCompetitionFunc() {
+    //         if (showResults) {
+    //             await createCompetition(challengeeId, challenger.id, questionsIds, score);
+    //         }
+    //     }
+    // }, [challengeeId, challenger, questionsIds, score, showResults])
 
     const handleOptionSelect = (optionId: string) => {
         setSelectedOption(optionId);
@@ -63,7 +65,8 @@ const Challenge: React.FC<ChallengeProps> = ({ challengeeId, challenger, quizId,
             setSelectedOption(null);
         } else {
             setShowResults(true);
-            // console.log(challengeeId, challengerId, "user ids from client")
+            const competition = await createCompetition(challengeeId, challenger.id, questionsIds, score);
+            router.push(`/competition/result?competitionId=${competition.id}`)
         }
     };
 
