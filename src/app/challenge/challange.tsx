@@ -9,8 +9,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { createCompetition, getChallengeData } from "./actions";
-import { AnswerOption, ChallengeQuestion } from "@prisma/client";
+import { completeCompetition, createCompetition, getChallengeData } from "./actions";
+import { AnswerOption, ChallengeQuestion, Competition } from "@prisma/client";
 import { User } from "@clerk/nextjs/server";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
@@ -23,6 +23,7 @@ interface ChallengeProps {
   challenger: User;
   quizId: string;
   quizQuestions: (ChallengeQuestion & { options: AnswerOption[] })[];
+  competition?: Competition;
 }
 
 const Challenge: React.FC<ChallengeProps> = ({
@@ -31,6 +32,7 @@ const Challenge: React.FC<ChallengeProps> = ({
   quizId,
   topic,
   quizQuestions,
+  competition
 }) => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
@@ -63,6 +65,16 @@ const Challenge: React.FC<ChallengeProps> = ({
       );
       router.push(`/challenge/result?competitionId=${competition.id}`);
     }
+
+    // async function completeCompetitionFunc() {
+    //     const completedCompetition = await completeCompetition(
+    //         competitionId,
+    //         score,
+    //         challenger.id,
+    //         winnerId,
+    //         challengeeId
+    //     )
+    // }
   }, [challengeeId, challenger, questionsIds, router, score, showResults]);
 
   const handleOptionSelect = (optionId: string) => {
