@@ -56,7 +56,7 @@ export default function Select({ users, userId }: { users: User[], userId: strin
         await startTransiton(async () => {
             await params.set('challengeeId', challengeeId);
             await params.set('topicId', selectedTopicId || '');
-            await replace(`${pathName}?${params.toString()}`);
+            await replace(`/challenge/play?${params.toString()}`);
         });
     };
 
