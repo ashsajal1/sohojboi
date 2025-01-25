@@ -20,10 +20,10 @@ export default async function page({ searchParams }: { searchParams: any }) {
   let challengerId;
   const topicId = searchParams.topicId;
   const competitionId = searchParams.competitionId;
-  let questions;
+  let questions, competition;
 
   if (competitionId) {
-    const competition = await prisma.competition.findUnique({
+    competition = await prisma.competition.findUnique({
       where: {
         id: competitionId,
       },
@@ -84,6 +84,7 @@ export default async function page({ searchParams }: { searchParams: any }) {
         challenger={user!}
         challengeeId={challengeeId ? challengeeId : challengerId}
         quizQuestions={questions!}
+        competition={competition!}
       />
     </div>
   );
