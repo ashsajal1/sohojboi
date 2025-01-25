@@ -4,7 +4,7 @@
 import { AppProgressBar as ProgressBar } from 'next-nprogress-bar';
 
 const Nprogress = () => {
-  const randomHighlightColors = ['#cafc03', '#fc3503', '#030bfc','#f403fc', '#03d7fc'];
+  const randomHighlightColors = ['#cafc03'];
   const randomColor = randomHighlightColors[Math.floor(Math.random() * randomHighlightColors.length)];
   return (
     <>
