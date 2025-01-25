@@ -56,12 +56,12 @@ const Challenge: React.FC<ChallengeProps> = ({
   }, [challengeeId]);
 
   useEffect(() => {
-    if (showResults) {
-      if (competition) {
-        completeCompetitionFunc();
-      } else {
-        createCompetitionFunc();
-      }
+    if (!showResults) return; // Only execute when results are ready to be processed.
+
+    if (competition?.status !== "completed") {
+      completeCompetitionFunc();
+    } else {
+      createCompetitionFunc();
     }
 
     async function createCompetitionFunc() {
@@ -76,12 +76,7 @@ const Challenge: React.FC<ChallengeProps> = ({
 
     async function completeCompetitionFunc() {
       let winnerId;
-      if (
-        competition!.challengeeScore === null ||
-        competition!.challengerScore === null
-      ) {
-        winnerId = null;
-      } else if (score > competition!.challengerScore) {
+      if (score > competition!.challengerScore) {
         winnerId = competition!.challengeeId;
       } else if (score < competition!.challengerScore) {
         winnerId = competition!.challengerId;
