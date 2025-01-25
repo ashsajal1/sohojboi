@@ -29,8 +29,6 @@ import {
   TrashIcon,
 } from "@radix-ui/react-icons";
 import ArticleQuestion from "./quiz";
-import QuizComponent from "@/app/quiz/quizzes";
-import { cn } from "@/lib/utils";
 
 export async function generateMetadata({
   params,
