@@ -190,7 +190,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 
   return (
     <div>
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between py-2">
         <div className="flex flex-col gap-2">
           <CardTitle>{article?.title}</CardTitle>
           <span className="text-sm font-light text-muted-foreground/70">
