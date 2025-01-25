@@ -66,7 +66,7 @@ const Challenge: React.FC<ChallengeProps> = ({ challengeeId, challenger, quizId,
         } else {
             setShowResults(true);
             const competition = await createCompetition(challengeeId, challenger.id, questionsIds, score);
-            router.push(`/competition/result?competitionId=${competition.id}`)
+            router.push(`/challenge/result?competitionId=${competition.id}`)
         }
     };
 
