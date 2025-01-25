@@ -58,7 +58,7 @@ const Challenge: React.FC<ChallengeProps> = ({
   useEffect(() => {
     if (!showResults) return; // Only execute when results are ready to be processed.
 
-    if (competition?.status !== "completed") {
+    if (competition) {
       completeCompetitionFunc();
     } else {
       createCompetitionFunc();
