@@ -341,7 +341,7 @@ export default async function Page({ params }: { params: { id: string } }) {
         </p>
       )}
 
-      <div>
+      <div className="py-3">
         <p>Read more</p>
         <div className="flex flex-col gap-2">
           {relatedArticles.map((article) => (
