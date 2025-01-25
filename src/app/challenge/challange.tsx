@@ -38,15 +38,16 @@ const Challenge: React.FC<ChallengeProps> = ({ challengeeId, challenger, quizId,
         
     },[challengeeId])
 
-    // useEffect(() => {
-    //     createCompetitionFunc();
+    useEffect(() => {
+        createCompetitionFunc();
 
-    //     async function createCompetitionFunc() {
-    //         if (showResults) {
-    //             await createCompetition(challengeeId, challenger.id, questionsIds, score);
-    //         }
-    //     }
-    // }, [challengeeId, challenger, questionsIds, score, showResults])
+        async function createCompetitionFunc() {
+            if (showResults) {
+                const competition =await createCompetition(challengeeId, challenger.id, questionsIds, score);
+                router.push(`/challenge/result?competitionId=${competition.id}`)
+            }
+        }
+    }, [challengeeId, challenger, questionsIds, router, score, showResults])
 
     const handleOptionSelect = (optionId: string) => {
         setSelectedOption(optionId);
@@ -65,8 +66,6 @@ const Challenge: React.FC<ChallengeProps> = ({ challengeeId, challenger, quizId,
             setSelectedOption(null);
         } else {
             setShowResults(true);
-            const competition = await createCompetition(challengeeId, challenger.id, questionsIds, score);
-            router.push(`/challenge/result?competitionId=${competition.id}`)
         }
     };
 
