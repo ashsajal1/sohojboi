@@ -9,7 +9,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { completeCompetition, createCompetition, getChallengeData } from "./actions";
+import {
+  completeCompetition,
+  createCompetition,
+  getChallengeData,
+} from "./actions";
 import { AnswerOption, ChallengeQuestion, Competition } from "@prisma/client";
 import { User } from "@clerk/nextjs/server";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
@@ -32,7 +36,7 @@ const Challenge: React.FC<ChallengeProps> = ({
   quizId,
   topic,
   quizQuestions,
-  competition
+  competition,
 }) => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
@@ -53,7 +57,11 @@ const Challenge: React.FC<ChallengeProps> = ({
 
   useEffect(() => {
     if (showResults) {
-      createCompetitionFunc();
+      if (competition) {
+        completeCompetitionFunc();
+      } else {
+        createCompetitionFunc();
+      }
     }
 
     async function createCompetitionFunc() {
@@ -66,16 +74,38 @@ const Challenge: React.FC<ChallengeProps> = ({
       router.push(`/challenge/result?competitionId=${competition.id}`);
     }
 
-    // async function completeCompetitionFunc() {
-    //     const completedCompetition = await completeCompetition(
-    //         competitionId,
-    //         score,
-    //         challenger.id,
-    //         winnerId,
-    //         challengeeId
-    //     )
-    // }
-  }, [challengeeId, challenger, questionsIds, router, score, showResults]);
+    async function completeCompetitionFunc() {
+      let winnerId;
+      if (
+        competition!.challengeeScore === null ||
+        competition!.challengerScore === null
+      ) {
+        winnerId = null;
+      } else if (score > competition!.challengerScore) {
+        winnerId = competition!.challengeeId;
+      } else if (score < competition!.challengerScore) {
+        winnerId = competition!.challengerId;
+      } else {
+        winnerId = null;
+      }
+
+      const completedCompetition = await completeCompetition(
+        competition!.id,
+        score,
+        challenger.id,
+        winnerId,
+        challengeeId
+      );
+    }
+  }, [
+    challengeeId,
+    challenger,
+    competition,
+    questionsIds,
+    router,
+    score,
+    showResults,
+  ]);
 
   const handleOptionSelect = (optionId: string) => {
     setSelectedOption(optionId);
