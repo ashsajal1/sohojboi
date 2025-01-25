@@ -33,7 +33,6 @@ interface ChallengeProps {
 const Challenge: React.FC<ChallengeProps> = ({
   challengeeId,
   challenger,
-  quizId,
   topic,
   quizQuestions,
   competition,
