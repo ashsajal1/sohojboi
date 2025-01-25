@@ -67,23 +67,21 @@ export default async function Navbar() {
 
         <ModeToggle />
         <SignedIn>
-          <Link href={"/notifications"}>
-            <Button className="relative mx-2" size={"icon"} variant={"outline"}>
-              {(notifications?.length || 0 > 0) && (
-                <Badge
-                  className="absolute -right-3 -top-3"
-                  variant={"destructive"}
-                >
-                  {notifications?.length}
-                </Badge>
-              )}
-              <BellIcon />
-            </Button>
-          </Link>
-
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant={"ghost"} size={"icon"} className="rounded-full">
+              <Button
+                variant={"ghost"}
+                size={"icon"}
+                className="rounded-full relative mx-2"
+              >
+                {(notifications?.length || 0 > 0) && (
+                  <Badge
+                    className="absolute -right-3 -top-3"
+                    variant={"destructive"}
+                  >
+                    {notifications?.length}
+                  </Badge>
+                )}
                 <Image
                   className="contain rounded-full"
                   src={user?.imageUrl!}
@@ -125,12 +123,24 @@ export default async function Navbar() {
                   </Button>
                 </Link>
               </div>
-              <Link href="/account">
-                <Button variant={"outline"} size="sm" className="w-full">
-                  <Settings2 className="w-4 h-4 mr-2" />
-                  Manage Account
-                </Button>
-              </Link>
+              <div className="flex items-center justify-between gap-2 w-full">
+                <Link className="w-full" href="/notifications">
+                  <Button variant={"outline"} size="sm" className="w-full">
+                    <BellIcon className="w-4 h-4 mr-2" />
+                    {(notifications?.length || 0 > 0) && (
+                      <Badge className="ml-2" variant={"destructive"}>
+                        {notifications?.length}
+                      </Badge>
+                    )}
+                  </Button>
+                </Link>
+                <Link className="w-full" href="/account">
+                  <Button variant={"outline"} size="sm" className="w-full">
+                    <Settings2 className="w-4 h-4 mr-2" />
+                    Account
+                  </Button>
+                </Link>
+              </div>
 
               <Button variant={"destructive"} size="sm" className="w-full">
                 <LogOut className="w-4 h-4 mr-2" />
