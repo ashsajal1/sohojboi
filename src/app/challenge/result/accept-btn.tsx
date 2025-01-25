@@ -16,7 +16,7 @@ export default function AcceptBtn({ competition }: { competition: Competition })
 
         await startTransiton(async () => {
             await params.set('competitionId', competition.id);
-            await replace(`accept?${params.toString()}`);
+            await replace(`/challenge/play?${params.toString()}`);
         });
     };
 
