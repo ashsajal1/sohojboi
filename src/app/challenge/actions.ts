@@ -112,6 +112,8 @@ export const completeCompetition = async (
     },
   });
 
+  return competition;
+
 };
 
 const getQuestionsByTopic = async (topicId: string) => {
