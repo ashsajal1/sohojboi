@@ -37,6 +37,8 @@ export const createCompetition = async (
         competitionId: competition.id,
       },
     });
+
+    return competition;
   } catch (error) {
     throw error;
   }
