@@ -37,6 +37,8 @@ export const createCompetition = async (
         competitionId: competition.id,
       },
     });
+
+    return competition;
   } catch (error) {
     throw error;
   }
@@ -70,6 +72,48 @@ export const declineChallange = async (competition: Competition) => {
   }
 
   revalidatePath("/challenge");
+};
+export const completeCompetition = async (
+  competitionId: string,
+  challengeeScore: number,
+  challangerId: string,
+  winnerId: string | null,
+  challengeeId: string
+) => {
+  const competition = await prisma.competition.update({
+    where: {
+      id: competitionId,
+    },
+    data: {
+      challengeeScore: challengeeScore,
+      status: "completed",
+    },
+  });
+
+  const challengeeName = await (
+    await clerkClient().users.getUser(challengeeId)
+  ).fullName;
+
+  let notificationMessage;
+  if (winnerId === challangerId) {
+    notificationMessage = `Congrats! You beat ${challengeeName} in a challenge.`;
+  } else if (winnerId === null) {
+    notificationMessage = `Challenge completed against ${challengeeName}! It's draw.`;
+  } else if (winnerId === challengeeId) {
+    notificationMessage = `You lost a challenge against ${challengeeName}.`;
+  }
+
+  const result = await prisma.notification.create({
+    data: {
+      userId: challangerId,
+      message: notificationMessage!,
+      type: NotificationType.CHALLENGE,
+      competitionId: competition.id,
+    },
+  });
+
+  return competition;
+
 };
 
 const getQuestionsByTopic = async (topicId: string) => {
