@@ -65,13 +65,13 @@ const Challenge: React.FC<ChallengeProps> = ({
     }
 
     async function createCompetitionFunc() {
-      const competition = await createCompetition(
+      const newCompetition = await createCompetition(
         challengeeId,
         challenger.id,
         questionsIds,
         score
       );
-      router.push(`/challenge/result?competitionId=${competition.id}`);
+      router.push(`/challenge/result?competitionId=${newCompetition.id}`);
     }
 
     async function completeCompetitionFunc() {
@@ -96,6 +96,8 @@ const Challenge: React.FC<ChallengeProps> = ({
         winnerId,
         challengeeId
       );
+
+      router.push(`/challenge/result?competitionId=${completedCompetition.id}`);
     }
   }, [
     challengeeId,
