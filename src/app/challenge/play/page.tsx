@@ -4,6 +4,16 @@ import { clerkClient, currentUser } from "@clerk/nextjs/server";
 import { Metadata } from "next";
 import Challange from "../challenge";
 import { redirect } from "next/navigation";
+import { ChallengeQuestion, Prisma } from "@prisma/client";
+
+// Define ChallengeQuestion type with included relations
+type ChallengeQuestionWithRelations = Prisma.ChallengeQuestionGetPayload<{
+  include: {
+    topic: true;
+    chapter: true;
+    options: true;
+  };
+}>;
 
 export const metadata: Metadata = {
   title: "Challenge Your Friends in Quizzes | Sohojboi",
@@ -13,6 +23,25 @@ export const metadata: Metadata = {
     "challenge, quiz, knowledge, friends, competition, topics, education, fun",
   ],
 };
+
+async function getCompetitionDetails(competitionId: string) {
+  return await prisma.competition.findUnique({ where: { id: competitionId } });
+}
+
+async function fetchQuestionsByTopic(topicId: string) {
+  return await prisma.challengeQuestion.findMany({
+    where: { topicId },
+    include: { topic: true, chapter: true, options: true },
+    take: 3,
+  });
+}
+
+async function fetchQuestionsByIds(questionIds: string[]) : Promise<ChallengeQuestionWithRelations[]> {
+  return await prisma.challengeQuestion.findMany({
+    where: { id: { in: questionIds } },
+    include: { topic: true, chapter: true, options: true },
+  });
+}
 
 export default async function page({ searchParams }: { searchParams: any }) {
   // Variables for starting a challenge
@@ -40,23 +69,11 @@ export default async function page({ searchParams }: { searchParams: any }) {
     }
 
     //this var for accept existing challenge
-
     const challengerId = competition?.challengerId;
     let challenger = await clerkClient().users.getUser(challengerId!);
     challenger = JSON.parse(JSON.stringify(challenger));
 
-    questions = await prisma.challengeQuestion.findMany({
-      where: {
-        id: {
-          in: competition?.questionIds,
-        },
-      },
-      include: {
-        topic: true,
-        chapter: true,
-        options: true,
-      },
-    });
+    questions = await fetchQuestionsByIds(competition?.questionIds!);
 
     return (
       <div className="flex flex-col items-center gap-2">
