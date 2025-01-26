@@ -4,7 +4,7 @@ import { clerkClient, currentUser } from "@clerk/nextjs/server";
 import { Metadata } from "next";
 import Challange from "../challenge";
 import { redirect } from "next/navigation";
-import { ChallengeQuestion, Prisma } from "@prisma/client";
+import { ChallengeQuestion, Competition, Prisma } from "@prisma/client";
 
 // Define ChallengeQuestion type with included relations
 type ChallengeQuestionWithRelations = Prisma.ChallengeQuestionGetPayload<{
@@ -24,7 +24,9 @@ export const metadata: Metadata = {
   ],
 };
 
-async function getCompetitionDetails(competitionId: string) {
+async function getCompetitionDetails(
+  competitionId: string
+): Promise<Competition | null> {
   return await prisma.competition.findUnique({ where: { id: competitionId } });
 }
 
@@ -60,11 +62,7 @@ export default async function page({ searchParams }: { searchParams: any }) {
   let questions, competition;
 
   if (existingCompetitionId) {
-    competition = await prisma.competition.findUnique({
-      where: {
-        id: existingCompetitionId,
-      },
-    });
+    competition = await getCompetitionDetails(existingCompetitionId);
 
     // redirect to result if competition status is completed
     if (competition?.status === "completed") {
