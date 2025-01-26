@@ -10,13 +10,13 @@ export default function AcceptBtn({ competition }: { competition: Competition })
     const [pending, startTransiton] = useTransition();
     const searchParams = useSearchParams();
     const pathName = usePathname();
-    const { replace } = useRouter();
+    const { push } = useRouter();
     const handleDecline = async () => {
         const params = new URLSearchParams(searchParams);
         
         await startTransiton(async () => {
             await params.set('competitionId', competition.id);
-            await replace(`challenge/play?${params.toString()}`);
+            await push(`challenge/play?${params.toString()}`);
         });
     };
 
