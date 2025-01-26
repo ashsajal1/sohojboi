@@ -1,5 +1,5 @@
 import React from "react";
-import Challange from "./challange";
+import Challange from "./challenge";
 import prisma from "@/lib/prisma";
 import { auth, clerkClient, currentUser } from "@clerk/nextjs/server";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";

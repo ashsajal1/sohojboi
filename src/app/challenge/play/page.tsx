@@ -2,7 +2,7 @@ import React from "react";
 import prisma from "@/lib/prisma";
 import { clerkClient, currentUser } from "@clerk/nextjs/server";
 import { Metadata } from "next";
-import Challange from "../challange";
+import Challange from "../challenge";
 import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
