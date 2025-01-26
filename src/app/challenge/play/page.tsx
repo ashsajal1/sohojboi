@@ -3,6 +3,7 @@ import prisma from "@/lib/prisma";
 import { clerkClient, currentUser } from "@clerk/nextjs/server";
 import { Metadata } from "next";
 import Challange from "../challange";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Challenge Your Friends in Quizzes | Sohojboi",
@@ -21,7 +22,6 @@ export default async function page({ searchParams }: { searchParams: any }) {
   const topicId = searchParams.topicId;
   const competitionId = searchParams.competitionId;
   let questions, competition;
-  
 
   if (competitionId) {
     competition = await prisma.competition.findUnique({
@@ -29,6 +29,11 @@ export default async function page({ searchParams }: { searchParams: any }) {
         id: competitionId,
       },
     });
+
+    // redirect to result if competition status is completed
+    if (competition?.status === "completed") {
+      redirect(`/challenge/result?competitionId=${competitionId}`);
+    }
 
     challengerId = competition?.challengerId;
     user = await clerkClient().users.getUser(challengerId!);
@@ -98,7 +103,6 @@ export default async function page({ searchParams }: { searchParams: any }) {
         challenger={user!}
         challengeeId={challengeeId ? challengeeId : challengerId}
         quizQuestions={questions!}
-        competition={competition!}
       />
     </div>
   );
