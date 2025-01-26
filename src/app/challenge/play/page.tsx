@@ -28,7 +28,9 @@ async function getCompetitionDetails(competitionId: string) {
   return await prisma.competition.findUnique({ where: { id: competitionId } });
 }
 
-async function fetchQuestionsByTopic(topicId: string) {
+async function fetchQuestionsByTopic(
+  topicId: string
+): Promise<ChallengeQuestionWithRelations[]> {
   return await prisma.challengeQuestion.findMany({
     where: { topicId },
     include: { topic: true, chapter: true, options: true },
@@ -36,7 +38,9 @@ async function fetchQuestionsByTopic(topicId: string) {
   });
 }
 
-async function fetchQuestionsByIds(questionIds: string[]) : Promise<ChallengeQuestionWithRelations[]> {
+async function fetchQuestionsByIds(
+  questionIds: string[]
+): Promise<ChallengeQuestionWithRelations[]> {
   return await prisma.challengeQuestion.findMany({
     where: { id: { in: questionIds } },
     include: { topic: true, chapter: true, options: true },
@@ -56,7 +60,6 @@ export default async function page({ searchParams }: { searchParams: any }) {
   let questions, competition;
 
   if (existingCompetitionId) {
-    
     competition = await prisma.competition.findUnique({
       where: {
         id: existingCompetitionId,
@@ -87,20 +90,9 @@ export default async function page({ searchParams }: { searchParams: any }) {
         />
       </div>
     );
-
   } else {
     try {
-      questions = await prisma.challengeQuestion.findMany({
-        where: {
-          topicId: selectedTopicId,
-        },
-        include: {
-          topic: true,
-          chapter: true,
-          options: true,
-        },
-        take: 3,
-      });
+      questions = await fetchQuestionsByTopic(selectedTopicId);
     } catch (error) {
       throw new Error("Error fetching questions:");
     }
