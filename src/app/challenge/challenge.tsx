@@ -17,7 +17,6 @@ import {
 import { AnswerOption, ChallengeQuestion, Competition } from "@prisma/client";
 import { User } from "@clerk/nextjs/server";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Separator } from "@/components/ui/separator";
 import { Progress } from "@/components/ui/progress";
 import { useRouter } from "next/navigation";
 
