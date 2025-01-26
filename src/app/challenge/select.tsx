@@ -19,7 +19,7 @@ import { useToast } from "@/components/ui/use-toast";
 export default function Select({ users, userId }: { users: User[], userId: string }) {
     const searchParams = useSearchParams();
     const pathName = usePathname();
-    const { replace } = useRouter();
+    const { push } = useRouter();
     const [pending, startTransiton] = useTransition();
     const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
     const [open, setOpen] = useState(false);
@@ -56,7 +56,7 @@ export default function Select({ users, userId }: { users: User[], userId: strin
         await startTransiton(async () => {
             await params.set('challengeeId', challengeeId);
             await params.set('topicId', selectedTopicId || '');
-            await replace(`/challenge/play?${params.toString()}`);
+            await push(`/challenge/play?${params.toString()}`);
         });
     };
 
