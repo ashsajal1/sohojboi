@@ -15,29 +15,36 @@ export const metadata: Metadata = {
 };
 
 export default async function page({ searchParams }: { searchParams: any }) {
-  let user = await currentUser();
-  user = JSON.parse(JSON.stringify(user));
-  let challengeeId = searchParams.challengeeId;
-  let challengerId;
-  const topicId = searchParams.topicId;
-  const competitionId = searchParams.competitionId;
+  // Variables for starting a challenge
+  let currentUserData = await currentUser();
+  currentUserData = JSON.parse(JSON.stringify(currentUserData));
+
+  let opponentId = searchParams.challengeeId;
+  let initiatorId;
+  const selectedTopicId = searchParams.topicId;
+  const existingCompetitionId = searchParams.competitionId;
+
   let questions, competition;
 
-  if (competitionId) {
+  if (existingCompetitionId) {
+    
     competition = await prisma.competition.findUnique({
       where: {
-        id: competitionId,
+        id: existingCompetitionId,
       },
     });
 
     // redirect to result if competition status is completed
     if (competition?.status === "completed") {
-      redirect(`/challenge/result?competitionId=${competitionId}`);
+      redirect(`/challenge/result?competitionId=${existingCompetitionId}`);
     }
 
-    challengerId = competition?.challengerId;
-    user = await clerkClient().users.getUser(challengerId!);
-    user = JSON.parse(JSON.stringify(user));
+    //this var for accept existing challenge
+
+    const challengerId = competition?.challengerId;
+    let challenger = await clerkClient().users.getUser(challengerId!);
+    challenger = JSON.parse(JSON.stringify(challenger));
+
     questions = await prisma.challengeQuestion.findMany({
       where: {
         id: {
@@ -50,11 +57,25 @@ export default async function page({ searchParams }: { searchParams: any }) {
         options: true,
       },
     });
+
+    return (
+      <div className="flex flex-col items-center gap-2">
+        <Challange
+          topic={questions![0].topic?.name!}
+          quizId={questions![0].id}
+          challenger={challenger!}
+          challengeeId={currentUserData?.id!}
+          quizQuestions={questions!}
+          competition={competition!}
+        />
+      </div>
+    );
+
   } else {
     try {
       questions = await prisma.challengeQuestion.findMany({
         where: {
-          topicId: topicId,
+          topicId: selectedTopicId,
         },
         include: {
           topic: true,
@@ -76,32 +97,17 @@ export default async function page({ searchParams }: { searchParams: any }) {
     );
   }
 
-  if (challengeeId === user?.id) {
+  if (opponentId === currentUserData?.id) {
     throw new Error("You cannot challenge yourself!");
   }
-
-  // if (competition) {
-  //   return (
-  //     <div className="flex flex-col items-center gap-2">
-  //       <Challange
-  //         topic={questions![0].topic?.name!}
-  //         quizId={questions![0].id}
-  //         challenger={user!}
-  //         challengeeId={challengeeId ? challengeeId : challengerId}
-  //         quizQuestions={questions!}
-  //         competition={competition!}
-  //       />
-  //     </div>
-  //   );
-  // }
 
   return (
     <div className="flex flex-col items-center gap-2">
       <Challange
         topic={questions![0].topic?.name!}
         quizId={questions![0].id}
-        challenger={user!}
-        challengeeId={challengeeId ? challengeeId : challengerId}
+        challenger={currentUserData!}
+        challengeeId={opponentId}
         quizQuestions={questions!}
       />
     </div>
