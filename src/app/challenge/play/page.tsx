@@ -1,6 +1,6 @@
 import React from "react";
 import prisma from "@/lib/prisma";
-import { currentUser } from "@clerk/nextjs/server";
+import { clerkClient, currentUser } from "@clerk/nextjs/server";
 import { Metadata } from "next";
 import Challange from "../challange";
 
@@ -21,6 +21,7 @@ export default async function page({ searchParams }: { searchParams: any }) {
   const topicId = searchParams.topicId;
   const competitionId = searchParams.competitionId;
   let questions, competition;
+  
 
   if (competitionId) {
     competition = await prisma.competition.findUnique({
@@ -30,10 +31,8 @@ export default async function page({ searchParams }: { searchParams: any }) {
     });
 
     challengerId = competition?.challengerId;
-    if (competition?.challengerId === user?.id) {
-      throw new Error("You cannot challenge yourself!");
-    }
-
+    user = await clerkClient().users.getUser(challengerId!);
+    user = JSON.parse(JSON.stringify(user));
     questions = await prisma.challengeQuestion.findMany({
       where: {
         id: {
@@ -75,6 +74,21 @@ export default async function page({ searchParams }: { searchParams: any }) {
   if (challengeeId === user?.id) {
     throw new Error("You cannot challenge yourself!");
   }
+
+  // if (competition) {
+  //   return (
+  //     <div className="flex flex-col items-center gap-2">
+  //       <Challange
+  //         topic={questions![0].topic?.name!}
+  //         quizId={questions![0].id}
+  //         challenger={user!}
+  //         challengeeId={challengeeId ? challengeeId : challengerId}
+  //         quizQuestions={questions!}
+  //         competition={competition!}
+  //       />
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="flex flex-col items-center gap-2">
