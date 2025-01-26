@@ -4,16 +4,7 @@ import { clerkClient, currentUser } from "@clerk/nextjs/server";
 import { Metadata } from "next";
 import Challange from "../challenge";
 import { redirect } from "next/navigation";
-import { ChallengeQuestion, Competition, Prisma } from "@prisma/client";
-
-// Define ChallengeQuestion type with included relations
-type ChallengeQuestionWithRelations = Prisma.ChallengeQuestionGetPayload<{
-  include: {
-    topic: true;
-    chapter: true;
-    options: true;
-  };
-}>;
+import { getCompetitionDetails, fetchQuestionsByIds, fetchQuestionsByTopic } from "./play-queries.ts";
 
 export const metadata: Metadata = {
   title: "Challenge Your Friends in Quizzes | Sohojboi",
@@ -23,31 +14,6 @@ export const metadata: Metadata = {
     "challenge, quiz, knowledge, friends, competition, topics, education, fun",
   ],
 };
-
-async function getCompetitionDetails(
-  competitionId: string
-): Promise<Competition | null> {
-  return await prisma.competition.findUnique({ where: { id: competitionId } });
-}
-
-async function fetchQuestionsByTopic(
-  topicId: string
-): Promise<ChallengeQuestionWithRelations[]> {
-  return await prisma.challengeQuestion.findMany({
-    where: { topicId },
-    include: { topic: true, chapter: true, options: true },
-    take: 3,
-  });
-}
-
-async function fetchQuestionsByIds(
-  questionIds: string[]
-): Promise<ChallengeQuestionWithRelations[]> {
-  return await prisma.challengeQuestion.findMany({
-    where: { id: { in: questionIds } },
-    include: { topic: true, chapter: true, options: true },
-  });
-}
 
 export default async function page({ searchParams }: { searchParams: any }) {
   // Variables for starting a challenge
