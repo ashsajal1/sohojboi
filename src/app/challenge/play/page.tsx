@@ -20,7 +20,7 @@ export default async function page({ searchParams }: { searchParams: any }) {
   currentUserData = JSON.parse(JSON.stringify(currentUserData));
 
   let opponentId = searchParams.challengeeId;
-  let initiatorId;
+  
   const selectedTopicId = searchParams.topicId;
   const existingCompetitionId = searchParams.competitionId;
 
