@@ -1,5 +1,4 @@
 import React from "react";
-import prisma from "@/lib/prisma";
 import { clerkClient, currentUser } from "@clerk/nextjs/server";
 import { Metadata } from "next";
 import Challange from "../challenge";
