@@ -1,23 +1,40 @@
+"use client"
+
 import Link from "next/link";
 import Image from "next/image";
 import { formatDate } from "@/lib/date-format";
-import { clerkClient } from "@clerk/nextjs/server";
-import prisma from "@/lib/prisma";
+import { getProfile } from "@/app/_actions/get-profile";
+import { useState, useEffect } from "react";
+import { User } from "@clerk/nextjs/server";
+import { Profile } from "@prisma/client";
 
 type Type = "answer" | "question" | "comment" | "article" | "challengeResult";
 interface ProfileImgCardProps {
     type: Type, userId: string, createdAt?: Date, challengeStatus?: string, leftSideImage?: boolean
 }
-export default async function ProfileImgCard({ type, userId, createdAt, challengeStatus, leftSideImage = true }: ProfileImgCardProps) {
-    const user = await clerkClient().users.getUser(userId);
+export default function ProfileImgCard({ type, userId, createdAt, challengeStatus, leftSideImage = true }: ProfileImgCardProps) {
+    const [user, setUser] = useState<User | null>(null); // Use state to store user data
+    const [profile, setProfile] = useState<Profile | null>(null); // Use state to store profile data
+
+    useEffect(() => {
+        async function fetchProfileData() {
+            const [userData, profileData] = await getProfile(userId); // Fetch the data asynchronously
+            setUser(userData); // Update user state
+            setProfile(profileData); // Update profile state
+        }
+
+        fetchProfileData(); // Call the async function
+    }, [userId]); // Only run when userId changes
+
+    // If user data is not loaded yet, return a loading state or nothing
+    if (!user || !profile) {
+        return <div>Loading...</div>;
+    }
+
     const profileImg = user.imageUrl;
-    const fullName = user.fullName;
-    const profile = await prisma.profile.findUnique({
-        where: {
-            clerkUserId: user.id,
-        },
-    });
-    const isVerified = profile?.badge.includes("VERIFIED")
+    const fullName = user.firstName + " " + user.lastName;
+    const isVerified = profile?.badge.includes("VERIFIED");
+
     return (
         <Link className="flex items-center gap-2" href={`/profile?id=${userId}`}>
             {(profileImg && leftSideImage) && <Image className="rounded-full" width={30} height={30} src={profileImg} alt={"Profile image"} />}
