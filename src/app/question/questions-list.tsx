@@ -77,7 +77,7 @@ export default function QuestionsList() {
         ))}
       </div>
 
-      {questions.length === 0 && (
+      {(questions.length === 0 && !isFetching) && (
         <h1 className="font-bold text-xl text-center p-12">
           No questions Found!
         </h1>
