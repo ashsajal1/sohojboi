@@ -4,7 +4,7 @@ import QuestionCard from "./question-card";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { PlusIcon } from "lucide-react";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
 import { getQuestions } from "./actions";
 import { Question } from "@prisma/client";
 
@@ -59,6 +59,9 @@ export default function QuestionsList() {
     fetchQuestions(page);
   }, [page]);
 
+  // Memoize the question list to avoid unnecessary re-renders
+  const memoizedQuestions = useMemo(() => questions, [questions]);
+
   return (
     <>
       <div className="grid md:grid-cols-2 gap-2">
@@ -69,7 +72,7 @@ export default function QuestionsList() {
             </Button>
           </Link>
         </div>
-        {questions.map((question) => (
+        {memoizedQuestions.map((question) => (
           <QuestionCard key={question.id} question={question} />
         ))}
       </div>
