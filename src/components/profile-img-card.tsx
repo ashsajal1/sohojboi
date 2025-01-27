@@ -7,6 +7,7 @@ import { getProfile } from "@/app/_actions/get-profile";
 import { useState, useEffect } from "react";
 import { User } from "@clerk/nextjs/server";
 import { Profile } from "@prisma/client";
+import { Skeleton } from "./ui/skeleton";
 
 type Type = "answer" | "question" | "comment" | "article" | "challengeResult";
 interface ProfileImgCardProps {
@@ -28,7 +29,7 @@ export default function ProfileImgCard({ type, userId, createdAt, challengeStatu
 
     // If user data is not loaded yet, return a loading state or nothing
     if (!user || !profile) {
-        return <div>Loading...</div>;
+        return <Skeleton className="w-1/3 h-[40px]" />;
     }
 
     const profileImg = user.imageUrl;
