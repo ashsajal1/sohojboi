@@ -7,16 +7,16 @@ import { Competition } from "@prisma/client";
 import LoaderIcon from "@/components/loader-icon";
 
 export default function AcceptBtn({ competition }: { competition: Competition }) {
-    const [pending, startTransiton] = useTransition();
+    const [pending, startTransition] = useTransition();
     const searchParams = useSearchParams();
     const pathName = usePathname();
     const { replace } = useRouter();
     const handleAccept = async () => {
         const params = new URLSearchParams(searchParams);
 
-        await startTransiton(async () => {
-            await params.set('competitionId', competition.id);
-            await replace(`/challenge/play?${params.toString()}`);
+        startTransition(() => {
+            params.set('competitionId', competition.id);
+            replace(`/challenge/play?${params.toString()}`);
         });
     };
 
