@@ -1,38 +1,14 @@
-"use client";
-
-import { Button } from "@/components/ui/button";
 import { Card, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import Link from "next/link";
-import UpvoteBtn from "./upvote-btn";
 import { Question } from "@prisma/client";
 import ProfileImgCard from "@/components/profile-img-card";
-import { CornerDownRightIcon } from "lucide-react";
+import QuestionInteractions from "./question-interactions";
 import BlurFade from "@/components/magicui/blur-fade";
-import { useUser } from "@clerk/nextjs";
-import { useEffect, useState } from "react";
-import { chekcIsQuestionUpvoted } from "../_actions/actions";
 
 interface QuestionProps {
   question: Question;
 }
 
 export default function QuestionCard({ question }: QuestionProps) {
-  const { user } = useUser();
-  const actorId = user?.id || "";
-  const [isUpvotedQuestion, setIsUpvotedQuestion] = useState<boolean>(false);
-
-  // Fetch upvote status
-  useEffect(() => {
-    const fetchUpvoteStatus = async () => {
-      const isUpvoted = await chekcIsQuestionUpvoted(actorId, question.id);
-      setIsUpvotedQuestion(isUpvoted);
-    };
-
-    if (actorId) {
-      fetchUpvoteStatus();
-    }
-  }, [actorId, question.id]);
-
   return (
     <Card className="z-10">
       <BlurFade delay={0.25} inView>
@@ -51,19 +27,7 @@ export default function QuestionCard({ question }: QuestionProps) {
             userId={question.userId}
           />
 
-          <div className="flex items-center gap-2">
-            <Link href={`/question/${question.id}`}>
-              <Button variant={"link"} size={"sm"}>
-                <CornerDownRightIcon className="mr-2 h-4 w-4" />
-                Answer
-              </Button>
-            </Link>
-            <UpvoteBtn
-              isUpvotedQuestion={isUpvotedQuestion}
-              question={question}
-              actorId={actorId}
-            />
-          </div>
+          <QuestionInteractions question={question} />
         </CardFooter>
       </BlurFade>
     </Card>
