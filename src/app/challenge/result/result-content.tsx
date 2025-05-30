@@ -3,7 +3,7 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { CheckCircle2, XCircle, Trophy, Medal } from 'lucide-react';
+import { Trophy, Medal } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Competition, ChallengeQuestion, AnswerOption } from '@prisma/client';
 import AcceptBtn from './accept-btn';
@@ -71,39 +71,6 @@ export default function ResultContent({
                 <span className="font-bold">{opponentScore}</span>
               </div>
               <Progress value={(opponentScore! / (userScore! + opponentScore!)) * 100} className="h-2" />
-            </div>
-          </div>
-
-          {/* Question Results */}
-          <div className="space-y-4">
-            <div className="text-lg font-semibold">Question Results</div>
-            <div className="grid grid-cols-5 gap-3">
-              {questions.map((question, index) => {
-                const userAnswer = userAnswers.find(ans => ans.questionId === question.id);
-                const correctOption = question.options.find(opt => opt.isCorrect);
-                const isCorrect = userAnswer?.answer === correctOption?.content;
-                
-                return (
-                  <motion.div
-                    key={index}
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ delay: index * 0.1 }}
-                    className={`p-3 rounded-lg flex items-center justify-center ${
-                      isCorrect 
-                        ? 'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400' 
-                        : 'bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400'
-                    }`}
-                    title={`Question ${index + 1}: ${userAnswer?.answer || 'Not answered'} (Correct: ${correctOption?.content})`}
-                  >
-                    {isCorrect ? (
-                      <CheckCircle2 className="w-6 h-6" />
-                    ) : (
-                      <XCircle className="w-6 h-6" />
-                    )}
-                  </motion.div>
-                );
-              })}
             </div>
           </div>
 
