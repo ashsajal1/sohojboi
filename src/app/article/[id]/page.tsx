@@ -140,6 +140,7 @@ export default async function Page({ params }: { params: { id: string } }) {
   const tableOfContentsMd =
     `## Table of Contents\n\n` +
     (article?.sections
+      .sort((a, b) => a.position - b.position)
       .map(
         (section, index) =>
           `> [**${index + 1}.** ${section.title}](#${section.title
@@ -268,21 +269,23 @@ export default async function Page({ params }: { params: { id: string } }) {
               </p>
             </div>
             <div className="space-y-2">
-              {article?.blogSeries?.articles.map((article, index) => (
-                <Link
-                  className="w-full block"
-                  href={`/article/${article.id}`}
-                  key={article.id}
-                >
-                  <Button
-                    className="w-full text-start justify-start"
-                    variant={article.id === params.id ? "secondary" : "outline"}
+              {article?.blogSeries?.articles
+                .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
+                .map((article, index) => (
+                  <Link
+                    className="w-full block"
+                    href={`/article/${article.id}`}
+                    key={article.id}
                   >
-                    <span className="font-medium mr-2">#{index + 1}</span>
-                    {article.title.slice(0, 40)}...
-                  </Button>
-                </Link>
-              ))}
+                    <Button
+                      className="w-full text-start justify-start"
+                      variant={article.id === params.id ? "secondary" : "outline"}
+                    >
+                      <span className="font-medium mr-2">#{index + 1}</span>
+                      {article.title.slice(0, 40)}...
+                    </Button>
+                  </Link>
+                ))}
             </div>
           </div>
         )}
@@ -294,28 +297,33 @@ export default async function Page({ params }: { params: { id: string } }) {
         )}
 
         <div className="space-y-8">
-          {article?.sections.map((section) => (
-            <div
-              key={section.id}
-              id={section.title.replace(/\s+/g, "-").toLowerCase()}
-              className="scroll-mt-20"
-            >
-              <Content
+          {article?.sections
+            .sort((a, b) => a.position - b.position)
+            .map((section) => (
+              <div
                 key={section.id}
-                content={`## **${section.title}**\n\n${section.content}`}
-              />
+                id={section.title.replace(/\s+/g, "-").toLowerCase()}
+                className="scroll-mt-20"
+              >
+                <Content
+                  key={section.id}
+                  content={`## **${section.title}**\n\n${section.content}`}
+                />
 
-              {quizBySection(section.id) && (
-                <div className="py-4">
-                  <ArticleQuestion
-                    showConfetti
-                    question={quizBySection(section.id)!}
-                  />
-                </div>
-              )}
-            </div>
-          ))}
-          {article?.content && <Content content={article?.content!} />}
+                {quizBySection(section.id) && (
+                  <div className="py-4">
+                    <ArticleQuestion
+                      showConfetti
+                      question={quizBySection(section.id)!}
+                    />
+                  </div>
+                )}
+              </div>
+            ))}
+
+          {!article?.sections.length && article?.content && (
+            <Content content={article.content} />
+          )}
 
           {quiz.length > 0 && (
             <div className="py-4">
@@ -372,9 +380,11 @@ export default async function Page({ params }: { params: { id: string } }) {
         </div>
 
         <div className="space-y-4">
-          {article?.comments.map((comment) => (
-            <Comment key={comment.id} comment={comment} />
-          ))}
+          {article?.comments
+            .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+            .map((comment) => (
+              <Comment key={comment.id} comment={comment} />
+            ))}
         </div>
       </div>
 
