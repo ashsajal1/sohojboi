@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import AcceptBtn from './accept-btn';
 import WinnerConfetti from './winner-confetti';
-import { CheckCircle2, XCircle, Circle } from 'lucide-react';
+import { CheckCircle2, XCircle } from 'lucide-react';
 import { Competition, ChallengeQuestion, AnswerOption } from '@prisma/client';
 
 type QuestionWithOptions = ChallengeQuestion & {
@@ -58,6 +58,13 @@ export default async function ResultPage({ searchParams }: { searchParams: any }
   const userScore = userIsChallenger ? competition.challengerScore : competition.challengeeScore;
   const opponentScore = userIsChallenger ? competition.challengeeScore : competition.challengerScore;
 
+  // Calculate question results
+  const questionResults = questions.map(question => {
+    const userAnswer = userAnswers.find(ans => ans.questionId === question.id);
+    const correctOption = question.options.find(opt => opt.isCorrect);
+    return userAnswer?.answer === correctOption?.content;
+  });
+
   return (
     <div className="max-w-4xl mx-auto p-4 space-y-6">
       <Card>
@@ -80,55 +87,24 @@ export default async function ResultPage({ searchParams }: { searchParams: any }
             )}
           </div>
 
-          <div className="mt-6">
-            <h3 className="text-xl font-bold mb-4">Questions</h3>
-            <div className="space-y-4">
-              {questions.map((question) => {
-                const userAnswer = userAnswers.find(ans => ans.questionId === question.id);
-                return (
-                  <div 
-                    key={question.id} 
-                    className="p-4 rounded-lg border dark:border-gray-700 dark:bg-gray-800/50"
-                  >
-                    <div className="space-y-2">
-                      <p className="font-medium">{question.content}</p>
-                      <div className="space-y-1">
-                        {question.options.map((option) => {
-                          const isUserSelected = userAnswer?.answer === option.content;
-                          return (
-                            <div 
-                              key={option.id}
-                              className={`p-2 rounded ${
-                                isUserSelected
-                                  ? 'bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800' 
-                                  : 'bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700'
-                              }`}
-                            >
-                              <div className="flex items-center gap-2">
-                                {isUserSelected ? (
-                                  <Circle className="w-4 h-4 text-blue-500" />
-                                ) : (
-                                  <XCircle className="w-4 h-4 text-gray-400" />
-                                )}
-                                <span>{option.content}</span>
-                                {isUserSelected && !option.isCorrect && (
-                                  <span className="text-sm text-red-500 ml-2">(Your answer)</span>
-                                )}
-                              </div>
-                            </div>
-                          );
-                        })}
-                      </div>
-                      {question.explanation && (
-                        <p className="text-sm text-muted-foreground mt-2">
-                          <strong>Explanation:</strong> {question.explanation}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
+          {/* Question Status Icons */}
+          <div className="flex flex-wrap gap-2 mt-4">
+            {questionResults.map((isCorrect, index) => (
+              <div
+                key={index}
+                className={`p-2 rounded-full ${
+                  isCorrect 
+                    ? 'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400' 
+                    : 'bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400'
+                }`}
+              >
+                {isCorrect ? (
+                  <CheckCircle2 className="w-5 h-5" />
+                ) : (
+                  <XCircle className="w-5 h-5" />
+                )}
+              </div>
+            ))}
           </div>
         </CardContent>
       </Card>
