@@ -193,7 +193,7 @@ export default async function Page({ params }: { params: { id: string } }) {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-6 space-y-8">
+    <div className="max-w-full mx-auto px-4 py-6 space-y-8">
       <div className="flex items-center justify-between">
         <div className="flex flex-col gap-2">
           <CardTitle className="text-2xl md:text-3xl font-bold dark:text-gray-100">{article?.title}</CardTitle>
