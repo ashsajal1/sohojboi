@@ -12,7 +12,8 @@ import PreviousBtn from '../question/previous-btn'
 import GridPattern from "@/components/magicui/grid-pattern";
 import { cn } from "@/lib/utils";
 
-export default async function Page({ searchParams }: { searchParams: { page: string } }) {
+export default async function Page(props: { searchParams: Promise<{ page: string }> }) {
+    const searchParams = await props.searchParams;
     const page = parseInt(searchParams.page) || 1;
     const skipSize = (page - 1) * 10;
     const totalArticles = await prisma.article.count();
@@ -99,5 +100,5 @@ export default async function Page({ searchParams }: { searchParams: { page: str
                 )}
             </div>
         </div>
-    )
+    );
 }

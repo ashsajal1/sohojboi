@@ -8,7 +8,8 @@ import { redirect } from "next/navigation";
 import DeleteQuestion from "./delete-question";
 import EditQuestion from "./edit-question";
 
-export default async function Create({ params }: { params: { id: string } }) {
+export default async function Create(props: { params: Promise<{ id: string }> }) {
+    const params = await props.params;
     const userId = await (await currentUser())?.id;
     const questionId = params.id;
 

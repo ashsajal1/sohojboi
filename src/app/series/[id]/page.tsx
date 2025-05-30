@@ -9,7 +9,8 @@ import Markdown from 'react-markdown'
 import ProfileImgCard from '@/components/profile-img-card'
 import Views from "@/app/article/[id]/views";
 
-export default async function Series({ params }: { params: { id: string } }) {
+export default async function Series(props: { params: Promise<{ id: string }> }) {
+    const params = await props.params;
     const series = await prisma.blogSeries.findUnique({
         where: {
             id: params.id!
@@ -31,7 +32,6 @@ export default async function Series({ params }: { params: { id: string } }) {
                 </Button>}
             </div>
             <p className="text-sm text-muted-foreground/70">{series?.description}</p>
-
             <div className='grid md:grid-cols-2 gap-2 py-2'>           
             {series?.articles.map((article) => (
                 <Card key={article.id}>
@@ -55,8 +55,7 @@ export default async function Series({ params }: { params: { id: string } }) {
             </Card>
             ))}
             </div>
-
             {isAuthor && <AddArticle userId={user.userId} seriesId={params.id} />}
         </div>
-    )
+    );
 }

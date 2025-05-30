@@ -24,7 +24,8 @@ import { Coins } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Badge as ProfileBadge } from '@prisma/client'
 
-export async function generateMetadata({ searchParams }: { searchParams: { id: string } }) {
+export async function generateMetadata(props: { searchParams: Promise<{ id: string }> }) {
+    const searchParams = await props.searchParams;
     let user: User | null;
 
     if (!searchParams.id) {
@@ -39,7 +40,8 @@ export async function generateMetadata({ searchParams }: { searchParams: { id: s
     }
 }
 
-export default async function Page({ searchParams }: { searchParams: { id: string } }) {
+export default async function Page(props: { searchParams: Promise<{ id: string }> }) {
+    const searchParams = await props.searchParams;
     const currentActiveUser = await currentUser();
     let user: User | null;
 

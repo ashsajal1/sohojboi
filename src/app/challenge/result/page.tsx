@@ -81,7 +81,8 @@ async function UserComparison({
   );
 }
 
-export default async function ResultPage({ searchParams }: { searchParams: any }) {
+export default async function ResultPage(props: { searchParams: Promise<any> }) {
+  const searchParams = await props.searchParams;
   const { userId } = await auth();
   const { competitionId } = searchParams;
 

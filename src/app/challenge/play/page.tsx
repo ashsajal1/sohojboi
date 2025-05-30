@@ -14,13 +14,14 @@ export const metadata: Metadata = {
   ],
 };
 
-export default async function page({ searchParams }: { searchParams: any }) {
+export default async function page(props: { searchParams: Promise<any> }) {
+  const searchParams = await props.searchParams;
   // Variables for starting a challenge
   let currentUserData = await currentUser();
   currentUserData = JSON.parse(JSON.stringify(currentUserData));
 
   let opponentId = searchParams.challengeeId;
-  
+
   const selectedTopicId = searchParams.topicId;
   const existingCompetitionId = searchParams.competitionId;
 

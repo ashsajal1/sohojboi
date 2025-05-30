@@ -35,11 +35,12 @@ import ArticleQuestion from "./quiz";
 import { Separator } from "@/components/ui/separator";
 import { checkRole } from '@/lib/roles';
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { id: string };
-}): Promise<Metadata> {
+export async function generateMetadata(
+  props: {
+    params: Promise<{ id: string }>;
+  }
+): Promise<Metadata> {
+  const params = await props.params;
   const articleId = params.id;
   let article;
   try {
@@ -75,7 +76,8 @@ export async function generateMetadata({
   };
 }
 
-export default async function Page({ params }: { params: { id: string } }) {
+export default async function Page(props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const articleId = params.id;
   const userId = await auth().userId;
   let isUpvoted;
@@ -252,7 +254,6 @@ export default async function Page({ params }: { params: { id: string } }) {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-
       <div className="space-y-6">
         {isInSeries && (
           <div className="p-4 rounded-lg border dark:border-gray-700 dark:bg-gray-800/50">
@@ -341,9 +342,7 @@ export default async function Page({ params }: { params: { id: string } }) {
           </div>
         </div>
       </div>
-
       <Separator className="dark:bg-gray-700" />
-
       <div className="flex items-center justify-between">
         <ProfileImgCard
           createdAt={article?.createdAt}
@@ -363,7 +362,6 @@ export default async function Page({ params }: { params: { id: string } }) {
           />
         </div>
       </div>
-
       <div className="space-y-6">
         <div>
           <h2 className="text-xl font-bold mb-4 dark:text-gray-100">Comments</h2>
@@ -381,7 +379,7 @@ export default async function Page({ params }: { params: { id: string } }) {
         </div>
 
         <div className="space-y-4">
-          {article?.comments && await Promise.all(
+          {article?.comments && (await Promise.all(
             article.comments
               .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
               .map(async (comment) => {
@@ -409,7 +407,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                     commentId: comment.id
                   }
                 });
-                const hasPermission = userId === comment.authorId || await checkRole("admin");
+                const hasPermission = userId === comment.authorId || (await checkRole("admin"));
                 const commentReplies = await prisma.comment.findMany({
                   where: {
                     parentId: comment.id,
@@ -429,10 +427,9 @@ export default async function Page({ params }: { params: { id: string } }) {
                   />
                 );
               })
-          )}
+          ))}
         </div>
       </div>
-
       <div className="space-y-4">
         <h2 className="text-xl font-bold dark:text-gray-100">Read more</h2>
         <div className="grid gap-3">

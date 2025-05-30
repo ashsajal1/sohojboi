@@ -21,12 +21,13 @@ import ShareBtn from "@/components/share-btn";
 import BoxReveal from "@/components/magicui/box-reveal";
 
 interface Params {
-    params: {
+    params: Promise<{
         id: string
-    }
+    }>
 }
 
-export async function generateMetadata({ params }: Params): Promise<Metadata> {
+export async function generateMetadata(props: Params): Promise<Metadata> {
+    const params = await props.params;
     let question = null;
 
     if (isValidObjectId(params.id)) {
@@ -67,7 +68,8 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
         }
     }
 }
-export default async function Question({ params }: Params) {
+export default async function Question(props: Params) {
+    const params = await props.params;
     const user = await currentUser();
     let question = null;
 

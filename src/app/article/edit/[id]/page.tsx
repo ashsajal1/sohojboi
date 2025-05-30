@@ -3,7 +3,8 @@ import { auth } from '@clerk/nextjs/server';
 import React from 'react'
 import EditArticleForm from './edit-article-form';
 
-export default async function Page({ params }: { params: { id: string } }) {
+export default async function Page(props: { params: Promise<{ id: string }> }) {
+    const params = await props.params;
     const articleId = params.id;
     const userId = await auth().userId;
 
@@ -15,7 +16,7 @@ export default async function Page({ params }: { params: { id: string } }) {
             sections: true
         }
     });
-    
+
 
     if(article?.authorId !== userId) {
         throw new Error("Unauthorized access!")
