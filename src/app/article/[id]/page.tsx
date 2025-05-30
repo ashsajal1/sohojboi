@@ -33,6 +33,7 @@ import {
 } from "@radix-ui/react-icons";
 import ArticleQuestion from "./quiz";
 import { Separator } from "@/components/ui/separator";
+import { checkRole } from '@/lib/roles';
 
 export async function generateMetadata({
   params,
@@ -380,11 +381,55 @@ export default async function Page({ params }: { params: { id: string } }) {
         </div>
 
         <div className="space-y-4">
-          {article?.comments
-            .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-            .map((comment) => (
-              <Comment key={comment.id} comment={comment} />
-            ))}
+          {article?.comments && await Promise.all(
+            article.comments
+              .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+              .map(async (comment) => {
+                const user = await clerkClient().users.getUser(comment.authorId);
+                const serializedUser = {
+                  id: user.id,
+                  firstName: user.firstName,
+                  lastName: user.lastName,
+                  imageUrl: user.imageUrl,
+                  username: user.username
+                };
+                const isUpvoted = userId ? await prisma.upvote.findUnique({
+                  where: {
+                    userId_commentId: {
+                      userId,
+                      commentId: comment.id
+                    }
+                  }
+                }) : false;
+                const upvoteCount = await prisma.upvote.aggregate({
+                  _count: {
+                    userId: true
+                  },
+                  where: {
+                    commentId: comment.id
+                  }
+                });
+                const hasPermission = userId === comment.authorId || await checkRole("admin");
+                const commentReplies = await prisma.comment.findMany({
+                  where: {
+                    parentId: comment.id,
+                    deletedAt: null
+                  }
+                });
+
+                return (
+                  <Comment 
+                    key={comment.id} 
+                    comment={comment}
+                    user={serializedUser}
+                    isUpvoted={!!isUpvoted}
+                    upvoteCount={upvoteCount._count.userId}
+                    hasPermission={hasPermission}
+                    commentReplies={commentReplies}
+                  />
+                );
+              })
+          )}
         </div>
       </div>
 
