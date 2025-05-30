@@ -6,8 +6,10 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import AcceptBtn from './accept-btn';
 import WinnerConfetti from './winner-confetti';
-import { CheckCircle2, XCircle } from 'lucide-react';
+import { CheckCircle2, XCircle, Trophy, Medal } from 'lucide-react';
 import { Competition, ChallengeQuestion, AnswerOption } from '@prisma/client';
+import { Progress } from '@/components/ui/progress';
+import ResultContent from './result-content';
 
 type QuestionWithOptions = ChallengeQuestion & {
   options: AnswerOption[];
@@ -58,65 +60,26 @@ export default async function ResultPage({ searchParams }: { searchParams: any }
   const userScore = userIsChallenger ? competition.challengerScore : competition.challengeeScore;
   const opponentScore = userIsChallenger ? competition.challengeeScore : competition.challengerScore;
 
-  // Calculate question results
-  const questionResults = questions.map(question => {
-    const userAnswer = userAnswers.find(ans => ans.questionId === question.id);
-    const correctOption = question.options.find(opt => opt.isCorrect);
-    return userAnswer?.answer === correctOption?.content;
-  });
-
   return (
     <div className="max-w-4xl mx-auto p-4 space-y-6">
-      <Card>
-        <CardHeader>
-          <CardTitle>
-            Competition Results: {competition.title}
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <p className="text-lg font-semibold">Your Score: {userScore}</p>
-              <p className="text-lg font-semibold">Opponent&apos;s Score: {opponentScore}</p>
-              <p className="text-lg font-semibold">Status: {competition.status}</p>
-            </div>
-            {userId === competition.challengeeId && (
-              <div className='mt-2'>
-                {competition.status === 'pending' && <AcceptBtn competition={competition} />}
-              </div>
-            )}
-          </div>
+      <ResultContent 
+        competition={competition}
+        questions={questions}
+        userAnswers={userAnswers}
+        isWinner={isWinner}
+        userScore={userScore}
+        opponentScore={opponentScore}
+        userId={userId}
+      />
 
-          {/* Question Status Icons */}
-          <div className="flex flex-wrap gap-2 mt-4">
-            {questionResults.map((isCorrect, index) => (
-              <div
-                key={index}
-                className={`p-2 rounded-full ${
-                  isCorrect 
-                    ? 'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400' 
-                    : 'bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400'
-                }`}
-              >
-                {isCorrect ? (
-                  <CheckCircle2 className="w-5 h-5" />
-                ) : (
-                  <XCircle className="w-5 h-5" />
-                )}
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      <div className='grid place-items-center'>
-        <Link className='mt-2 w-full' href="/challenge">
-          <Button variant={'link'} className='w-full'>Back to Competitions</Button>
+      <div className="grid place-items-center">
+        <Link className="mt-2 w-full max-w-xs" href="/challenge">
+          <Button variant="outline" className="w-full">Back to Competitions</Button>
         </Link>
       </div>
       
       {isWinner && (
-        <div className='grid place-items-center'>
+        <div className="grid place-items-center">
           <WinnerConfetti />
         </div>
       )}
