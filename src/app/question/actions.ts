@@ -93,10 +93,20 @@ export const getQuestions = async (page: number): Promise<Question[]> => {
     const newQuestions = await prisma.question.findMany({
       skip: skipSize,
       take: 8,
+      where: {
+        deletedAt: null
+      },
+      orderBy: {
+        createdAt: 'desc'
+      },
+      include: {
+        topic: true
+      }
     });
 
     return newQuestions;
   } catch (error) {
-    throw error;
+    console.error('Error fetching questions:', error);
+    return [];
   }
 };

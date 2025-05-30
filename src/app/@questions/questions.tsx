@@ -5,13 +5,10 @@ import { ReactNode } from "react"
 
 export default function Questions({ children }: { children: ReactNode }) {
     const pathname = usePathname();
-    const isHomeRoute = pathname === "/" || pathname === "/qustion";
+    const isHomeRoute = pathname === "/" || pathname === "/question";
 
     if (isHomeRoute) {
         return <>{children}</>
     }
-    return (
-        <>
-        </>
-    )
+    return null;
 }
