@@ -48,6 +48,10 @@ export const createChallengeQuestion = async (formData: QuestionFormData) => {
 
 export async function createManyQuestions(topicId: string, questions: any[], articleId?: string) {
   try {
+    if (!Array.isArray(questions)) {
+      console.error("Invalid input: questions is not an array.", questions);
+      throw new Error("Invalid data format: Expected an array of questions.");
+    }
     for (const question of questions) {
       // Create ChallengeQuestion first
       const createdQuestion = await prisma.challengeQuestion.create({
