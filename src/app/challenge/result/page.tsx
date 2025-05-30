@@ -10,10 +10,76 @@ import { CheckCircle2, XCircle, Trophy, Medal, Clock } from 'lucide-react';
 import { Competition, ChallengeQuestion, AnswerOption } from '@prisma/client';
 import { Progress } from '@/components/ui/progress';
 import ResultContent from './result-content';
+import { clerkClient } from '@clerk/nextjs/server';
+import Image from 'next/image';
 
 type QuestionWithOptions = ChallengeQuestion & {
   options: AnswerOption[];
 };
+
+async function UserComparison({ 
+  challengerId, 
+  challengeeId, 
+  challengerScore, 
+  challengeeScore, 
+  winnerId 
+}: { 
+  challengerId: string;
+  challengeeId: string;
+  challengerScore: number;
+  challengeeScore: number;
+  winnerId: string;
+}) {
+  const challenger = await clerkClient().users.getUser(challengerId);
+  const challengee = await clerkClient().users.getUser(challengeeId);
+
+  return (
+    <div className="flex items-center justify-between p-6 bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-950/30 dark:to-blue-950/30 rounded-lg mb-6">
+      <div className="flex flex-col items-center gap-2">
+        <div className="relative">
+          <Image
+            src={challenger.imageUrl}
+            alt={challenger.fullName || ''}
+            width={80}
+            height={80}
+            className="rounded-full border-4 border-white dark:border-gray-800"
+          />
+          {challengerId === winnerId && (
+            <Trophy className="absolute -top-2 -right-2 w-8 h-8 text-yellow-500" />
+          )}
+        </div>
+        <div className="text-center">
+          <p className="font-bold">{challenger.fullName}</p>
+          <p className="text-2xl font-bold text-purple-600 dark:text-purple-400">{challengerScore}</p>
+        </div>
+      </div>
+
+      <div className="flex flex-col items-center">
+        <p className="text-xl font-bold mb-2">VS</p>
+        <div className="h-16 w-1 bg-gradient-to-b from-purple-500 to-blue-500 rounded-full"></div>
+      </div>
+
+      <div className="flex flex-col items-center gap-2">
+        <div className="relative">
+          <Image
+            src={challengee.imageUrl}
+            alt={challengee.fullName || ''}
+            width={80}
+            height={80}
+            className="rounded-full border-4 border-white dark:border-gray-800"
+          />
+          {challengeeId === winnerId && (
+            <Trophy className="absolute -top-2 -right-2 w-8 h-8 text-yellow-500" />
+          )}
+        </div>
+        <div className="text-center">
+          <p className="font-bold">{challengee.fullName}</p>
+          <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">{challengeeScore}</p>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default async function ResultPage({ searchParams }: { searchParams: any }) {
   const { userId } = await auth();
@@ -132,15 +198,24 @@ export default async function ResultPage({ searchParams }: { searchParams: any }
           </CardContent>
         </Card>
       ) : (
-        <ResultContent 
-          competition={competition}
-          questions={questions}
-          userAnswers={userAnswers}
-          isWinner={isWinner}
-          userScore={userScore}
-          opponentScore={opponentScore}
-          userId={userId}
-        />
+        <>
+          <UserComparison
+            challengerId={competition.challengerId}
+            challengeeId={competition.challengeeId}
+            challengerScore={competition.challengerScore!}
+            challengeeScore={competition.challengeeScore!}
+            winnerId={winnerId}
+          />
+          <ResultContent 
+            competition={competition}
+            questions={questions}
+            userAnswers={userAnswers}
+            isWinner={isWinner}
+            userScore={userScore}
+            opponentScore={opponentScore}
+            userId={userId}
+          />
+        </>
       )}
 
       <div className="grid place-items-center">
