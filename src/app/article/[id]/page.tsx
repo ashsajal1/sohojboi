@@ -297,7 +297,7 @@ export default async function Page({ params }: { params: { id: string } }) {
           </div>
         )}
 
-        <div className="space-y-8">
+        <div>
           {article?.sections
             .sort((a, b) => a.position - b.position)
             .map((section) => (
