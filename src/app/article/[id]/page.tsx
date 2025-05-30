@@ -27,8 +27,12 @@ import {
   DotsHorizontalIcon,
   Pencil1Icon,
   TrashIcon,
+  ClockIcon,
+  EyeOpenIcon,
+  BookmarkIcon,
 } from "@radix-ui/react-icons";
 import ArticleQuestion from "./quiz";
+import { Separator } from "@/components/ui/separator";
 
 export async function generateMetadata({
   params,
@@ -187,30 +191,37 @@ export default async function Page({ params }: { params: { id: string } }) {
   };
 
   return (
-    <div>
-      <div className="flex items-center justify-between py-2">
+    <div className="max-w-4xl mx-auto px-4 py-6 space-y-8">
+      <div className="flex items-center justify-between">
         <div className="flex flex-col gap-2">
-          <CardTitle>{article?.title}</CardTitle>
-          <span className="text-sm font-light text-muted-foreground/70">
-            {timeToRead} mins read
-          </span>
+          <CardTitle className="text-2xl md:text-3xl font-bold dark:text-gray-100">{article?.title}</CardTitle>
+          <div className="flex items-center gap-4 text-sm text-muted-foreground/70">
+            <div className="flex items-center gap-1">
+              <ClockIcon className="w-4 h-4" />
+              <span>{timeToRead} mins read</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <EyeOpenIcon className="w-4 h-4" />
+              <span>{viewCount._sum.count || 0} views</span>
+            </div>
+          </div>
         </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button size="sm" variant="ghost">
+            <Button size="sm" variant="ghost" className="dark:text-gray-100">
               <DotsHorizontalIcon />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent>
+          <DropdownMenuContent className="dark:bg-gray-800 dark:border-gray-700">
             {userId === article?.authorId && (
               <>
                 <DropdownMenuGroup>
-                  <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                  <DropdownMenuLabel className="dark:text-gray-100">Actions</DropdownMenuLabel>
                   <Link
                     className="w-full"
                     href={`/article/edit/${article?.id}`}
                   >
-                    <DropdownMenuItem className="w-full">
+                    <DropdownMenuItem className="w-full dark:text-gray-100 dark:hover:bg-gray-700">
                       <Pencil1Icon className="mr-1" />
                       Edit
                     </DropdownMenuItem>
@@ -219,7 +230,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                     className="w-full"
                     href={`/article/edit/${article?.id}`}
                   >
-                    <DropdownMenuItem className="w-full">
+                    <DropdownMenuItem className="w-full dark:text-gray-100 dark:hover:bg-gray-700">
                       <TrashIcon className="mr-1" />
                       Delete
                     </DropdownMenuItem>
@@ -227,11 +238,11 @@ export default async function Page({ params }: { params: { id: string } }) {
                 </DropdownMenuGroup>
               </>
             )}
-            <DropdownMenuSeparator />
+            <DropdownMenuSeparator className="dark:bg-gray-700" />
 
             <DropdownMenuGroup>
-              <DropdownMenuLabel>Reports</DropdownMenuLabel>
-              <DropdownMenuItem className="w-full">
+              <DropdownMenuLabel className="dark:text-gray-100">Reports</DropdownMenuLabel>
+              <DropdownMenuItem className="w-full dark:text-gray-100 dark:hover:bg-gray-700">
                 <TrashIcon className="mr-1" />
                 Spam
               </DropdownMenuItem>
@@ -240,75 +251,91 @@ export default async function Page({ params }: { params: { id: string } }) {
         </DropdownMenu>
       </div>
 
-      <div>
+      <div className="space-y-6">
         {isInSeries && (
-          <div className="flex flex-col gap-2 py-2">
-            <p>
-              This article is a part of{" "}
-              <Link
-                className="text-blue-500 underline"
-                href={`/series/${article?.blogSeriesId}`}
-              >
-                {article?.blogSeries?.title}
-              </Link>{" "}
-              series.
-            </p>
-            {article?.blogSeries?.articles.map((article, index) => (
-              <Link
-                className="w-full"
-                href={`/article/${article.id}`}
-                key={article.id}
-              >
-                <Button
-                  className="w-full text-start"
-                  variant={article.id === params.id ? "secondary" : "outline"}
+          <div className="p-4 rounded-lg border dark:border-gray-700 dark:bg-gray-800/50">
+            <div className="flex items-center gap-2 mb-3">
+              <BookmarkIcon className="w-5 h-5 text-blue-500" />
+              <p className="text-sm font-medium dark:text-gray-100">
+                This article is a part of{" "}
+                <Link
+                  className="text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300"
+                  href={`/series/${article?.blogSeriesId}`}
                 >
-                  #{index + 1} {article.title.slice(0, 40)}...
-                </Button>
-              </Link>
-            ))}
+                  {article?.blogSeries?.title}
+                </Link>{" "}
+                series
+              </p>
+            </div>
+            <div className="space-y-2">
+              {article?.blogSeries?.articles.map((article, index) => (
+                <Link
+                  className="w-full block"
+                  href={`/article/${article.id}`}
+                  key={article.id}
+                >
+                  <Button
+                    className="w-full text-start justify-start"
+                    variant={article.id === params.id ? "secondary" : "outline"}
+                  >
+                    <span className="font-medium mr-2">#{index + 1}</span>
+                    {article.title.slice(0, 40)}...
+                  </Button>
+                </Link>
+              ))}
+            </div>
           </div>
         )}
-        {tableOfContentsMd && <Content content={tableOfContentsMd} />}
-        {article?.sections.map((section) => (
-          <div
-            key={section.id}
-            id={section.title.replace(/\s+/g, "-").toLowerCase()}
-          >
-            <Content
+
+        {tableOfContentsMd && (
+          <div className="p-4 rounded-lg border dark:border-gray-700 dark:bg-gray-800/50">
+            <Content content={tableOfContentsMd} />
+          </div>
+        )}
+
+        <div className="space-y-8">
+          {article?.sections.map((section) => (
+            <div
               key={section.id}
-              content={`## **${section.title}**\n\n${section.content}`}
-            />
+              id={section.title.replace(/\s+/g, "-").toLowerCase()}
+              className="scroll-mt-20"
+            >
+              <Content
+                key={section.id}
+                content={`## **${section.title}**\n\n${section.content}`}
+              />
 
-            {quizBySection(section.id) && (
-              <div className="py-2">
-                <ArticleQuestion
-                  showConfetti
-                  question={quizBySection(section.id)!}
-                />
-              </div>
-            )}
+              {quizBySection(section.id) && (
+                <div className="py-4">
+                  <ArticleQuestion
+                    showConfetti
+                    question={quizBySection(section.id)!}
+                  />
+                </div>
+              )}
+            </div>
+          ))}
+          {article?.content && <Content content={article?.content!} />}
+
+          {quiz.length > 0 && (
+            <div className="py-4">
+              <ArticleQuestion showConfetti question={randomQuiz!} />
+            </div>
+          )}
+
+          <div className="py-4">
+            <Link href={`/quiz/create?articleId=${article?.id}`}>
+              <Button variant="outline" className="w-full dark:border-gray-700 dark:hover:bg-gray-800">
+                Create quiz on this article
+              </Button>
+            </Link>
           </div>
-        ))}
-        {article?.content && <Content content={article?.content!} />}
-
-        {quiz.length > 0 && (
-          <div>
-            <ArticleQuestion showConfetti question={randomQuiz!} />
-          </div>
-        )}
-
-        <div className="py-2">
-          <Link href={`/quiz/create?articleId=${article?.id}`}>
-            <Button variant={"outline"} className="w-full">
-              Create quiz on this article
-            </Button>
-          </Link>
         </div>
-        <p className="mt-2"> {viewCount._sum.count || 0} views </p>
       </div>
 
-      <div className="flex items-center justify-between py-3">
+      <Separator className="dark:bg-gray-700" />
+
+      <div className="flex items-center justify-between">
         <ProfileImgCard
           createdAt={article?.createdAt}
           type={"article"}
@@ -328,37 +355,45 @@ export default async function Page({ params }: { params: { id: string } }) {
         </div>
       </div>
 
-      <h1 className="font-bold mt-3">Enter comments :</h1>
-      {userId ? (
-        <CommentForm articleId={articleId} />
-      ) : (
-        <p>
-          Please{" "}
-          <Link className="border-b" href="/login">
-            Login
-          </Link>{" "}
-          to comment
-        </p>
-      )}
+      <div className="space-y-6">
+        <div>
+          <h2 className="text-xl font-bold mb-4 dark:text-gray-100">Comments</h2>
+          {userId ? (
+            <CommentForm articleId={articleId} />
+          ) : (
+            <p className="text-muted-foreground">
+              Please{" "}
+              <Link className="text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300" href="/login">
+                Login
+              </Link>{" "}
+              to comment
+            </p>
+          )}
+        </div>
 
-      <div className="py-3">
-        <p>Read more</p>
-        <div className="flex flex-col gap-2">
-          {relatedArticles.map((article) => (
-            <Link
-              className="text-blue-500 hover:underline"
-              href={`/article/${article.id}`}
-              key={article.id}
-            >
-              {article.title}
-            </Link>
+        <div className="space-y-4">
+          {article?.comments.map((comment) => (
+            <Comment key={comment.id} comment={comment} />
           ))}
         </div>
       </div>
 
-      {article?.comments.map((comment) => (
-        <Comment key={comment.id} comment={comment} />
-      ))}
+      <div className="space-y-4">
+        <h2 className="text-xl font-bold dark:text-gray-100">Read more</h2>
+        <div className="grid gap-3">
+          {relatedArticles.map((article) => (
+            <Link
+              className="block p-3 rounded-lg border dark:border-gray-700 dark:bg-gray-800/50 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+              href={`/article/${article.id}`}
+              key={article.id}
+            >
+              <h3 className="font-medium text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300">
+                {article.title}
+              </h3>
+            </Link>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
