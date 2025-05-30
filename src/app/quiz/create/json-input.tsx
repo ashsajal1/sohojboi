@@ -13,6 +13,7 @@ import {
   PlusCircledIcon,
   TrashIcon,
   InfoCircledIcon,
+  CopyIcon,
 } from "@radix-ui/react-icons";
 import { useSearchParams } from "next/navigation";
 import {
@@ -100,6 +101,7 @@ export default function CreateForm({
   const [isArticleOpen, setIsArticleOpen] = React.useState(false);
   const [isSectionOpen, setIsSectionOpen] = React.useState(false);
   const [sections, setSections] = React.useState<ArticleSection[]>([]);
+  const [copied, setCopied] = React.useState(false);
 
   const {
     register,
@@ -185,6 +187,58 @@ export default function CreateForm({
       setSections([]);
     }
   }, [selectedArticleId, articleSections]);
+
+  const getFullPrompt = () => {
+    const selectedTopic = topics.find((topic) => topic.id === watch("topic"));
+    const topicName = selectedTopic?.name || "[topic]";
+    
+    return `Generate 5 multiple choice questions about ${topicName} in the following JSON format:
+
+[
+  {
+    "content": "What is the main concept of ${topicName}?",
+    "options": [
+      {
+        "text": "Option 1",
+        "isCorrect": false
+      },
+      {
+        "text": "Option 2",
+        "isCorrect": true
+      },
+      {
+        "text": "Option 3",
+        "isCorrect": false
+      },
+      {
+        "text": "Option 4",
+        "isCorrect": false
+      }
+    ],
+    "hint": "Consider the fundamental principles",
+    "explanation": "Detailed explanation of why the correct answer is right and others are wrong"
+  }
+]
+
+Requirements:
+1. Each question should test understanding of ${topicName}
+2. Include 4 options per question with exactly one correct answer
+3. Make distractors plausible but clearly incorrect
+4. Provide a helpful hint that guides without giving away the answer
+5. Include a detailed explanation for the correct answer
+6. Ensure the JSON is properly formatted with all required fields
+7. Generate 5 unique and challenging questions`;
+  };
+
+  const copyToClipboard = async () => {
+    try {
+      await navigator.clipboard.writeText(getFullPrompt());
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy text: ', err);
+    }
+  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -451,6 +505,44 @@ export default function CreateForm({
                 <li>hint (optional): A hint for the question</li>
                 <li>explanation (optional): Explanation of the correct answer</li>
               </ul>
+            </div>
+          </div>
+        </Card>
+
+        <Card className="p-4 bg-muted/50">
+          <div className="flex items-start gap-2">
+            <InfoCircledIcon className="h-5 w-5 mt-0.5" />
+            <div className="space-y-2">
+              <h3 className="font-medium">AI Prompt Generator</h3>
+              <div className="flex items-center justify-between">
+                <p className="text-sm text-muted-foreground">
+                  Use this prompt with AI tools to generate MCQs in the correct format. The prompt will automatically include your selected topic.
+                </p>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={copyToClipboard}
+                  className="flex items-center gap-2"
+                >
+                  {copied ? (
+                    <>
+                      <CheckIcon className="h-4 w-4" />
+                      Copied!
+                    </>
+                  ) : (
+                    <>
+                      <CopyIcon className="h-4 w-4" />
+                      Copy Prompt
+                    </>
+                  )}
+                </Button>
+              </div>
+              <div className="text-sm bg-background p-3 rounded-md border font-mono whitespace-pre-wrap">
+                {getFullPrompt()}
+              </div>
+              <p className="text-sm text-muted-foreground mt-2">
+                After getting the AI&apos;s response, paste it into the JSON input field above. The preview will show if the format is correct.
+              </p>
             </div>
           </div>
         </Card>
