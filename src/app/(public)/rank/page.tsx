@@ -10,7 +10,7 @@ import type { Metadata } from 'next'
 export const metadata: Metadata = {
     title: 'Top Learners Leaderboard | Sohojboi',
     description:
-        'See the top learners on Sohojboi ranked by the coins they earned from daily check-ins, answers and quizzes. Track the leaderboard and keep your study streak going.',
+        'See top Sohojboi learners by coins earned from check-ins, answers and quizzes. Follow the leaderboard and keep your study streak going.',
     alternates: { canonical: '/rank' },
 }
 

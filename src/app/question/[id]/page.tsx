@@ -68,10 +68,11 @@ export async function generateMetadata(props: Params): Promise<Metadata> {
     const description =
         rawText.length >= 120
             ? `${rawText.slice(0, 155).trim()}…`
-            : `${rawText ? `${rawText} ` : ''}Read the answers and opinions shared by the Sohojboi community, and add your own answer to help this student learn faster.`;
+            : `${rawText ? `${rawText.slice(0, 37).trim()} ` : ''}Read the answers and opinions shared by the Sohojboi community, and add your own answer to help this student learn faster.`;
 
+    const questionTitle = question?.content ?? "Question";
     return {
-        title: question?.content,
+        title: `${questionTitle.length > 39 ? `${questionTitle.slice(0, 38).trimEnd()}…` : questionTitle} | Sohojboi Questions`,
         description,
         alternates: { canonical: `/question/${params.id}` },
         openGraph: {

@@ -6,7 +6,7 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = {
     title: 'Practise Quizzes on Any Topic | Sohojboi',
     description:
-        'Practise multiple-choice quizzes on your syllabus topics, check your score instantly and learn from the explanations. Free quiz practice for HSC, SSC and admission tests.',
+        'Practise quizzes on your syllabus topics, check your score instantly and learn from explanations. Free practice for HSC, SSC and admission tests.',
     alternates: { canonical: '/quiz' },
 };
 
