@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Button } from "./ui/button";
 import { ModeToggle } from "./mode-toggle";
-import { SignedIn, SignedOut, SignOutButton } from "@clerk/nextjs";
+import { Show, SignOutButton } from "@clerk/nextjs";
 import { BellIcon } from "@radix-ui/react-icons";
 import { Badge } from "./ui/badge";
 import prisma from "@/lib/prisma";
@@ -28,7 +28,12 @@ import {
 import { cn } from "@/lib/utils";
 
 export default async function Navbar() {
-  const user = await currentUser();
+  let user = null;
+  try {
+    user = await currentUser();
+  } catch {
+    user = null;
+  }
   let notifications: null | Notification[] = null;
   if (user?.id) {
     try {
@@ -66,12 +71,13 @@ export default async function Navbar() {
         )}
 
         <ModeToggle />
-        <SignedIn>
+        <Show when="signed-in">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
                 variant={"ghost"}
                 size={"icon"}
+                aria-label="Open account menu"
                 className="rounded-full relative mx-2"
               >
                 {(notifications?.length || 0 > 0) && (
@@ -125,7 +131,12 @@ export default async function Navbar() {
               </div>
               <div className="flex items-center justify-between gap-2 w-full">
                 <Link className="w-full" href="/notifications">
-                  <Button variant={"outline"} size="sm" className="w-full">
+                  <Button
+                    variant={"outline"}
+                    size="sm"
+                    className="w-full"
+                    aria-label="Notifications"
+                  >
                     <BellIcon className="w-4 h-4 mr-2" />
                     {(notifications?.length || 0 > 0) && (
                       <Badge className="ml-2" variant={"destructive"}>
@@ -148,12 +159,12 @@ export default async function Navbar() {
               </Button>
             </DropdownMenuContent>
           </DropdownMenu>
-        </SignedIn>
-        <SignedOut>
+        </Show>
+        <Show when="signed-out">
           <Link href={"/login"}>
             <Button>Login</Button>
           </Link>
-        </SignedOut>
+        </Show>
       </div>
     </nav>
   );
