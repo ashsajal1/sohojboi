@@ -34,7 +34,7 @@ export const createComment = async (
 
 export const getName = async (userId: string) => {
   try {
-    const user = await clerkClient().users.getUser(userId);
+    const user = await (await clerkClient()).users.getUser(userId);
     return user.fullName;
   } catch (err) {
     return { error: { message: "Cannot get user name" } };

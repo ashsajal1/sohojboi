@@ -8,7 +8,7 @@ import { redirect } from "next/navigation";
 export const createOrUpdateProfile = async (data: EditFormSchema, currentUserId: string) => {
   try {
     if (data.name.length > 0) {
-      await clerkClient().users.updateUser(currentUserId, {
+      await (await clerkClient()).users.updateUser(currentUserId, {
         firstName: data.name.split(" ")[0],
         lastName: data.name.split(" ")[1] || "",
       });

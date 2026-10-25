@@ -12,7 +12,7 @@ import { cn, getPathnameByNotificationType } from '@/lib/utils';
 import MarkAllReadBtn from './mark-all-read-btn';
 
 export default async function page() {
-    const userId = auth().userId;
+    const userId = (await auth()).userId;
     let notifications: null | Notification[] = null;
     if (userId) {
         try {

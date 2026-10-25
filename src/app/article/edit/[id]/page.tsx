@@ -6,7 +6,7 @@ import EditArticleForm from './edit-article-form';
 export default async function Page(props: { params: Promise<{ id: string }> }) {
     const params = await props.params;
     const articleId = params.id;
-    const userId = await auth().userId;
+    const userId = await (await auth()).userId;
 
     const article = await prisma.article.findUnique({
         where: {

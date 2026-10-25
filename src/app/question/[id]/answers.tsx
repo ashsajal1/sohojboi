@@ -72,7 +72,7 @@ const Answer = async ({ answer, question }: { answer: Answer, question: Question
         /**
          * Get the user who answered the question
          */
-        answeredUser = await clerkClient().users.getUser(answer.userId);
+        answeredUser = await (await clerkClient()).users.getUser(answer.userId);
         /**
          * Get the profile image URL for the answered user
          */
@@ -111,7 +111,7 @@ const Answer = async ({ answer, question }: { answer: Answer, question: Question
                      */
                     user.userId === answer?.userId && <HoverCard>
                         <HoverCardTrigger>
-                            <Button size='sm' variant='ghost'><DotsHorizontalIcon /></Button>
+                            <Button size='sm' variant='ghost' aria-label='Answer actions'><DotsHorizontalIcon /></Button>
                         </HoverCardTrigger>
                         <HoverCardContent>
                             <div className="flex items-center gap-2 justify-between">

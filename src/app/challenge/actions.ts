@@ -12,9 +12,9 @@ export const createCompetition = async (
   challengerScore: number
 ) => {
   try {
-    const challengerName = (await clerkClient().users.getUser(challangerId))
+    const challengerName = (await (await clerkClient()).users.getUser(challangerId))
       .fullName as string | "";
-    const challengeeName = (await clerkClient().users.getUser(challangeeId))
+    const challengeeName = (await (await clerkClient()).users.getUser(challangeeId))
       .fullName as string | "";
 
     const competition = await prisma.competition.create({
@@ -48,7 +48,7 @@ export const createCompetition = async (
 
 export const declineChallange = async (competition: Competition) => {
   try {
-    const user = await clerkClient().users.getUser(competition.challengeeId);
+    const user = await (await clerkClient()).users.getUser(competition.challengeeId);
     await Promise.all([
       await prisma.competition.update({
         where: {
@@ -91,7 +91,7 @@ export const completeCompetition = async (
   });
 
   const challengeeName = await (
-    await clerkClient().users.getUser(challengeeId)
+    await (await clerkClient()).users.getUser(challengeeId)
   ).fullName;
 
   let notificationMessage;
@@ -144,7 +144,7 @@ export const getTopics = async (): Promise<Topic[]> => {
 
 export const getChallengeData = async (challangeeId: string) => {
   try {
-     let challengee = await clerkClient().users.getUser(challangeeId);
+     let challengee = await (await clerkClient()).users.getUser(challangeeId);
      challengee = JSON.parse(JSON.stringify(challengee))
      return challengee;
   } catch (err) {

@@ -10,7 +10,7 @@ export const createArticle = async (
   topicId: string
 ) => {
   try {
-    const authorId = await auth().userId;
+    const authorId = await (await auth()).userId;
 
     // Create the article with related sections
     const newArticle = await prisma.article.create({

@@ -53,7 +53,7 @@ export async function generateMetadata(
     throw new Error("Invalid article id!");
   }
 
-  const author = await clerkClient().users.getUser(article?.authorId!);
+  const author = await (await clerkClient()).users.getUser(article?.authorId!);
   const profileImg = await author.imageUrl;
   const authorName = await author.fullName;
   const formattedDate = new Date(article?.createdAt!).toLocaleDateString(
@@ -65,13 +65,29 @@ export async function generateMetadata(
     }
   );
 
-  const ogImage = `/api/og?title=${article?.title}&profileImg=${profileImg}&date=${formattedDate}&authorName=${authorName}`;
+  const ogImage = `/api/og?title=${encodeURIComponent(article?.title ?? "Sohojboi")}&profileImg=${encodeURIComponent(profileImg)}&date=${encodeURIComponent(formattedDate)}&authorName=${encodeURIComponent(authorName ?? "")}`;
+
+  // Descriptions shorter than ~120 chars get rewritten by search engines,
+  // so pad thin/UGC text with a stable summary instead of a bare title.
+  const rawText = (article?.content ?? "")
+    .replace(/[#*_>`\n\r]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+  const description =
+    rawText.length >= 120
+      ? `${rawText.slice(0, 155).trim()}…`
+      : `${rawText ? `${rawText} ` : ""}Read this study article on Sohojboi: chapter-wise explanations, exam tips and practice questions for HSC and SSC students.`;
 
   return {
     title: article?.title,
-    description: article?.content?.slice(1, 150),
+    description,
+    alternates: { canonical: `/article/${articleId}` },
     openGraph: {
-      images: [ogImage],
+      type: "article",
+      title: article?.title,
+      description,
+      url: `/article/${articleId}`,
+      images: [{ url: ogImage, width: 1200, height: 630, alt: article?.title ?? "Sohojboi article" }],
     },
   };
 }
@@ -79,7 +95,7 @@ export async function generateMetadata(
 export default async function Page(props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
   const articleId = params.id;
-  const userId = await auth().userId;
+  const userId = await (await auth()).userId;
   let isUpvoted;
   let article;
   let relatedArticles;
@@ -198,8 +214,8 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
     <div className="max-w-full mx-auto px-4 py-6 space-y-8">
       <div className="flex items-center justify-between">
         <div className="flex flex-col gap-2">
-          <CardTitle className="text-2xl md:text-3xl font-bold dark:text-gray-100">{article?.title}</CardTitle>
-          <div className="flex items-center gap-4 text-sm text-muted-foreground/70">
+          <CardTitle as="h1" className="text-2xl md:text-3xl font-bold dark:text-gray-100">{article?.title}</CardTitle>
+          <div className="flex items-center gap-4 text-sm text-muted-foreground">
             <div className="flex items-center gap-1">
               <ClockIcon className="w-4 h-4" />
               <span>{timeToRead} mins read</span>
@@ -212,7 +228,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
         </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button size="sm" variant="ghost" className="dark:text-gray-100">
+            <Button size="sm" variant="ghost" aria-label="Article actions" className="dark:text-gray-100">
               <DotsHorizontalIcon />
             </Button>
           </DropdownMenuTrigger>
@@ -383,7 +399,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
             article.comments
               .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
               .map(async (comment) => {
-                const user = await clerkClient().users.getUser(comment.authorId);
+                const user = await (await clerkClient()).users.getUser(comment.authorId);
                 const serializedUser = {
                   id: user.id,
                   firstName: user.firstName,

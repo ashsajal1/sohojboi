@@ -4,7 +4,8 @@ import { DataTable } from "./data-table"
 
 
 export default async function DemoPage() {
-  let users: User[] = await (await clerkClient().users.getUserList()).data;
+  const client = await clerkClient();
+  let users: User[] = (await client.users.getUserList()).data;
   users = JSON.parse(JSON.stringify(users))
   return (
     <div className="container mx-auto py-10">

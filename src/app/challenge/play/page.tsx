@@ -37,7 +37,7 @@ export default async function page(props: { searchParams: Promise<any> }) {
 
     //this var for accept existing challenge
     const challengerId = competition?.challengerId;
-    let challenger = await clerkClient().users.getUser(challengerId!);
+    let challenger = await (await clerkClient()).users.getUser(challengerId!);
     challenger = JSON.parse(JSON.stringify(challenger));
 
     questions = await fetchQuestionsByIds(competition?.questionIds!);

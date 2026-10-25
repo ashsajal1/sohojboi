@@ -7,21 +7,21 @@ import { revalidatePath } from "next/cache";
 
 export async function setRole(userId: string, role: Roles) {
   // Check that the user trying to set the role is an admin
-  if (!checkRole("admin")) {
+  if (!(await checkRole("admin"))) {
     return { message: "Not Authorized" };
   }
 
   try {
-    const isMod = (await clerkClient().users.getUser(userId)).publicMetadata.role;
+    const isMod = (await (await clerkClient()).users.getUser(userId)).publicMetadata.role;
     if(role === 'moderator') {
-      await clerkClient().users.updateUser(userId, {
+      await (await clerkClient()).users.updateUser(userId, {
         publicMetadata: { role: 'user' },
       });
       revalidatePath("/");
       return;
     }
 
-    const res = await clerkClient().users.updateUser(userId, {
+    const res = await (await clerkClient()).users.updateUser(userId, {
       publicMetadata: { role: role },
     });
     revalidatePath("/");

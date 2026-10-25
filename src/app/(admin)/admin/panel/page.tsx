@@ -1,8 +1,8 @@
 import { checkRole } from '@/lib/roles'
 import React from 'react'
 
-export default function page() {
-  const isAdmin = checkRole("admin");
+export default async function page() {
+  const isAdmin = await checkRole("admin");
   if (!isAdmin) {
     throw new Error("Unauthorized access!")
   }

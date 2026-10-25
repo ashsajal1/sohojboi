@@ -6,7 +6,7 @@ import { checkRole } from "@/lib/roles";
 
 export default async function TopicPage() {
     const topics = await prisma.topic.findMany();
-    const hasPermission = checkRole("admin") || checkRole("moderator");
+    const hasPermission = (await checkRole("admin")) || (await checkRole("moderator"));
     return (
         <div>
             <Card>

@@ -12,7 +12,7 @@ export const editArticle = async (
   articleId: string
 ) => {
   try {
-    const authorId = await auth().userId;
+    const authorId = await (await auth()).userId;
 
     // Begin a transaction to update article and sections
     const updatedArticle = await prisma.article.update({
@@ -45,7 +45,7 @@ export const editArticle = async (
 
 export const deleteArticle = async (article: Article) => {
   try {
-    const currentUserId = await auth().userId;
+    const currentUserId = await (await auth()).userId;
     if (currentUserId !== article.authorId) {
       throw new Error("Unauthorized access!");
     }

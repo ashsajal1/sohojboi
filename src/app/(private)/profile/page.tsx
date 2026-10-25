@@ -31,12 +31,14 @@ export async function generateMetadata(props: { searchParams: Promise<{ id: stri
     if (!searchParams.id) {
         user = await currentUser();
     } else {
-        user = await clerkClient().users.getUser(searchParams.id)
+        user = await (await clerkClient()).users.getUser(searchParams.id)
     }
     return {
-        title: `Profile of ${user?.fullName}`,
-        description: `View profile of ${user?.fullName}`,
-        tags: [`${user?.fullName}`, `Profile of ${user?.fullName}`, `Sohojboi profile of ${user?.fullName}`]
+        title: `${user?.fullName}'s Profile, Stats & Answers | Sohojboi`,
+        description: `See ${user?.fullName}'s Sohojboi profile: questions asked, answers posted, quiz challenge win rate, coins and badges. Follow their study activity and learn along.`,
+        alternates: {
+            canonical: searchParams.id ? `/profile?id=${searchParams.id}` : '/profile',
+        },
     }
 }
 
@@ -48,7 +50,7 @@ export default async function Page(props: { searchParams: Promise<{ id: string }
     if (!searchParams.id) {
         user = currentActiveUser;
     } else {
-        user = await clerkClient().users.getUser(searchParams.id)
+        user = await (await clerkClient()).users.getUser(searchParams.id)
     }
 
     const challangeStats = await getUserWinLoseStats(user?.id || '')
@@ -95,7 +97,9 @@ export default async function Page(props: { searchParams: Promise<{ id: string }
                 <CardHeader>
                     <div className="flex items-center justify-between">
                         <div>
-                            <CardTitle>Profile details of {user?.fullName}</CardTitle>
+                            <CardTitle as="h1" className="text-xl md:text-2xl">
+                                Profile details of {user?.fullName}
+                            </CardTitle>
 
                             {profile?.bio && <CardDescription>{profile.bio}</CardDescription>}
                         </div>
@@ -147,20 +151,20 @@ export default async function Page(props: { searchParams: Promise<{ id: string }
                 </TabsList>
 
                 <TabsContent className="flex flex-col gap-2" value="questions">
-                    {questions.length === 0 && <h3 className="text-center p-4 font-bold text-xl">No questions found!</h3>}
+                    {questions.length === 0 && <h2 className="text-center p-4 font-bold text-xl">No questions found!</h2>}
                     {questions.map(question => (
                         <QuestionCard key={question.id} question={question} />
                     ))}
                 </TabsContent>
                 <TabsContent value="answers">
-                    {answers.length === 0 && <h3 className="text-center p-4 font-bold text-xl">No answers found!</h3>}
+                    {answers.length === 0 && <h2 className="text-center p-4 font-bold text-xl">No answers found!</h2>}
 
                     {answers.map(answer => (
                         <Answer key={answer.id} answer={answer}></Answer>
                     ))}
                 </TabsContent>
                 <TabsContent className="grid md:grid-cols-2 gap-2" value="challenges">
-                    {challenges.length === 0 && <h3 className="text-center p-4 font-bold text-xl">No challenges found!</h3>}
+                    {challenges.length === 0 && <h2 className="text-center p-4 font-bold text-xl">No challenges found!</h2>}
                     {challenges.map(challenge => (
                         <Card key={challenge.id}>
                             <CardHeader>
@@ -171,7 +175,7 @@ export default async function Page(props: { searchParams: Promise<{ id: string }
                                     challengerScore={challenge.challengerScore}
                                     challengeeScore={challenge.challengeeScore || 0}
                                 />
-                                <CardTitle>
+                                <CardTitle as="h2">
                                     Competition between: {challenge.title}
                                 </CardTitle>
                                 <CardDescription>{formatDate(challenge.createdAt)}</CardDescription>

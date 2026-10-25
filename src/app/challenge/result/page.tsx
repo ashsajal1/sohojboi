@@ -30,8 +30,8 @@ async function UserComparison({
   challengeeScore: number;
   winnerId: string;
 }) {
-  const challenger = await clerkClient().users.getUser(challengerId);
-  const challengee = await clerkClient().users.getUser(challengeeId);
+  const challenger = await (await clerkClient()).users.getUser(challengerId);
+  const challengee = await (await clerkClient()).users.getUser(challengeeId);
 
   return (
     <div className="flex items-center justify-between p-6 bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-950/30 dark:to-blue-950/30 rounded-lg mb-6">

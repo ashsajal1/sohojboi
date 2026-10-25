@@ -14,7 +14,7 @@ export const handleQuestionUpvote = async (
   let actorName;
 
   try {
-    actor = await clerkClient().users.getUser(actorId);
+    actor = await (await clerkClient()).users.getUser(actorId);
     actorName = actor.fullName || `${actor.firstName} ${actor.lastName}`;
   } catch (error) {
     redirect("/login");

@@ -8,7 +8,7 @@ import { redirect } from "next/navigation";
 
 const getActorName = async (actorId: string): Promise<string> => {
   try {
-    const actor = await clerkClient().users.getUser(actorId);
+    const actor = await (await clerkClient()).users.getUser(actorId);
     return actor.fullName || `${actor.firstName} ${actor.lastName}`;
   } catch {
     redirect("/login");

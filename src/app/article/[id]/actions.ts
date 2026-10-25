@@ -40,7 +40,7 @@ export const createComment = async (
 
   let comment;
   try {
-    const authorId = (await auth().userId) as string;
+    const authorId = (await (await auth()).userId) as string;
 
     if (commentType.type === "comment") {
       comment = await prisma.comment.create({
@@ -74,9 +74,9 @@ export const createComment = async (
 };
 
 export const handleUpvote = async (article: Article) => {
-  const actorId = await auth().userId;
+  const actorId = await (await auth()).userId;
   if (!actorId) redirect("/login");
-  const actor = await clerkClient().users.getUser(actorId!);
+  const actor = await (await clerkClient()).users.getUser(actorId!);
   const actorName = actor.fullName || `${actor.firstName} ${actor.lastName}`;
 
   const existingUpvote = await prisma.upvote.findUnique({
@@ -162,9 +162,9 @@ export const editComment = async (commentId: string, value: string) => {
 };
 
 export const handleCommentUpvote = async (comment: Comment) => {
-  const actorId = await auth().userId;
+  const actorId = await (await auth()).userId;
   if (!actorId) redirect("/login");
-  const actor = await clerkClient().users.getUser(actorId!);
+  const actor = await (await clerkClient()).users.getUser(actorId!);
   const actorName = actor.fullName || `${actor.firstName} ${actor.lastName}`;
 
   const existingUpvote = await prisma.upvote.findUnique({

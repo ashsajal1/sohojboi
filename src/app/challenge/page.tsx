@@ -16,6 +16,7 @@ export const metadata: Metadata = {
   keywords: [
     "challenge, quiz, knowledge, friends, competition, topics, education, fun",
   ],
+  alternates: { canonical: "/challenge" },
 };
 
 export default async function page({ searchParams }: { searchParams: any }) {
@@ -35,7 +36,8 @@ export default async function page({ searchParams }: { searchParams: any }) {
   });
 
   // Retrieve a list of all users
-  let users: any = await (await clerkClient().users.getUserList()).data;
+  const client = await clerkClient();
+  let users: any = (await client.users.getUserList()).data;
   // Deep copy the users list to prevent mutation
   users = JSON.parse(JSON.stringify(users));
 

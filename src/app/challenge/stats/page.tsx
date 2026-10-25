@@ -17,8 +17,9 @@ export default async function page() {
 }
 
 const StatusCard = async ({ competition }: { competition: Competition }) => {
-    const challangerName = await (await clerkClient().users.getUser(competition.challengerId)).fullName;
-    const challangeeName = await (await clerkClient().users.getUser(competition.challengeeId)).fullName;
+    const client = await clerkClient();
+    const challangerName = (await client.users.getUser(competition.challengerId)).fullName;
+    const challangeeName = (await client.users.getUser(competition.challengeeId)).fullName;
     
 
     return <Card key={competition.id}>
