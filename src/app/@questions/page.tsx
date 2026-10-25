@@ -11,7 +11,7 @@ export default async function QuestionsSlot() {
     });
     if (questions.length === 0) {
         return <Card className="p-4 m-12">
-            <CardTitle>Question is empty!</CardTitle>
+            <CardTitle as="h2">Question is empty!</CardTitle>
         </Card>
 
     }

@@ -9,7 +9,7 @@ import { Card, CardContent, CardTitle } from "@/components/ui/card";
 export default function QuestionsError({ reset }: { error: Error; reset: () => void }) {
   return (
     <Card className="p-4 m-12">
-      <CardTitle>Couldn&apos;t load questions</CardTitle>
+      <CardTitle as="h2">Couldn&apos;t load questions</CardTitle>
       <CardContent className="px-0 pt-2 text-sm text-muted-foreground">
         The database is unreachable right now.
         <button

@@ -103,7 +103,7 @@ const Answer = async ({ answer, question }: { answer: Answer, question: Question
             </div>}
             <div className="flex justify-between items-start">
                 <CardDescription>
-                    <ReactMarkdown>{answer.answer}</ReactMarkdown>
+                    <ReactMarkdown components={{ h1: 'h2' }}>{answer.answer}</ReactMarkdown>
                 </CardDescription>
                 {
                     /**

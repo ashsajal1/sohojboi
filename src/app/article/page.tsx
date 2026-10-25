@@ -57,9 +57,10 @@ export default async function Page(props: { searchParams: Promise<{ page: string
                 )}
             />
             <div className='fixed bottom-12 right-12'>
-                <Link href='/article/create'>
+                <Link href='/article/create' aria-label='Write a new article'>
                     <Button size={'icon'} variant={'destructive'} aria-label='Write a new article'>
                         <PlusIcon />
+                        <span className='sr-only'>Write a new article</span>
                     </Button>
                 </Link>
             </div>

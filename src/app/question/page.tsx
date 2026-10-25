@@ -15,7 +15,7 @@ export default async function Page() {
   return (
     <>
       <div className="fixed bottom-12 z-20 right-12">
-        <Link href="/question/create">
+        <Link href="/question/create" aria-label="Ask a new question">
           <Button
             size={"icon"}
             variant={"destructive"}
