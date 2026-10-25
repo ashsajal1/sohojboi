@@ -1,53 +1,41 @@
-"use client";
-
-import { motion, Variants } from "framer-motion";
-
 import { cn } from "@/lib/utils";
 
 interface WordPullUpProps {
   words: string;
+  /** seconds each word waits after the previous one (CSS-driven, no JS) */
   delayMultiple?: number;
-  wrapperFramerProps?: Variants;
-  framerProps?: Variants;
   className?: string;
 }
 
+/**
+ * Renders the headline server-side and animates it with CSS.
+ *
+ * The previous framer-motion version SSR'd `style="opacity:0"`, so the page's
+ * largest text stayed invisible until hydration — the main driver behind the
+ * 5.1 s LCP / 11.9 s Speed Index.
+ */
 export default function WordPullUp({
   words,
-  wrapperFramerProps = {
-    hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-      },
-    },
-  },
-  framerProps = {
-    hidden: { y: 20, opacity: 0 },
-    show: { y: 0, opacity: 1 },
-  },
+  delayMultiple = 0.06,
   className,
 }: WordPullUpProps) {
+  const wordList = words.split(" ");
   return (
-    <motion.h1
-      variants={wrapperFramerProps}
-      initial="hidden"
-      animate="show"
+    <h1
       className={cn(
         "font-display text-center text-4xl font-bold leading-[5rem] tracking-[-0.02em] drop-shadow-sm",
         className,
       )}
     >
-      {words.split(" ").map((word, i) => (
-        <motion.span
+      {wordList.map((word, i) => (
+        <span
           key={i}
-          variants={framerProps}
-          style={{ display: "inline-block", paddingRight: "8px" }}
+          className="word-pull-up-word"
+          style={{ animationDelay: `${i * delayMultiple}s` }}
         >
           {word === "" ? <span>&nbsp;</span> : word}
-        </motion.span>
+        </span>
       ))}
-    </motion.h1>
+    </h1>
   );
 }

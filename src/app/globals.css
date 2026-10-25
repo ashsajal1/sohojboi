@@ -12,7 +12,9 @@
     --card-foreground: 240 10% 3.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 240 10% 3.9%;
-    --primary: 142.1 76.2% 36.3%;
+    /* 27% (was 36.3%) so bg-primary/text-primary-foreground and text-primary
+       clear WCAG AA 4.5:1 on white (--primary-foreground is near-white) */
+    --primary: 142.1 76.2% 27%;
     --primary-foreground: 355.7 100% 97.3%;
     --secondary: 240 4.8% 95.9%;
     --secondary-foreground: 240 5.9% 10%;
@@ -20,11 +22,13 @@
     --muted-foreground: 240 3.8% 46.1%;
     --accent: 240 4.8% 95.9%;
     --accent-foreground: 240 5.9% 10%;
-    --destructive: 0 84.2% 60.2%;
+    /* 46% (was 60.2%): white text on destructive needs >= 4.5:1 */
+    --destructive: 0 84.2% 46%;
     --destructive-foreground: 0 0% 98%;
     --border: 240 5.9% 90%;
     --input: 240 5.9% 90%;
-    --ring: 142.1 76.2% 36.3%;
+    /* focus ring must reach 3:1 against the page background */
+    --ring: 142.1 76.2% 27%;
     --radius: 1rem;
     --chart-1: 12 76% 61%;
     --chart-2: 173 58% 39%;
@@ -74,4 +78,107 @@
 
 html {
   scroll-behavior: smooth;
+}
+
+/*
+ * Entrance animations that run on CSS only.
+ *
+ * They used to be framer-motion `initial="hidden"` states, which SSR as
+ * `style="opacity:0"` — so the hero <h1> and card text stayed invisible until
+ * 589 KB of JS hydrated (LCP 5.1 s, Speed Index 11.9 s). CSS starts at first
+ * paint and needs no JS, and is disabled by the reduced-motion query below.
+ */
+@keyframes word-pull-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes blur-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--blur-fade-y, 6px));
+    filter: blur(var(--blur-fade-blur, 6px));
+  }
+  to {
+    /* keeps the original framer-motion end state (y: -yOffset) */
+    opacity: 1;
+    transform: translateY(calc(var(--blur-fade-y, 6px) * -1));
+    filter: blur(0px);
+  }
+}
+
+@keyframes box-reveal-content {
+  from {
+    opacity: 0;
+    transform: translateY(75px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes box-reveal-wipe {
+  from {
+    left: 0;
+  }
+  to {
+    left: 100%;
+  }
+}
+
+.word-pull-up-word {
+  display: inline-block;
+  padding-right: 8px;
+  animation: word-pull-up 0.5s ease-out both;
+}
+
+.blur-fade {
+  animation: blur-fade-in var(--blur-fade-duration, 0.4s) ease-out
+    var(--blur-fade-delay, 0.04s) both;
+}
+
+.box-reveal {
+  position: relative;
+  overflow: hidden;
+}
+
+.box-reveal-content {
+  animation: box-reveal-content var(--box-reveal-duration, 0.5s) ease-out 0.25s
+    both;
+}
+
+.box-reveal-wipe {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  background: var(--box-reveal-color, #5046e6);
+  animation: box-reveal-wipe var(--box-reveal-duration, 0.5s) ease-in 0.25s both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .word-pull-up-word,
+  .blur-fade,
+  .box-reveal-content,
+  .box-reveal-wipe {
+    animation: none !important;
+    opacity: 1;
+    filter: none;
+    transform: none;
+  }
+  .box-reveal-wipe {
+    display: none;
+  }
 }

@@ -1,19 +1,10 @@
-"use client";
-
-import { useRef } from "react";
-import {
-  AnimatePresence,
-  motion,
-  useInView,
-  UseInViewOptions,
-  Variants,
-} from "framer-motion";
-
-type MarginType = UseInViewOptions["margin"];
+import * as React from "react";
+import { cn } from "@/lib/utils";
 
 interface BlurFadeProps {
   children: React.ReactNode;
   className?: string;
+  /** kept for API compatibility; animation now runs on paint, not on scroll */
   variant?: {
     hidden: { y: number };
     visible: { y: number };
@@ -22,46 +13,36 @@ interface BlurFadeProps {
   delay?: number;
   yOffset?: number;
   inView?: boolean;
-  inViewMargin?: MarginType;
+  inViewMargin?: string;
   blur?: string;
 }
 
+/**
+ * Fade/blur-in wrapper driven by CSS instead of framer-motion, so children are
+ * painted by the browser on first render instead of waiting for hydration
+ * (the old `initial="hidden"` SSR'd `opacity:0` onto every question card).
+ */
 export default function BlurFade({
   children,
   className,
-  variant,
   duration = 0.4,
   delay = 0,
   yOffset = 6,
-  inView = false,
-  inViewMargin = "-50px",
   blur = "6px",
 }: BlurFadeProps) {
-  const ref = useRef(null);
-  const inViewResult = useInView(ref, { once: true, margin: inViewMargin });
-  const isInView = !inView || inViewResult;
-  const defaultVariants: Variants = {
-    hidden: { y: yOffset, opacity: 0, filter: `blur(${blur})` },
-    visible: { y: -yOffset, opacity: 1, filter: `blur(0px)` },
-  };
-  const combinedVariants = variant || defaultVariants;
   return (
-    <AnimatePresence>
-      <motion.div
-        ref={ref}
-        initial="hidden"
-        animate={isInView ? "visible" : "hidden"}
-        exit="hidden"
-        variants={combinedVariants}
-        transition={{
-          delay: 0.04 + delay,
-          duration,
-          ease: "easeOut",
-        }}
-        className={className}
-      >
-        {children}
-      </motion.div>
-    </AnimatePresence>
+    <div
+      className={cn("blur-fade", className)}
+      style={
+        {
+          "--blur-fade-duration": `${duration}s`,
+          "--blur-fade-delay": `${0.04 + delay}s`,
+          "--blur-fade-y": `${yOffset}px`,
+          "--blur-fade-blur": blur,
+        } as React.CSSProperties
+      }
+    >
+      {children}
+    </div>
   );
 }
