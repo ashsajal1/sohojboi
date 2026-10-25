@@ -1,9 +1,6 @@
 "use client";
 
 import QuestionCard from "./question-card";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { PlusIcon } from "lucide-react";
 import { useEffect, useState, useRef, useMemo } from "react";
 import { getQuestions } from "./actions";
 import { Question } from "@prisma/client";
@@ -71,22 +68,15 @@ export default function QuestionsListClient({ initialQuestions }: QuestionsListC
   return (
     <>
       <div className="grid md:grid-cols-2 gap-2">
-        <div className="fixed bottom-12 z-20 right-12">
-          <Link href="/question/create">
-            <Button size={"icon"} variant={"destructive"}>
-              <PlusIcon />
-            </Button>
-          </Link>
-        </div>
         {memoizedQuestions.map((question) => (
           <QuestionCard key={question.id} question={question} />
         ))}
       </div>
 
       {(questions.length === 0 && !isFetching.current) && (
-        <h1 className="font-bold text-xl text-center p-12">
+        <h2 className="font-bold text-xl text-center p-12">
           No questions Found!
-        </h1>
+        </h2>
       )}
 
       {hasMoreQuestions && (

@@ -11,6 +11,15 @@ import NextBtn from '../question/next-btn'
 import PreviousBtn from '../question/previous-btn'
 import GridPattern from "@/components/magicui/grid-pattern";
 import { cn } from "@/lib/utils";
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+    title: 'Articles & Study Guides | Sohojboi',
+    description:
+        'Read study guides, chapter notes and exam tips written by the Sohojboi community. Practical explanations for HSC, SSC and admission preparation.',
+    alternates: { canonical: '/article' },
+};
+
 
 export default async function Page(props: { searchParams: Promise<{ page: string }> }) {
     const searchParams = await props.searchParams;
@@ -49,15 +58,16 @@ export default async function Page(props: { searchParams: Promise<{ page: string
             />
             <div className='fixed bottom-12 right-12'>
                 <Link href='/article/create'>
-                    <Button size={'icon'} variant={'destructive'}>
+                    <Button size={'icon'} variant={'destructive'} aria-label='Write a new article'>
                         <PlusIcon />
                     </Button>
                 </Link>
             </div>
+            <h1 className='p-4 text-center text-xl font-bold md:text-2xl'>Articles and study guides</h1>
             <div className='grid md:grid-cols-2 gap-2'>
                 {articles.map(article => <Card key={article.id}>
                     <CardHeader>
-                        <CardTitle>{article.title}</CardTitle>
+                        <CardTitle as='h2'>{article.title}</CardTitle>
                         <Markdown className={'text-sm text-muted-foreground'}>
                             {article?.content && article?.content?.replace(/\n/g, ' ').slice(0, 260)}
 
@@ -73,7 +83,10 @@ export default async function Page(props: { searchParams: Promise<{ page: string
                             <div className='flex justify-end items-center gap-2'>
                                 <Views articleId={article.id} />
                                 <Link href={`/article/${article.id}`}>
-                                    <Button variant={'ghost'}>Read more</Button>
+                                    <Button variant={'ghost'}>
+                                        Read more
+                                        <span className='sr-only'> about {article.title}</span>
+                                    </Button>
                                 </Link>
                             </div>
                         </div>

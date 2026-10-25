@@ -13,7 +13,7 @@ export default function QuestionCard({ question }: QuestionProps) {
     <Card className="z-10">
       <BlurFade delay={0.25} inView>
         <CardHeader>
-          <CardTitle>{question.content}</CardTitle>
+          <CardTitle as="h2">{question.content}</CardTitle>
           <p className="text-sm text-muted-foreground">
             {question.description.slice(0, 120)}...
           </p>

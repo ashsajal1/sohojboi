@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /dashboard
+Disallow: /account
+Disallow: /referral
+Disallow: /notifications
+
+Sitemap: https://sohojboi.netlify.app/sitemap.xml

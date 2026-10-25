@@ -6,6 +6,7 @@ import { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Sohojboi: Write your question",
   description: "Sohojboi : Write your question",
+  alternates: { canonical: "/question/create" },
 };
 
 

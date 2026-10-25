@@ -5,6 +5,15 @@ import { clerkClient } from '@clerk/nextjs/server'
 import { Coins } from 'lucide-react'
 import Image from 'next/image'
 import React from 'react'
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+    title: 'Top Learners Leaderboard | Sohojboi',
+    description:
+        'See the top learners on Sohojboi ranked by the coins they earned from daily check-ins, answers and quizzes. Track the leaderboard and keep your study streak going.',
+    alternates: { canonical: '/rank' },
+}
+
 
 export default async function TopUsersPage() {
     const users = await prisma.profile.findMany({
@@ -14,7 +23,7 @@ export default async function TopUsersPage() {
         take: 10,
     });
 
-    const clerkUsers = await clerkClient().users.getUserList();
+    const clerkUsers = await (await clerkClient()).users.getUserList();
     // Combine the two datasets
     const userList = users.map(user => {
         const clerkUser = clerkUsers.data.find(clerkUser => clerkUser.id === user.clerkUserId);
@@ -27,8 +36,10 @@ export default async function TopUsersPage() {
     }).filter(user => user.fullName !== null); // Filter out users without a matching Clerk user
 
     return (
-        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
-            {userList.map((user, index) => (
+        <div>
+            <h1 className='p-4 text-center text-xl font-bold md:text-2xl'>Top learners</h1>
+            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
+                {userList.map((user, index) => (
                 <Card key={user.id}>
                     <CardHeader>
                         <div className='flex items-center justify-between'>
@@ -47,6 +58,7 @@ export default async function TopUsersPage() {
                     </CardHeader>
                 </Card>
             ))}
+            </div>
         </div>
     )
 }

@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import prisma from "@/lib/prisma"
 import { isValidObjectId } from "@/lib/validate";
-import { SignedIn, SignedOut } from "@clerk/nextjs";
+import { Show } from "@clerk/nextjs";
 import Link from "next/link";
 import { clerkClient, currentUser } from '@clerk/nextjs/server';
 import { Answers } from "./answers";
@@ -49,7 +49,7 @@ export async function generateMetadata(props: Params): Promise<Metadata> {
         throw new Error('Invalid ObjectId');
     }
 
-    const author = await clerkClient().users.getUser(question?.userId!);
+    const author = await (await clerkClient()).users.getUser(question?.userId!);
     const profileImg = await author.imageUrl;
     const authorName = await author.fullName;
     const formattedDate = new Date(question?.createdAt!).toLocaleDateString('en-US', {
@@ -58,13 +58,28 @@ export async function generateMetadata(props: Params): Promise<Metadata> {
         month: 'short',
     });
 
-    const ogImage = `/api/og?title=${question?.content}&profileImg=${profileImg}&date=${formattedDate}&authorName=${authorName}`
+    const ogImage = `/api/og?title=${encodeURIComponent(question?.content ?? "Sohojboi")}&profileImg=${encodeURIComponent(profileImg)}&date=${encodeURIComponent(formattedDate)}&authorName=${encodeURIComponent(authorName ?? "")}`
+
+    // Keep the description long enough for search results (120-160 chars).
+    const rawText = (question?.description ?? "")
+        .replace(/[#*_>`\n\r]+/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+    const description =
+        rawText.length >= 120
+            ? `${rawText.slice(0, 155).trim()}…`
+            : `${rawText ? `${rawText} ` : ''}Read the answers and opinions shared by the Sohojboi community, and add your own answer to help this student learn faster.`;
 
     return {
         title: question?.content,
-        description: question?.description.slice(1, 150),
+        description,
+        alternates: { canonical: `/question/${params.id}` },
         openGraph: {
-            images: [ogImage]
+            type: 'article',
+            title: question?.content,
+            description,
+            url: `/question/${params.id}`,
+            images: [{ url: ogImage, width: 1200, height: 630, alt: question?.content ?? 'Sohojboi question' }]
         }
     }
 }
@@ -134,13 +149,13 @@ export default async function Question(props: Params) {
                 <CardHeader>
                     <div className="flex justify-between items-start">
                         <BoxReveal>
-                            <CardTitle className="py-2 text-xl">
+                            <CardTitle as="h1" className="py-2 text-xl">
                                 {question?.content}
                             </CardTitle>
                         </BoxReveal>
                         {user?.id === question?.userId && <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                                <Button size='sm' variant='ghost'><DotsHorizontalIcon /></Button>
+                                <Button size='sm' variant='ghost' aria-label='Question actions'><DotsHorizontalIcon /></Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent>
                                 <div className="flex flex-col p-2 items-center gap-2 justify-between">
@@ -181,12 +196,12 @@ export default async function Question(props: Params) {
                         </div>
                     </div>
 
-                    <SignedIn>
+                    <Show when="signed-in">
                         {isAnswered === null && <AnswerForm question={question} />}
-                    </SignedIn>
-                    <SignedOut>
-                        <h3 className="font-bold text-muted-foreground text-xl"><Link className="text-primary border-b" href={'/login'}>Login</Link> to post your answer</h3>
-                    </SignedOut>
+                    </Show>
+                    <Show when="signed-out">
+                        <h2 className="font-bold text-muted-foreground text-xl"><Link className="text-primary border-b" href={'/login'}>Login</Link> to post your answer</h2>
+                    </Show>
 
                 </CardContent>
 
